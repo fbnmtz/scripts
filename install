@@ -1,0 +1,34 @@
+#!/usr/bin/env bash
+#
+# ############################################################################
+# Project: scripts (none)
+# File...: install
+# Created: Friday, 2023/03/31 - 19:38:33
+# Author.: @fbnmtz, (fabiano.matoz@gmail.com)
+# ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
+# Last Modified: Friday, 2023/03/31 - 19:42:57
+# Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
+# ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
+# Version: 0.0.1.15
+# ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
+# Description: 
+#  >
+# ############################################################################
+# HISTORY:
+#
+
+github=https://github.com
+repo=fbnmtz/scripts
+
+if [ -d ~/bin ] || [ -L ~/bin ]; then
+    echo "Error! faild to install repository '$repo'. Dir '~/bin' already exists"
+    exit 2
+else
+    # clone this repo to your '/home'
+    git clone "${github}/${repo}" ~/bin
+    
+    # Add scripts to your system $PATH
+    if ! grep "\$PATH:\$HOME/bin" ~/.profile  1> /dev/null  ; then
+        echo -e "\nexport PATH=\"\$PATH:\$HOME/bin\"" >> ~/.profile
+    fi 
+fi
