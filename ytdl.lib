@@ -6,10 +6,10 @@
 # Created: Sunday, 2022/04/03 - 17:39:45
 # Author.: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Last Modified: Friday, 2023/03/31 - 20:15:04
+# Last Modified: Friday, 2023/03/31 - 20:26:20
 # Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Version: 0.0.1.133
+# Version: 0.0.3.136
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
 # Description: 
 #  >
@@ -85,7 +85,6 @@ setCase(){
                         ytdl_output="$location_to_save%(original_url)s-%(upload_date>%Y-%m-%d)s-%(duration>%H-%M-%S)s.%(ext)s" ;;
                     *)
                         ytdl_output="$location_to_save%(uploader)s.%(title)s.%(creator)s.%(upload_date>%Y-%m-%d)s.%(release_date)s-%(duration>%H-%M-%S)s-%(original_url)s-%(id)s-%(filesize)s.%(ext)s" 
-                    # *) ytdl_output="$location_to_save%(uploader)s.%(title)s.%(creator)s.%(alt_title)s-%(upload_date>%Y-%m-%d)s.%(release_date)s-%(duration>%H-%M-%S)s-%(original_url)s-%(id)s-%(filesize)s.%(ext)s" 
                 esac
             else
                 ytdl_output="$location_to_save%(title)s.%(ext)s"
@@ -124,8 +123,6 @@ runVideo(){
 runAudio(){
 
     APP_HOME="$(gethome)/ytdl"
-    echo "$APP_HOME - $_OS_" ; exit
-    local url=$1
 
     setCase music $url 
     runDownload $url
