@@ -1,15 +1,15 @@
 #!/usr/bin/env bash
 #
 # ############################################################################
-# Project: bin (none)
+# Project: scripts (none)
 # File...: ytdl
 # Created: Sunday, 2022/04/03 - 16:49:39
 # Author.: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Last Modified: Wednesday, 2023/01/18 - 18:44:14
+# Last Modified: Friday, 2023/03/31 - 20:15:51
 # Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Version: 0.0.1.54
+# Version: 0.0.1.58
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
 # Description: 
 #  >
@@ -31,9 +31,9 @@ xarg --id -V,--video --var flag:video,url+r --desc "download video from YouTube 
 xarg --id -a,--audio --var flag:audio,url+r --desc "download audio from YouTube url"     
 
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~    
-xhelp --header="ytdl - download a video/audio from a given url on YouTube"
+xarg --header "ytdl - download a video/audio from a given url on YouTube"
     
-xrun --xreject-unknow --xrequire-one --xversionrc "$@"    
+xrun --xreject-unknow --xrequire-one --xversionrc --xcolors "$@"    
     
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~    
 case "$flag" in    

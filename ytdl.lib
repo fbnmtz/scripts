@@ -1,15 +1,15 @@
 #!/usr/bin/env bash
 #
 # ############################################################################
-# Project: bin (none)
+# Project: scripts (none)
 # File...: ytdl.lib
 # Created: Sunday, 2022/04/03 - 17:39:45
 # Author.: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Last Modified: Wednesday, 2023/01/18 - 18:54:01
+# Last Modified: Friday, 2023/03/31 - 20:15:04
 # Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Version: 0.0.1.112
+# Version: 0.0.1.133
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
 # Description: 
 #  >
@@ -26,6 +26,22 @@ ytdl_text=''
 
 CMD="yt-dlp"
 ARGS="-4"
+
+# get system home path
+gethome(){
+    local videos_path=''
+    case "$_OS_" in
+        Linux ) 
+            if [ -n "$XDG_VIDEOS_DIR" ]; then
+                videos_path=$XDG_VIDEOS_DIR 
+            else
+                videos_path=$HOME/videos
+            fi
+        ;;
+        Darwin) videos_path=$HOME/Movies  ;;
+    esac
+    echo $videos_path
+}
 
 common(){
     $notify_app "$APP" "$ytdl_text download"
@@ -67,12 +83,6 @@ setCase(){
                         ytdl_output="$location_to_save%(title)s.%(ext)s" ;;
                     *redd.it|v.redd.it|reddit.com)
                         ytdl_output="$location_to_save%(original_url)s-%(upload_date>%Y-%m-%d)s-%(duration>%H-%M-%S)s.%(ext)s" ;;
-                    *redgifs.com)
-                        ytdl_output="$location_to_save%(uploader)s.%(title)s-%(upload_date>%Y-%m-%d)s.%(original_url)s.%(ext)s" ;;
-                    *imgur.com)
-                        ytdl_output="$location_to_save%(original_url)s" ;;
-                    *xnxxhdvid.com)
-                        ytdl_output="$location_to_save%(original_url)s" ;;
                     *)
                         ytdl_output="$location_to_save%(uploader)s.%(title)s.%(creator)s.%(upload_date>%Y-%m-%d)s.%(release_date)s-%(duration>%H-%M-%S)s-%(original_url)s-%(id)s-%(filesize)s.%(ext)s" 
                     # *) ytdl_output="$location_to_save%(uploader)s.%(title)s.%(creator)s.%(alt_title)s-%(upload_date>%Y-%m-%d)s.%(release_date)s-%(duration>%H-%M-%S)s-%(original_url)s-%(id)s-%(filesize)s.%(ext)s" 
@@ -104,7 +114,7 @@ runDownload(){
 }
 
 runVideo(){
-    APP_HOME=~/videos/ytdl
+    APP_HOME="$(gethome)/ytdl"
     local url=$1
     
     setCase video $url 
@@ -113,7 +123,8 @@ runVideo(){
 
 runAudio(){
 
-    APP_HOME=~/music/ytdl
+    APP_HOME="$(gethome)/ytdl"
+    echo "$APP_HOME - $_OS_" ; exit
     local url=$1
 
     setCase music $url 
