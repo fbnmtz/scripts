@@ -6,10 +6,10 @@
 # Created: Friday, 2023/03/31 - 19:38:33
 # Author.: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Last Modified: Sunday, 2023/04/02 - 15:00:08
+# Last Modified: Sunday, 2023/04/02 - 15:17:09
 # Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Version: 0.0.2.31
+# Version: 0.0.3.38
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
 # Description: 
 #  >
@@ -21,8 +21,14 @@ github=https://github.com
 repo=fbnmtz/scripts
 
 if [ -d ~/bin ] ; then
-    git clone "${github}/${repo}" /tmp/scripts
-    mv /tmp/scripts/* ~/bin/
+    if [ -d ~/bin/.git ] ; then
+        cd ~/bin || exit 1
+        git pull    
+    else
+        git clone "${github}/${repo}" /tmp/scripts
+        mv /tmp/scripts/* ~/bin/
+        rm -rf /tmp/scripts
+    fi
 else
     # clone this repo to your '/home'
     git clone "${github}/${repo}" ~/bin
