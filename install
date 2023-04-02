@@ -6,10 +6,10 @@
 # Created: Friday, 2023/03/31 - 19:38:33
 # Author.: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Last Modified: Friday, 2023/03/31 - 19:42:57
+# Last Modified: Sunday, 2023/04/02 - 15:00:08
 # Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Version: 0.0.1.15
+# Version: 0.0.2.31
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
 # Description: 
 #  >
@@ -20,15 +20,15 @@
 github=https://github.com
 repo=fbnmtz/scripts
 
-if [ -d ~/bin ] || [ -L ~/bin ]; then
-    echo "Error! faild to install repository '$repo'. Dir '~/bin' already exists"
-    exit 2
+if [ -d ~/bin ] ; then
+    git clone "${github}/${repo}" /tmp/scripts
+    mv /tmp/scripts/* ~/bin/
 else
     # clone this repo to your '/home'
     git clone "${github}/${repo}" ~/bin
-    
-    # Add scripts to your system $PATH
-    if ! grep "\$PATH:\$HOME/bin" ~/.profile  1> /dev/null  ; then
-        echo -e "\nexport PATH=\"\$PATH:\$HOME/bin\"" >> ~/.profile
-    fi 
 fi
+
+# Add scripts to your system $PATH
+if ! grep "\$PATH:\$HOME/bin" ~/.profile  1> /dev/null  ; then
+    echo -e "\nexport PATH=\"\$PATH:\$HOME/bin\"" >> ~/.profile
+fi 
