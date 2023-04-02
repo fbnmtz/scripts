@@ -6,10 +6,10 @@
 # Created: Sunday, 2022/04/03 - 17:39:45
 # Author.: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Last Modified: Friday, 2023/03/31 - 20:26:20
+# Last Modified: Saturday, 2023/04/01 - 21:26:56
 # Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Version: 0.0.3.136
+# Version: 0.0.4.159
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
 # Description: 
 #  >
@@ -20,6 +20,8 @@
 use system
 
 _xLIB_YTDL_=true
+# ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
+
 notify_app=xsys.notify
 ytdl_output=''
 ytdl_text=''
@@ -30,7 +32,7 @@ ARGS="-4"
 # get system home path
 gethome(){
     local videos_path=''
-    case "$_OS_" in
+    case "$(xsys.os)" in
         Linux ) 
             if [ -n "$XDG_VIDEOS_DIR" ]; then
                 videos_path=$XDG_VIDEOS_DIR 
@@ -40,14 +42,18 @@ gethome(){
         ;;
         Darwin) videos_path=$HOME/Movies  ;;
     esac
-    echo $videos_path
+    echo "$videos_path"
 }
 
-common(){
-    $notify_app "$APP" "$ytdl_text download"
+geLinuxtPath(){
+    local type=$1
+    case "$type" in
+        audio)  ;;
+        video)  ;;
+    esac
 }
 
-setCase(){
+prepareArgs(){
     local type=$1
     local url=$2
     shift; shift;
@@ -81,7 +87,7 @@ setCase(){
                     # from YT open url in mpv
                     youtu.be|youtube.com|youtube.com.br)
                         ytdl_output="$location_to_save%(title)s.%(ext)s" ;;
-                    *redd.it|v.redd.it|reddit.com)
+                    *redd.it|reddit.com)
                         ytdl_output="$location_to_save%(original_url)s-%(upload_date>%Y-%m-%d)s-%(duration>%H-%M-%S)s.%(ext)s" ;;
                     *)
                         ytdl_output="$location_to_save%(uploader)s.%(title)s.%(creator)s.%(upload_date>%Y-%m-%d)s.%(release_date)s-%(duration>%H-%M-%S)s-%(original_url)s-%(id)s-%(filesize)s.%(ext)s" 
@@ -92,39 +98,30 @@ setCase(){
     esac
 
     case "$type" in
-        music) ARGS+=" --output $ytdl_output --extract-audio --audio-format mp3 " ;;
+        audio) ARGS+=" --output $ytdl_output --extract-audio --audio-format mp3 " ;;
         video) ARGS+=" --cookies ~/bin/youtube.com_cookies.txt --output $ytdl_output" ;;
     esac
 
 }
 
-runDownload(){
+runCMD(){
+    APP_HOME="$(gethome)/ytdl"
+    local type=$1
+    local url=$2
+    
+    prepareArgs "$type" "$url" 
+    ytdlCMD "$url"
+}
+
+ytdlCMD(){
     local url=$1
 
     command="$CMD $ARGS $url"
-    echo $command
-    # exit 1
+    echo "$command"
     
     if $command; then
         $notify_app "$APP" "$ytdl_text download complete" -c
     else
         $notify_app "$APP" "Error!" -c
     fi
-}
-
-runVideo(){
-    APP_HOME="$(gethome)/ytdl"
-    local url=$1
-    
-    setCase video $url 
-    runDownload $url
-}
-
-runAudio(){
-
-    APP_HOME="$(gethome)/ytdl"
-
-    setCase music $url 
-    runDownload $url
-    
 }
