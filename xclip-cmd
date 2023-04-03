@@ -1,0 +1,52 @@
+#!/usr/bin/env bash
+#
+# ############################################################################
+# Project: bin (none)
+# File...: xclip-cmd
+# Created: Wednesday, 2021/01/27 - 10:46:26
+# Author.: @fbnmtz, (devel.fgm@gmail.com)
+# ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
+# Last Modified: Tuesday, 2023/01/24 - 19:09:04
+# Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
+# ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
+# Version: 0.2.1.97
+# ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
+# Description: 
+#  > https://unix.stackexchange.com/questions/61183/bash-script-that-reads-filenames-from-a-pipe-or-from-command-line-args
+# ############################################################################
+# HISTORY:
+#
+# Tuesday, 2022/03/15 - 12:35:01: (@fbnmtz)
+#  -> * new feature - input values via args or pipe
+    # * stil empty? try again with echo
+
+source ~/bin/xSHELL/init
+xrequirements xclip tee
+
+# format an array with received args
+    # ex:
+    # seq 1 3 | xclip-cmd foo bar baz
+    # ARGS=([0]="foo" [1]="bar" [2]="baz" [3]="1" [4]="2" [5]="3")
+declare -a ARGS=("$@")
+while read -rt .02 arg;do
+    ARGS+=($arg)
+done
+
+# join all args to pass everything to xclip
+for arg in "${ARGS[@]}" ; do
+    if [ "$arg" == "--xclip-silent" ]; then
+        NO_ALERT=true
+    else
+        output+="$arg "
+    fi
+done
+
+# fill all buffers of xclip
+for sel in primary secondary clipboard; do 
+    echo -n "$output" | xclip -selection $sel
+done
+
+# save clipboard history
+echo "$output" | tee -a ~/.fbnmtz/clipboard
+
+[ -z "$NO_ALERT" ] && notify-send "xclip" "$output"
