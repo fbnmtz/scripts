@@ -1,25 +1,25 @@
 #!/usr/bin/env bash
 #
 # ############################################################################
-# Project: bin (none)
+# Project: scripts (none)
 # File...: xclip-cmd
 # Created: Wednesday, 2021/01/27 - 10:46:26
 # Author.: @fbnmtz, (devel.fgm@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Last Modified: Tuesday, 2023/01/24 - 19:09:04
+# Last Modified: Tuesday, 2023/04/04 - 23:01:57
 # Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Version: 0.2.1.97
+# Version: 0.2.3.101
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
 # Description: 
 #  > https://unix.stackexchange.com/questions/61183/bash-script-that-reads-filenames-from-a-pipe-or-from-command-line-args
 # ############################################################################
 # HISTORY:
 #
-# Tuesday, 2022/03/15 - 12:35:01: (@fbnmtz)
-#  -> * new feature - input values via args or pipe
-    # * stil empty? try again with echo
 
+# ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~    
+# shellcheck disable=SC1090,SC2154    
+# ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~    
 source ~/bin/xSHELL/init
 xrequirements xclip tee
 
