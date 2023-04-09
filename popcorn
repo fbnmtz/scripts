@@ -7,10 +7,10 @@
 # Author.: Fabiano Matos, fgm (fabiano.matoz@gmail.com) 
 #        (take idea for another script)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Last Modified: Saturday, 2023/04/08 - 10:00:58
+# Last Modified: Sunday, 2023/04/09 - 00:30:07
 # Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Version: 1.1.5.137
+# Version: 1.1.5.145
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
 # Description: 
 #  > popcorn (term version)
@@ -45,8 +45,8 @@ else
     if [[ "$magnet" =~ "magnet:?xt=" ]]; then
         link=${magnet^^}
     else
-        # magnet=${magnet^^}
-        link="magnet:?xt=${magnet//.torrent}"
+        # get magnet by folder or file name  
+        link="magnet:?xt=urn:btih:${magnet//.torrent}"
     fi
     cmd=${cmd//<link>/${link}}
     echo "$cmd"
