@@ -7,10 +7,10 @@
 # Author.: Fabiano Matos, fgm (fabiano.matoz@gmail.com) 
 #        (take idea for another script)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Last Modified: Sunday, 2023/04/09 - 00:37:10
+# Last Modified: Sunday, 2023/04/09 - 12:49:55
 # Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Version: 1.1.6.150
+# Version: 1.1.6.166
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
 # Description: 
 #  > popcorn (term version)
@@ -25,7 +25,7 @@
 # HISTORY:
 #
 
-# shellcheck disable=SC1090,SC2124,SC2145
+# shellcheck disable=SC1090        # SC1090: Can't follow non-constant source. Use a directive to specify location.
 source ~/bin/xSHELL/init
 use args
 xrequirements pirate-get peerflix mpv
@@ -39,22 +39,23 @@ xarg --id -p,--player --var player+r --desc "set player to watch torrent"
 xrun --xversionrc --xrequire-one "$@"
 
 if [ -z "$magnet" ]; then
+    # shellcheck disable=SC2124     # SC2124: Assigning an array to a string! Assign as array, or use * instead of @ to concatenate.
     [ -z "$search" ] && search="$@"
+    # shellcheck disable=SC2145     # SC2145: Argument mixes string and array. Use * or separate argument.
     pirate-get -C \
         "peerflix %s --all --list --subtitles --no-quit --$player  -- \"$@\"" \
         "$search"
-        # --on-donwloaded 'notify-send \"popcorn\" \"download 100%\" ' \
 else
     cmd="peerflix \"<link>\" --all --list --subtitles --no-quit --$player --"
     if [[ "$magnet" =~ "magnet:?xt=" ]]; then
         link=${magnet^^}
     else
-        # get magnet by folder or file name  
+        # get magnet by folder/file name  
         link="magnet:?xt=urn:btih:${magnet//.torrent}"
     fi
     cmd=${cmd//<link>/${link}}
     echo "$cmd"
-    eval $cmd
+    eval "$cmd"
 fi
 
 # docker run -p 9000:9000 -p 6881:6881 -p 6881:6881/udp \
