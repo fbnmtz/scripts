@@ -7,10 +7,10 @@
 # Author.: Fabiano Matos, fgm (fabiano.matoz@gmail.com) 
 #        (take idea for another script)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Last Modified: Sunday, 2023/04/09 - 12:49:55
+# Last Modified: Sunday, 2023/04/09 - 13:22:00
 # Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Version: 1.1.6.166
+# Version: 1.1.7.198
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
 # Description: 
 #  > popcorn (term version)
@@ -38,25 +38,24 @@ xarg --id -p,--player --var player+r --desc "set player to watch torrent"
 
 xrun --xversionrc --xrequire-one "$@"
 
+# command to download torrent
+_cmd_="peerflix '<link>' --all --list --subtitles --no-quit --$player --"
+
 if [ -z "$magnet" ]; then
     # shellcheck disable=SC2124     # SC2124: Assigning an array to a string! Assign as array, or use * instead of @ to concatenate.
     [ -z "$search" ] && search="$@"
-    # shellcheck disable=SC2145     # SC2145: Argument mixes string and array. Use * or separate argument.
-    pirate-get -C \
-        "peerflix %s --all --list --subtitles --no-quit --$player  -- \"$@\"" \
-        "$search"
+    
+    _cmd_=${_cmd_//<link>/%s}
+    _cmd_search="pirate-get -C '$_cmd_' '$search'"
+    
+    echo "$_cmd_search" && eval "$_cmd_search"
 else
-    cmd="peerflix \"<link>\" --all --list --subtitles --no-quit --$player --"
     if [[ "$magnet" =~ "magnet:?xt=" ]]; then
         link=${magnet^^}
     else
         # get magnet by folder/file name  
         link="magnet:?xt=urn:btih:${magnet//.torrent}"
     fi
-    cmd=${cmd//<link>/${link}}
-    echo "$cmd"
-    eval "$cmd"
+    _cmd_=${_cmd_//<link>/${link}}
+    echo "$_cmd_" && eval "$_cmd_"
 fi
-
-# docker run -p 9000:9000 -p 6881:6881 -p 6881:6881/udp \
-#     --rm -v /tmp/torrent-stream:/tmp/torrent-stream asapach/peerflix-server
