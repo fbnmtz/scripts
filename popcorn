@@ -7,10 +7,10 @@
 # Author.: Fabiano Matos, fgm (fabiano.matoz@gmail.com) 
 #        (take idea for another script)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Last Modified: Sunday, 2023/04/09 - 13:22:00
+# Last Modified: Sunday, 2023/04/09 - 15:39:35
 # Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Version: 1.1.7.198
+# Version: 1.1.8.208
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
 # Description: 
 #  > popcorn (term version)
@@ -39,23 +39,30 @@ xarg --id -p,--player --var player+r --desc "set player to watch torrent"
 xrun --xversionrc --xrequire-one "$@"
 
 # command to download torrent
-_cmd_="peerflix '<link>' --all --list --subtitles --no-quit --$player --"
+_peerflix="peerflix '<link>' --all --list --subtitles --no-quit --$player --"
 
+# no magnet link? perform a search 
 if [ -z "$magnet" ]; then
     # shellcheck disable=SC2124     # SC2124: Assigning an array to a string! Assign as array, or use * instead of @ to concatenate.
+    # no search? pass all arguments as search
     [ -z "$search" ] && search="$@"
     
-    _cmd_=${_cmd_//<link>/%s}
-    _cmd_search="pirate-get -C '$_cmd_' '$search'"
+    # prepare 'pirete-get/peerflix' command
+    _peerflix=${_peerflix//<link>/%s}
+    # run command
+    _pirateget="pirate-get -C '$_peerflix' '$search'"
     
-    echo "$_cmd_search" && eval "$_cmd_search"
+    echo "$_pirateget" && eval "$_pirateget"
 else
+    # magnet is a valid link?
     if [[ "$magnet" =~ "magnet:?xt=" ]]; then
         link=${magnet^^}
     else
         # get magnet by folder/file name  
         link="magnet:?xt=urn:btih:${magnet//.torrent}"
     fi
-    _cmd_=${_cmd_//<link>/${link}}
-    echo "$_cmd_" && eval "$_cmd_"
+    # prepare 'pirete-get/peerflix' command
+    _peerflix=${_peerflix//<link>/${link}}
+    # run command
+    echo "$_peerflix" && eval "$_peerflix"
 fi
