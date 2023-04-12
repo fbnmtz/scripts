@@ -7,10 +7,10 @@
 # Author.: Fabiano Matos, fgm (fabiano.matoz@gmail.com) 
 #        (take idea for another script)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Last Modified: Sunday, 2023/04/09 - 15:39:35
+# Last Modified: Thursday, 2023/04/13 - 01:39:38
 # Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Version: 1.1.8.208
+# Version: 1.1.8.228
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
 # Description: 
 #  > popcorn (term version)
@@ -32,14 +32,22 @@ xrequirements pirate-get peerflix mpv
 
 player=mpv 
 
-xarg --id -s,--search --var search+o --desc "term for search a torrent"
-xarg --id -m,--magnet --var magnet+r --desc "magnet link for download"
-xarg --id -p,--player --var player+r --desc "set player to watch torrent"
+xarg --id -s,--search --var search+o   --desc "term for search a torrent"
+xarg --id -w,--web    --var _pweb:true --desc "start peerfliex web interface"
+xarg --id -m,--magnet --var magnet+r   --desc "magnet link for download"
+xarg --id -p,--player --var player+r   --desc "set player to watch torrent"
 
-xrun --xversionrc --xrequire-one "$@"
+xrun --xversionrc --xrequire-one --xcolors "$@"
 
 # command to download torrent
 _peerflix="peerflix '<link>' --all --list --subtitles --no-quit --$player --"
+
+# web interface
+if [ -n "$_pweb" ]; then 
+    docker run -p 9000:9000 -p 6881:6881 -p 6881:6881/udp \
+        --rm -v /tmp/torrent-stream:/tmp/torrent-stream asapach/peerflix-server
+    exit 
+fi
 
 # no magnet link? perform a search 
 if [ -z "$magnet" ]; then
