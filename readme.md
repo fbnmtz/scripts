@@ -5,10 +5,10 @@
  Created: Friday, 2023/03/31 - 04:54:21
  Author.: @fbnmtz, (fabiano.matoz@gmail.com)
  ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
- Last Modified: Friday, 2023/03/31 - 23:54:18
+ Last Modified: Friday, 2023/04/14 - 02:19:53
  Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
  ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
- Version: 0.0.1.16
+ Version: 0.0.1.22
  ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
  Description: 
   >
@@ -53,8 +53,13 @@
 
 - [Index](#index)
 - [Install](#install)
+- [`aw`](#aw)
 - [`mpvtube`](#mpvtube)
+- [`popcorn`](#popcorn)
+- [`xclip-cmd`](#xclip-cmd)
+- [`xman`](#xman)
 - [`ytdl`](#ytdl)
+- [`ytinfo`](#ytinfo)
 
 ---
 
@@ -69,8 +74,13 @@ curl -sSL https://raw.githubusercontent.com/fbnmtz/scripts/master/install | bash
 
 ---
 
+## `aw`
 ## `mpvtube`
+## `popcorn`
+## `xclip-cmd`
+## `xman`
 ## `ytdl`
+## `ytinfo`
 
 script to watch youtube videos using rofi and mpv.
 
