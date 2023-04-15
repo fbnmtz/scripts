@@ -1,15 +1,15 @@
 #!/usr/bin/env bash
 #
 # ############################################################################
-# Project: bin (vundefined)
+# Project: scripts (none)
 # File...: mpvtube.lib
 # Created: Friday, 2022/02/11 - 23:14:08
 # Author.: @fbnmtz, fgm (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Last Modified: Tuesday, 2023/02/28 - 08:22:25
+# Last Modified: Saturday, 2023/04/15 - 02:05:15
 # Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Version: 0.1.7.750
+# Version: 0.1.7.753
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
 # Description: 
 #  >
@@ -564,6 +564,8 @@ actionAddChannel(){
     local FILE=$MYHOME/channels.list
     local FONT="Terminus bold 20"
     local padding=40
+    local rtheme="$HOME/bin/mpvtube-themes/mpvtube.rasi"
+
 
     local category=$1
     local channel_name=$2
@@ -572,8 +574,7 @@ actionAddChannel(){
     menu(){
         prompt=$1; lines=$2
         
-        rofi \
-            -theme $rtheme \
+        rofi -theme "$rtheme" \
             -dmenu \
             -font "$FONT" \
             -padding $padding \
