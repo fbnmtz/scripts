@@ -1,0 +1,191 @@
+#!/usr/bin/env ruby
+#
+# #############################################################
+# File...: appleISO-downloader
+# Project: scripts (none)
+# Created: Wednesday, 2021/02/10-16:05:35
+# Author.: bkn7c4 (none) - [bkn@7c4]
+# ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~
+# Last Modified: Sunday, 2023/04/16 - 04:28:59
+# Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
+# ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~
+# Description: 
+#  >
+# #############################################################
+#
+
+# ruby 2.7.1
+# mechanize 2.7.6
+
+require 'mechanize'
+require 'colorize'
+
+# use dots on Hashs
+require 'hash_dot'
+Hash.use_dot_syntax = true
+
+
+# catalog with all apptle images (redirector to apple cdn)
+URL="https://ipsw.me"
+
+IDs = Hash.new
+
+# browser agent
+agent = Mechanize.new
+
+# main page content
+page = agent.get(URL)
+
+# get all apple products
+products = Array.new
+page.search('.products').search(".product").each do |p| 
+    data = Hash.new
+    data.link = p['href']
+    data.name = data.link.gsub("/product/","")
+
+    products.push(data) 
+end
+
+products.each_with_index do |product, pi|
+    # open each product page
+    page = agent.get("#{URL}#{product.link}")
+    
+    # save all models for this product
+    models = Array.new
+    page.search('.products').search(".product").each do |p| 
+        data = Hash.new
+        
+        data.link = p['href']
+        data.id   = data.link.gsub('/',"")
+        data.name = p.text.strip.gsub(" ",".").gsub("(","").gsub(")","").gsub("/","")
+        
+        IDs[ data.link.gsub('/',"").to_sym ] = data.name
+        
+        # data[:link] = p['href']
+        # data[:id]   = data[:link].gsub('/',"")
+        # data[:name] = p.text.strip.gsub(" ",".").gsub("(","").gsub(")","").gsub("/","")
+        # IDs[ data[:link].gsub('/',"").to_sym ] = data[:name]
+
+        models.push(data)
+    end
+
+    models.each_with_index do |model, mi|
+        # open each model page
+            
+        images = Array.new
+        page = agent.get("#{URL}#{model[:link]}")
+        page.search('.table').search("tr").each do |p| 
+            # save all information about restore images for this model/product
+            data = Hash.new
+            data.link     = p['onclick'].split("=").last.gsub("'","").gsub(" ","").gsub(";","")
+            data.name     = p.search('td')[1].text.strip.gsub(" ",".").gsub("(","").gsub(")","").gsub("/","")
+            data.size     = p.search('td')[3].text.strip.gsub(" ","").gsub("B","").gsub(".",",")
+            data.filename = p.search('td')[4].text.gsub("(","-").gsub(")","-")
+            data.ios      = data.filename.split("_")[1]
+            data.codename = data.filename.split("_")[2]
+            
+
+            # data[:link]     = p['onclick'].split("=").last.gsub("'","").gsub(" ","").gsub(";","")
+            # data[:name]     = p.search('td')[1].text.strip.gsub(" ",".").gsub("(","").gsub(")","").gsub("/","")
+            # data[:size]     = p.search('td')[3].text.strip.gsub(" ","").gsub("B","").gsub(".",",")
+            # data[:filename] = p.search('td')[4].text.gsub("(","-").gsub(")","-")
+            images.push(data)
+        end
+    
+        puts "products:", products
+        puts "models:",   models
+        puts "images:",   images
+        
+        images.each_with_index do |image, ii|
+            # API links
+            ipsw_download_link = 'https://api.ipsw.me/v4/ipsw'
+            device_pic_link    = "https://ipsw.me/assets/devices/"
+
+            output_dir   = "apple/#{product.name}/#{model.name}"
+
+            download_dir = "apple/#{product.name}/v#{image.ios}"
+            localFilename = image.filename.to_s.split("_").first
+            IDs.keys.each do |id|
+                localFilename = localFilename.gsub(id.to_s,"#{IDs[id]}")
+            end
+            localFilename = "#{localFilename}-#{image.ios}-#{image.codename}.ipsw"
+
+            
+            # set linux cmds
+            mkdir_out   = "mkdir -p #{output_dir}/"
+            wget_pic    = "wget #{device_pic_link}#{model.link}.png -O #{output_dir}/#{model.name}.png"
+            wget_image2 = "wget #{ipsw_download_link}#{image.link} -O #{output_dir}/#{image.filename}"
+            wget_image  = "wget #{ipsw_download_link}#{image.link} -O #{download_dir}/#{localFilename}"
+            
+            # inspect cmds 
+            # puts "\n\nproduct: #{product.name}\n#{mkdir_out}\n#{wget_image2}\n#{wget_pic  }\noutput_dir:#{output_dir}\n\n".yellow
+            
+            # create directories
+            `#{mkdir_out}`
+            
+            # download device image 1
+            if ! File.file?(output_dir + "/#{model.name}.png" )
+                puts "\ndownloading device picture: #{model.name}\n".magenta
+                `#{wget_pic  }`
+            end
+
+            # exit
+            
+            print "\nproduct:#{product.name} (#{pi+1}/#{products.count}) -> model:#{model.name} (#{mi+1}/#{models.count}) image:#{image.name} (#{ii+1}/#{images.count}) ".blue
+            
+            # download image
+            if ! File.file?("#{output_dir}/#{image.filename}")
+                
+                # save link in text file
+                `echo "#{model.name}:#{image.name}:#{ipsw_download_link}#{image.link}" >> apple/#{product.name}/links.txt`
+                
+                puts "downloading image (#{image.size})\n".green
+                `#{wget_image2}`
+                # `#{wget_image}`
+                
+            else
+                
+                print "\nremote-filename:#{image.filename} ".magenta
+                # print "\n",IDs
+                
+                if ! File.file?("#{download_dir}/#{localFilename}")
+                    print "\nlocal-filename.:#{localFilename}\n".yellow
+                    
+                    mkdir_new   = "mkdir -p #{download_dir}"
+                    rename_file = "mv #{output_dir}/#{image.filename} #{download_dir}/#{localFilename}"
+                    echo_file   = "echo '#{ipsw_download_link}#{image.link}:#{image.filename}' >> #{download_dir}/#{localFilename}.txt"
+                    
+                    commands = [ mkdir_new,  rename_file, echo_file ]
+
+                    commands.each do |cmd|
+                        puts cmd
+                        # `#{cmd}`
+                    end
+                else
+
+                    puts "\nimage #{model.name} already downloaded.\n".red
+                end
+
+                
+                # size = `du -h #{output_dir}/#{image.filename}| aw 1`
+                # puts "image_size: #{image.size} == local_size: #{size}".blue
+                # ifs size == image.size
+                # else
+                    # puts "\ndownloading image #{model.name} (#{image.name})\n".green
+                    # `#{wget_image2}`
+                # end
+                puts "\nimage #{model.name} already downloaded.\n".red
+
+            end
+
+            puts "\nnext image..."
+            sleep 2
+        
+        end
+        puts "\nnext model..."
+        sleep 2
+    end
+    
+    puts "\nnext product..."
+    sleep 2
+end
