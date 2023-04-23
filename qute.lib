@@ -1,0 +1,39 @@
+#!/usr/bin/env bash
+#
+# ############################################################################
+# Project: scripts (none)
+# File...: qute.lib
+# Created: Saturday, 2023/04/22 - 22:17:30
+# Author.: @fbnmtz, (fabiano.matoz@gmail.com)
+# ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
+# Last Modified: Saturday, 2023/04/22 - 23:57:00
+# Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
+# ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
+# Version: 0.0.1.32
+# ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
+# Description: 
+#  >
+# ############################################################################
+# HISTORY:
+#
+
+_xLIB_QUTE_=true
+
+quteROOT="$XDG_CONFIG_HOME/qutebrowser"
+quteProfiles="$quteROOT/profiles"
+
+qNew(){
+  mkdir -p "$quteProfiles/$1/config"
+  ln -s "$quteROOT"/config.py "$quteProfiles/$1" 
+  ln -s "$quteROOT"/autoconfig.yml "$quteProfiles/$1/config" 
+}
+
+qList(){
+  ls "$quteProfiles"
+}
+
+qChoose(){
+  run_profile=$(qList | dmenu -p "Select a profile")
+  [ -n "$run_profile" ] && \
+    qutebrowser --config-py "$quteROOT/config.py" -B "$quteProfiles/$run_profile" 
+}
