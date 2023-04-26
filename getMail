@@ -6,10 +6,10 @@
 # Created: Tuesday, 2023/04/25 - 20:11:57
 # Author.: fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Last Modified: Tuesday, 2023/04/25 - 21:44:15
+# Last Modified: Tuesday, 2023/04/25 - 22:02:47
 # Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Version: 0.0.1.54
+# Version: 0.0.1.55
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
 # Description: 
 #  >
@@ -27,7 +27,7 @@
 
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~
 source ~/bin/xSHELL/init
-xrequirements dmenu xclip-cmd grep
+xrequirements rofi:dmenu xclip-cmd
 
 use args getMail.lib
 
