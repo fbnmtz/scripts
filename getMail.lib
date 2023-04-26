@@ -1,0 +1,45 @@
+#!/usr/bin/env bash
+#
+# ############################################################################
+# Project: scripts (none)
+# File...: getMail.lib
+# Created: Tuesday, 2023/04/25 - 20:14:21
+# Author.: @fbnmtz, (fabiano.matoz@gmail.com)
+# ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
+# Last Modified: Tuesday, 2023/04/25 - 21:39:01
+# Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
+# ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
+# Version: 0.0.1.84
+# ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
+# Description: 
+#  >
+# ############################################################################
+# HISTORY:
+#
+use utils io
+
+_xLIB_GETMAIL_=true
+
+# create default data directory
+xsetHome
+MAILSTORE="$APP_HOME/mails"
+[ ! -f "$MAILSTORE" ] && touch "$MAILSTORE"
+
+MAILCONF=$APP_HOME/$APP.cfg
+_EDITOR=$(rconfig editor "$MAILCONF")
+
+[ -z "$_EDITOR" ] && _EDITOR=$(getPath vim nano code gedit micro code sublime)
+
+xNew(){
+  if grep "$1" "$MAILSTORE"; then
+    exit
+  else
+    echo "$1" >> "$MAILSTORE"
+  fi
+}
+
+xMenu(){
+  mail=$(dmenu -p "Select a mail" < "$MAILSTORE")
+
+  [ -n "$mail" ] && echo "$mail" | xclip-cmd
+}

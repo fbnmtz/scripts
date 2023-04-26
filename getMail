@@ -1,0 +1,54 @@
+#!/usr/bin/env bash
+#
+# ############################################################################
+# Project: scripts (none)
+# File...: getMail
+# Created: Tuesday, 2023/04/25 - 20:11:57
+# Author.: fbnmtz, (fabiano.matoz@gmail.com)
+# ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
+# Last Modified: Tuesday, 2023/04/25 - 21:44:15
+# Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
+# ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
+# Version: 0.0.1.54
+# ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
+# Description: 
+#  >
+# ############################################################################
+# HISTORY:
+#
+
+
+# ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~
+# shellcheck disable=SC1090,SC2154
+#   * SC1090: Can't follow non-constant source. Use a directive to specify location.
+#       -> cant follow or source usage
+#   * SC2154: var is referenced but not assigned.
+#       -> variables created by or library system (don't worry)
+
+# ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~
+source ~/bin/xSHELL/init
+xrequirements dmenu xclip-cmd grep
+
+use args getMail.lib
+
+# ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~
+xarg --id -m,--menu --var action:menu          --desc "select a email with a dmenu"
+xarg --id -n,--new  --var action:new,email+r   --desc "save new email"
+xarg --id -e,--edit --var action:edit,editor+o --desc "edit email list"
+
+# ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~
+# initilizae values before xrun (if you need to)
+
+# ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~
+# arguments will be checked/validated here (use --xhelp arg for more info)
+xrun --xreject-unknow --xrequire-one --xcolors "$@"
+
+[ -n "$editor" ] && _EDITOR=$editor
+
+# ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~
+# now put your code below
+case "$action" in
+  menu) xMenu ;;
+  new ) xNew "$email" ;;
+  edit) $_EDITOR "$MAILSTORE" ;;
+esac
