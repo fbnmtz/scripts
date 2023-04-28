@@ -6,10 +6,10 @@
 # Created: Friday, 2022/02/11 - 23:14:08
 # Author.: @fbnmtz, fgm (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Last Modified: Saturday, 2023/04/15 - 02:10:39
+# Last Modified: Tuesday, 2023/04/25 - 23:24:57
 # Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Version: 0.1.8.758
+# Version: 0.1.8.761
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
 # Description: 
 #  >
@@ -61,6 +61,9 @@ SEARCHHOME=$MYHOME/searchs
 
 playlist=$MYHOME/channels.list
 favlist=$MYHOME/favorites.list
+
+# ROFI
+rtheme="$HOME/bin/mpvtube-themes/mpvtube.rasi"
 
 
 __initApp__(){
@@ -564,7 +567,6 @@ actionAddChannel(){
     local FILE=$MYHOME/channels.list
     local FONT="Terminus bold 20"
     local padding=40
-    local rtheme="$HOME/bin/mpvtube-themes/mpvtube.rasi"
 
 
     local category=$1

@@ -6,10 +6,10 @@
 # Created: Tuesday, 2023/04/25 - 20:11:57
 # Author.: fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Last Modified: Tuesday, 2023/04/25 - 22:02:47
+# Last Modified: Friday, 2023/04/28 - 02:08:37
 # Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Version: 0.0.1.55
+# Version: 0.0.2.58
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
 # Description: 
 #  >
@@ -27,7 +27,7 @@
 
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~
 source ~/bin/xSHELL/init
-xrequirements rofi:dmenu xclip-cmd
+xrequirements rofi:dmenu
 
 use args getMail.lib
 
@@ -35,9 +35,6 @@ use args getMail.lib
 xarg --id -m,--menu --var action:menu          --desc "select a email with a dmenu"
 xarg --id -n,--new  --var action:new,email+r   --desc "save new email"
 xarg --id -e,--edit --var action:edit,editor+o --desc "edit email list"
-
-# ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~
-# initilizae values before xrun (if you need to)
 
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~
 # arguments will be checked/validated here (use --xhelp arg for more info)

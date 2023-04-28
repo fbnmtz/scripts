@@ -6,10 +6,10 @@
 # Created: Tuesday, 2023/04/25 - 20:14:21
 # Author.: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Last Modified: Tuesday, 2023/04/25 - 22:34:42
+# Last Modified: Friday, 2023/04/28 - 02:08:32
 # Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Version: 0.0.3.117
+# Version: 0.0.4.120
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
 # Description: 
 #  >
@@ -32,8 +32,9 @@ _EDITOR=$(rconfig editor "$MAILCONF")
 
 xNew(){
   if grep "$1" "$MAILSTORE"; then
-    exit
+    echo "mail $1 already saved"; exit
   else
+    echo "mail $1 saved"
     echo "$1" >> "$MAILSTORE"
   fi
 }
