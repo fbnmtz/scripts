@@ -7,10 +7,10 @@
 # Author.: Fabiano Matos, fgm (fabiano.matoz@gmail.com) 
 #        (take idea for another script)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Last Modified: Thursday, 2023/04/13 - 01:39:38
+# Last Modified: Sunday, 2023/04/30 - 11:39:04
 # Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Version: 1.1.8.228
+# Version: 1.1.9.246
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
 # Description: 
 #  > popcorn (term version)
@@ -28,12 +28,13 @@
 # shellcheck disable=SC1090        # SC1090: Can't follow non-constant source. Use a directive to specify location.
 source ~/bin/xSHELL/init
 use args
-xrequirements pirate-get peerflix mpv
+xrequirements pirate-get peerflix
 
+# set default player
 player=mpv 
 
 xarg --id -s,--search --var search+o   --desc "term for search a torrent"
-xarg --id -w,--web    --var _pweb:true --desc "start peerfliex web interface"
+xarg --id -w,--web    --var pweb:true  --desc "start peerfliex web interface"
 xarg --id -m,--magnet --var magnet+r   --desc "magnet link for download"
 xarg --id -p,--player --var player+r   --desc "set player to watch torrent"
 
@@ -43,9 +44,16 @@ xrun --xversionrc --xrequire-one --xcolors "$@"
 _peerflix="peerflix '<link>' --all --list --subtitles --no-quit --$player --"
 
 # web interface
-if [ -n "$_pweb" ]; then 
+if [ -n "$pweb" ]; then 
+    docker volume create --name popcorn-data type=none --opt device=/tmp/torrent-stream --opt o=bind
+
     docker run -p 9000:9000 -p 6881:6881 -p 6881:6881/udp \
-        --rm -v /tmp/torrent-stream:/tmp/torrent-stream asapach/peerflix-server
+        --rm -it \
+        --mount source=popcorn-data,target=/tmp/torrent-stream \
+        --name porpcorn-web \
+        asapach/peerflix-server
+        # -v /tmp/torrent-stream/:/tmp/torrent-stream/ \
+        # --mount type=bind,source="/tmp/torrent-stream"/target,target=/tmp/torrent-stream \
     exit 
 fi
 
@@ -59,6 +67,9 @@ if [ -z "$magnet" ]; then
     _peerflix=${_peerflix//<link>/%s}
     # run command
     _pirateget="pirate-get -C '$_peerflix' '$search'"
+    
+    # validate selected player
+    xrequirements $player
     
     echo "$_pirateget" && eval "$_pirateget"
 else
