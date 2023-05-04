@@ -6,10 +6,10 @@
 # Created: Saturday, 2023/04/22 - 22:17:30
 # Author.: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Last Modified: Saturday, 2023/04/22 - 23:57:00
+# Last Modified: Thursday, 2023/05/04 - 05:08:23
 # Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Version: 0.0.1.32
+# Version: 0.0.2.39
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
 # Description: 
 #  >
@@ -23,9 +23,14 @@ quteROOT="$XDG_CONFIG_HOME/qutebrowser"
 quteProfiles="$quteROOT/profiles"
 
 qNew(){
-  mkdir -p "$quteProfiles/$1/config"
-  ln -s "$quteROOT"/config.py "$quteProfiles/$1" 
-  ln -s "$quteROOT"/autoconfig.yml "$quteProfiles/$1/config" 
+  if [ ! -d "$quteProfiles/$1" ]; then
+    mkdir -p "$quteProfiles/$1/config"
+    ln -s "$quteROOT"/config.py "$quteProfiles/$1" 
+    ln -s "$quteROOT"/autoconfig.yml "$quteProfiles/$1/config" 
+  else
+    echo "This profile ($1) already exists!"
+    exit 1
+  fi
 }
 
 qList(){
@@ -35,5 +40,5 @@ qList(){
 qChoose(){
   run_profile=$(qList | dmenu -p "Select a profile")
   [ -n "$run_profile" ] && \
-    qutebrowser --config-py "$quteROOT/config.py" -B "$quteProfiles/$run_profile" 
+    qutebrowser --config-py "$quteROOT/config.py" -B "$quteProfiles/$run_profile" &
 }
