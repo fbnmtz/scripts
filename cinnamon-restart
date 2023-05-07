@@ -1,0 +1,11 @@
+#!/bin/bash
+#
+# Script: cinnamon-restart
+# Date..: 02/12/19, 16:17:17
+# Author: fabiano@core
+# Params:
+# 
+# 
+
+# use when cinnamon freezes
+export DISPLAY=:0.0 && cinnamon --replace &
