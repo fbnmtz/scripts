@@ -5,10 +5,10 @@
  Created: Friday, 2023/03/31 - 04:54:21
  Author.: @fbnmtz, (fabiano.matoz@gmail.com)
  ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
- Last Modified: Friday, 2023/04/14 - 02:19:53
+ Last Modified: Wednesday, 2023/05/10 - 21:56:54
  Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
  ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
- Version: 0.0.1.22
+ Version: 0.0.1.27
  ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
  Description: 
   >
@@ -54,9 +54,13 @@
 - [Index](#index)
 - [Install](#install)
 - [`aw`](#aw)
+- [`cmx`](#cmx)
+- [`gclone`](#gclone)
+- [`getMail`](#getmail)
 - [`mpvtube`](#mpvtube)
 - [`popcorn`](#popcorn)
 - [`xclip-cmd`](#xclip-cmd)
+- [`xclip-cmd`](#xclip-cmd-1)
 - [`xman`](#xman)
 - [`ytdl`](#ytdl)
 - [`ytinfo`](#ytinfo)
@@ -75,8 +79,12 @@ curl -sSL https://raw.githubusercontent.com/fbnmtz/scripts/master/install | bash
 ---
 
 ## `aw`
+## `cmx`
+## `gclone`
+## `getMail`
 ## `mpvtube`
 ## `popcorn`
+## `xclip-cmd`
 ## `xclip-cmd`
 ## `xman`
 ## `ytdl`
