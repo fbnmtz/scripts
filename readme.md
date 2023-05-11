@@ -5,17 +5,16 @@
  Created: Friday, 2023/03/31 - 04:54:21
  Author.: @fbnmtz, (fabiano.matoz@gmail.com)
  ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
- Last Modified: Wednesday, 2023/05/10 - 21:56:54
+ Last Modified: Wednesday, 2023/05/10 - 22:13:02
  Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
  ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
- Version: 0.0.1.27
+ Version: 0.0.1.33
  ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
  Description: 
   >
  ############################################################################
  HISTORY:
 -->
-
 
 <p align="center">
     <a href="https://www.codefactor.io/repository/github/fbnmtz/scripts/">
@@ -60,7 +59,6 @@
 - [`mpvtube`](#mpvtube)
 - [`popcorn`](#popcorn)
 - [`xclip-cmd`](#xclip-cmd)
-- [`xclip-cmd`](#xclip-cmd-1)
 - [`xman`](#xman)
 - [`ytdl`](#ytdl)
 - [`ytinfo`](#ytinfo)
@@ -79,15 +77,32 @@ curl -sSL https://raw.githubusercontent.com/fbnmtz/scripts/master/install | bash
 ---
 
 ## `aw`
+
+```
+awk wrapper: simplify the syntax to use awk
+```
+
 ## `cmx`
+```
+shortcut to add 'x' permission to a file
+```
 ## `gclone`
+```
+clone git repository to a default destination and open it on ranger
+```
+
 ## `getMail`
+
 ## `mpvtube`
+
 ## `popcorn`
+
 ## `xclip-cmd`
-## `xclip-cmd`
+
 ## `xman`
+
 ## `ytdl`
+
 ## `ytinfo`
 
 script to watch youtube videos using rofi and mpv.
