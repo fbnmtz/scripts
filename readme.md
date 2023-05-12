@@ -5,10 +5,10 @@
  Created: Friday, 2023/03/31 - 04:54:21
  Author.: @fbnmtz, (fabiano.matoz@gmail.com)
  ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
- Last Modified: Wednesday, 2023/05/10 - 22:13:02
+ Last Modified: Thursday, 2023/05/11 - 02:58:00
  Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
  ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
- Version: 0.0.1.33
+ Version: 0.0.1.37
  ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
  Description: 
   >
@@ -92,10 +92,21 @@ clone git repository to a default destination and open it on ranger
 ```
 
 ## `getMail`
+```
+save all your email addresses. Select one and copy to clipboard.
+```
 
 ## `mpvtube`
+```
+Manage and watch youtube videos with ROFI and MPV
+```
+
 
 ## `popcorn`
+```
+Search torrents and watch on mpv
+```
+
 
 ## `xclip-cmd`
 
