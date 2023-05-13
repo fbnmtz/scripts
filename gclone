@@ -2,11 +2,11 @@
 #
 # #############################################################
 # File...: gclone
-# Project: bin
+# Project: scripts (none)
 # Created: Sunday, 12/07/2020-21:24:15
 # Author: broken7c4 (none) - [fgm@7c4]
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~
-# Last Modified: Monday, 2021/02/08-16:52:07
+# Last Modified: Saturday, 2023/05/13 - 00:38:18
 # Modified By: bkn7c4
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~
 # Description: 
@@ -19,9 +19,9 @@ mkdir -p $DIR/repos.urls
 
 URL=$1
 
-project_name=$(echo $URL | rev | cut -d '/' -f1,2 | rev | tr -s '/' '.')
-git clone $URL $DIR/$project_name/
-echo "$URL" > $DIR/repos.urls/$project_name.gclone
+project_name=$(echo "$URL" | rev | cut -d '/' -f1,2 | rev | tr -s '/' '.')
+git clone "$URL" $DIR/$project_name/
+echo "$URL" > "$DIR/repos.urls/$project_name.gclone"
 
 notify-send "gclone" "$DIR/$project_name/"
-second-terminal -e ranger $DIR/$project_name/
+second-terminal -e ranger "$DIR/$project_name/"
