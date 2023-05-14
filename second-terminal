@@ -1,0 +1,64 @@
+#!/usr/bin/env bash
+#
+# ############################################################################
+# Project: scripts (none)
+# File...: second-terminal
+# Created: Thursday, 2020/04/23 - 20:21:38
+# Author.: @fbnmtz, fgm (fabiano.matoz@gmail.com)
+# ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
+# Last Modified: Sunday, 2023/05/14 - 01:03:21
+# Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
+# ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
+# Version: 0.2.1.11
+# ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
+# Description: 
+#  >
+# ############################################################################
+# HISTORY:
+#
+
+# load .profile config
+source "$HOME/.profile"
+
+current_terminal=$TERM3
+
+case $1 in
+	--session | --select-session) SELECT_SESSION=true; shift ;;
+	*) SELECT_SESSION=false;
+esac
+
+# no want choose a session?
+if [ "$SELECT_SESSION" != "true" ];then
+	# we have arguments?
+	if [ -n "$*" ]; then
+		# open a new term with then
+		$current_terminal "$@"
+	else
+		# no args? create a new session
+		session=$(date +"%Y%m%d-%H%M%S")
+		# open a term with temux 
+		$current_terminal -e tmux new-session -s "$session"
+		# $current_terminal -e byobu new-session -s $$
+	fi
+else
+	# select a existent session 
+	session=$(tmux list-sessions 2>/dev/null | \
+				rofi -no-config -columns 1 -lines 6 -i \
+					-dmenu -markup-rows -no-show-icons \
+					-theme ~/.config/rofi/rofi-menus/themes/mpdselect.rasi \
+					-p "TMUX Session's" | \
+				cut -d ':' -f1)
+	
+	# user input as `session` isnt empty?
+	if [ -n "$session" ]; then
+		# has a session like userInput?
+		if [ "$(tmux list-sessions 2>/dev/null | grep "$session")" != "" ]; then
+			# attach to this session
+			$current_terminal -e tmux attach-session -t "$session"
+		else
+			# no? open a new one with input as session name
+			# session=$(date +"%Y%m%d-%H%M%S")
+			$current_terminal -e tmux new-session -s "$session"
+		fi
+	fi
+fi
