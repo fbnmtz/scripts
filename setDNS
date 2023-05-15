@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+#
+# #############################################################
+# File...: setDNS
+# Project: bin (none)
+# Created: Tuesday, 2021/01/12-11:12:13
+# Author: bkn7c4 (none) - [bkn@7c4]
+# ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~
+# Last Modified: Thursday, 2022/06/23 - 03:43:19
+# Modified By: fgm
+# ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~
+# Description: 
+#  >
+# #############################################################
+#
+
+tee_cmd="sudo tee -a /etc/resolv.conf"
+# servers addresses
+DNS_ADDRS="
+8.8.8.8:google
+8.8.4.4:google
+"
+# 1.1.1.1:cloudflare
+# 191.36.0.94:ifsc
+while IFS=":" read -r ip provider; do
+    if [ "$ip" != "" ]; then
+        echo "# DNS provider: ${provider}" | $tee_cmd
+        echo "nameserver ${ip}" | $tee_cmd
+    fi
+done <<< "$DNS_ADDRS" 
