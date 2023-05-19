@@ -6,10 +6,10 @@
 # Created: Tuesday, 2023/04/25 - 20:14:21
 # Author.: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Last Modified: Friday, 2023/04/28 - 02:08:32
+# Last Modified: Friday, 2023/05/19 - 00:18:24
 # Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Version: 0.0.4.120
+# Version: 0.0.5.126
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
 # Description: 
 #  >
@@ -22,12 +22,16 @@ _xLIB_GETMAIL_=true
 
 # create default data directory
 xsetHome
+
+# app data file 
 MAILSTORE="$APP_HOME/mails"
 [ ! -f "$MAILSTORE" ] && touch "$MAILSTORE"
 
+# app config file
 MAILCONF=$APP_HOME/$APP.cfg
 _EDITOR=$(rconfig editor "$MAILCONF")
 
+# get an editor
 [ -z "$_EDITOR" ] && _EDITOR=$(getPath vim nano code gedit micro code sublime)
 
 xNew(){
