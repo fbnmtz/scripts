@@ -6,10 +6,10 @@
 # Created: Thursday, 2020/10/01 - 12:52:37
 # Author.: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Last Modified: Friday, 2023/04/28 - 02:11:38
+# Last Modified: Thursday, 2023/05/18 - 22:16:47
 # Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Version: 0.3.3.230
+# Version: 0.3.3.232
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
 # Description: 
 #  >
@@ -18,6 +18,7 @@
 #
 
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~
+# shellcheck disable=SC1090
 source ~/bin/xSHELL/init
 use args
 
@@ -61,7 +62,7 @@ xarg --id -f,--for-filename --code "args=\"%Y%m%d-%H%M%S\""                     
 # [ "$type" == "date" ] && { date_separator=$date_char; } #args=$(updateArgs); }
 # [ "$type" == "time" ] && { time_separator=$time_char; } #args=$(updateArgs); }
 
-xrun --xreject-unknow --xrequire-one --xversionrc "$@"
+xrun --xreject-unknow --xrequire-one --xversionrc --xcolors "$@"
 
 # if [ -n "$char" ]; then
 #     date_separator="$char"
