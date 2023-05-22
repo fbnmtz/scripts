@@ -6,10 +6,10 @@
 # Created: Saturday, 2023/04/22 - 21:31:31
 # Author.: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Last Modified: Saturday, 2023/04/22 - 23:56:49
+# Last Modified: Sunday, 2023/05/21 - 21:07:07
 # Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Version: 0.0.1.40
+# Version: 0.0.2.45
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
 # Description: 
 #  >
@@ -33,7 +33,7 @@ use args qute.lib
 xarg --id -c,--choose --var run:choose      --desc "choose and open a profile"
 xarg --id -l,--list   --var run:list        --desc "list profiles"
 xarg --id -n,--new    --var run:new,name+r  --desc "create a profile"
-# xarg --id -o,--open   --var run:open,name+r   --desc "open a given profile"
+xarg --id -o,--open   --var run:open,name+r   --desc "open a given profile"
 
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~
 # initilizae values before xrun (if you need to)
@@ -49,5 +49,6 @@ case "$run" in
     choose) qChoose      ;;
     list  ) qList        ;;
     new   ) qNew "$name" ;;
+    open  ) qOpen "$name";;
 esac    
 

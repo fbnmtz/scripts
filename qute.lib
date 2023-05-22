@@ -6,10 +6,10 @@
 # Created: Saturday, 2023/04/22 - 22:17:30
 # Author.: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Last Modified: Thursday, 2023/05/04 - 05:08:23
+# Last Modified: Sunday, 2023/05/21 - 21:09:58
 # Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Version: 0.0.2.39
+# Version: 0.0.3.47
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
 # Description: 
 #  >
@@ -41,4 +41,13 @@ qChoose(){
   run_profile=$(qList | dmenu -p "Select a profile")
   [ -n "$run_profile" ] && \
     qutebrowser --config-py "$quteROOT/config.py" -B "$quteProfiles/$run_profile" &
+}
+
+qOpen(){
+  if [ -d "$quteProfiles/$1" ]; then
+    qutebrowser --config-py "$quteROOT/config.py" -B "$quteProfiles/$1" 
+  else
+    echo "profile '$1' not found."
+    exit
+  fi
 }
