@@ -5,10 +5,10 @@
  Created: Friday, 2023/03/31 - 04:54:21
  Author.: @fbnmtz, (fabiano.matoz@gmail.com)
  ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
- Last Modified: Thursday, 2023/05/11 - 02:58:00
+ Last Modified: Monday, 2023/05/22 - 21:27:42
  Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
  ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
- Version: 0.0.1.37
+ Version: 0.0.1.40
  ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
  Description: 
   >
@@ -109,6 +109,12 @@ Search torrents and watch on mpv
 
 
 ## `xclip-cmd`
+```
+xclip wrapper with some features:
+* copy automaticly to buffers 'primary', 'secondary' and 'clipboard'.
+* save a history off clipboard usage.
+
+```
 
 ## `xman`
 
