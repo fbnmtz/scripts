@@ -7,10 +7,10 @@
 # Author.: Fabiano Matos, fgm (fabiano.matoz@gmail.com) 
 #        (take idea for another script)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Last Modified: Sunday, 2023/04/30 - 11:39:04
+# Last Modified: Tuesday, 2023/05/23 - 21:23:21
 # Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Version: 1.1.9.246
+# Version: 1.1.9.247
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
 # Description: 
 #  > popcorn (term version)
@@ -45,6 +45,7 @@ _peerflix="peerflix '<link>' --all --list --subtitles --no-quit --$player --"
 
 # web interface
 if [ -n "$pweb" ]; then 
+    xrequirements docker
     docker volume create --name popcorn-data type=none --opt device=/tmp/torrent-stream --opt o=bind
 
     docker run -p 9000:9000 -p 6881:6881 -p 6881:6881/udp \
