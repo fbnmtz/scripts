@@ -6,10 +6,10 @@
 # Created: Wednesday, 2021/01/27 - 10:46:26
 # Author.: @fbnmtz, (devel.fgm@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Last Modified: Tuesday, 2023/04/04 - 23:01:57
+# Last Modified: Wednesday, 2023/05/24 - 01:38:10
 # Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Version: 0.2.3.101
+# Version: 0.2.3.109
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
 # Description: 
 #  > https://unix.stackexchange.com/questions/61183/bash-script-that-reads-filenames-from-a-pipe-or-from-command-line-args
@@ -34,7 +34,7 @@ done
 
 # join all args to pass everything to xclip
 for arg in "${ARGS[@]}" ; do
-    if [ "$arg" == "--xclip-silent" ]; then
+    if [ "$arg" == "--silent" ] || [ "$arg" == "-s" ]; then
         NO_ALERT=true
     else
         output+="$arg "
