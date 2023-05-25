@@ -6,10 +6,10 @@
 # Created: Thursday, 2020/10/01 - 12:52:37
 # Author.: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Last Modified: Thursday, 2023/05/18 - 22:16:47
+# Last Modified: Thursday, 2023/05/25 - 00:27:23
 # Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Version: 0.3.3.232
+# Version: 0.3.4.234
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
 # Description: 
 #  >
@@ -58,6 +58,8 @@ xarg --id -R,--header-en    --code "export LC_TIME=en_US.UTF-8 2>/dev/null; args
 xarg --id -w,--weekday      --code "args+=\"%A\""                                                                         --desc "current weekday (name)"
 xarg --id -W,--weekday-en   --code "export LC_TIME=en_US.UTF-8 2>/dev/null; args+=\"%A\""                                 --desc "current weekday (name) (us format)"
 xarg --id -f,--for-filename --code "args=\"%Y%m%d-%H%M%S\""                                                               --desc "full date formated for filename"
+
+xarg --header "helper to get date in many formats"
 
 # [ "$type" == "date" ] && { date_separator=$date_char; } #args=$(updateArgs); }
 # [ "$type" == "time" ] && { time_separator=$time_char; } #args=$(updateArgs); }
