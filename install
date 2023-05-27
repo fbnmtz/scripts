@@ -6,16 +6,22 @@
 # Created: Friday, 2023/03/31 - 19:38:33
 # Author.: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Last Modified: Sunday, 2023/04/02 - 15:17:09
+# Last Modified: Friday, 2023/05/26 - 23:50:32
 # Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Version: 0.0.3.38
+# Version: 0.0.3.43
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
 # Description: 
 #  >
 # ############################################################################
 # HISTORY:
 #
+
+# check if git is available 
+if ! which git; then 
+    echo "please install git to continue."
+    exit 1
+fi
 
 github=https://github.com
 repo=fbnmtz/scripts
