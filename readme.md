@@ -5,10 +5,10 @@
  Created: Friday, 2023/03/31 - 04:54:21
  Author.: @fbnmtz, (fabiano.matoz@gmail.com)
  ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
- Last Modified: Monday, 2023/05/22 - 21:27:42
+ Last Modified: Saturday, 2023/05/27 - 03:40:30
  Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
  ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
- Version: 0.0.1.40
+ Version: 0.0.1.41
  ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
  Description: 
   >
@@ -119,6 +119,9 @@ xclip wrapper with some features:
 ## `xman`
 
 ## `ytdl`
+```
+    download a video/audio from a youtube url
+```
 
 ## `ytinfo`
 
