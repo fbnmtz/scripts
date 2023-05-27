@@ -6,10 +6,10 @@
 # Created: Thursday, 2020/09/22 - 12:58:16
 # Author.: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Last Modified: Sunday, 2023/04/02 - 15:04:59
+# Last Modified: Friday, 2023/05/26 - 23:41:21
 # Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Version: 0.1.3.5
+# Version: 1.0.1.22
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
 # Description: 
 #  > wrapper for awk command
@@ -18,13 +18,18 @@
 #
 
 if [[ "$@" =~ "-" ]];then
-  # notify-send "awk" "$1 has (-)"
+  # has an interval to cut?
   fst=$(echo $1 | cut -d '-' -f1)
   lst=$(echo $1 | cut -d '-' -f2)
-  awk_args=' BEGIN { first = '$fst'; last = '$lst' } { for (i = first; i < last; i++) { printf("%10s ", $i) } printf("%10s", $last)}'
+  awk_args=' BEGIN { 
+      first = '$fst'; last = '$lst' \
+    } { \
+    for (i = first; i < last; i++) { \
+        printf("%10s ", $i) \
+    } printf("%10s", $last) \
+  }'
 else
-  # notify-send "awk" "single"
-
+  # creat awk syntax for values
   awk_args="{printf("
     while [ "$1" != "" ]; do
       pf_s+="%s"
@@ -38,7 +43,7 @@ else
 
 fi
 
-cat - | while read LINE
-do
+# use column so separete results
+cat - | while read LINE ; do
   echo "${LINE}" | awk "$awk_args" | column -t -s ':'
 done
