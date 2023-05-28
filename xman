@@ -6,10 +6,10 @@
 # Created: 2020/02/27 - 00:04:23
 # Author.: @fbnmtz, fgm (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Last Modified: Monday, 2023/04/10 - 23:39:51
+# Last Modified: Sunday, 2023/05/28 - 01:48:20
 # Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Version: 0.2.2.68
+# Version: 1.0.1.92
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
 # Description: 
 #  >
@@ -17,7 +17,8 @@
 # HISTORY:
 #
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~
-# shellcheck disable=SC1090        # SC1090: Can't follow non-constant source. Use a directive to specify location.
+# SC1090: Can't follow non-constant source. Use a directive to specify location.
+# shellcheck disable=SC1090        
 source ~/bin/xSHELL/init
 use args
 
@@ -26,12 +27,27 @@ xrequirements find sed awk sort rofi man llppac
 xsetHome
 
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~
-xarg --id -b,--binary --var binary+o --desc "binary to show man"
-xrun --xversionrc "$@"
+xarg --id -b,--binary --var binary+r  --desc "binary to show man"
+xarg --id -l,--list   --var list:true --desc "list already generated man"
+xrun --xversionrc --xcolors "$@"
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~
 
+if [ -n "$list" ]; then
+  binary=$(ls $APP_HOME/* | \
+    rev | \
+    cut -d '/' -f1 |
+    rev |
+    cut -d '.' -f1 |
+    sort -u | \
+    rofi -no-config  \
+        -columns 1 \
+        -lines 10 \
+        -i -dmenu \
+        -p "Man Found")
+fi
+
 if [ -z "$binary" ]; then
-    SELECTED_BIN=$( find /usr/bin/ /bin/ /sbin/ -type f | \
+    binary=$( find /usr/bin/ /bin/ /sbin/ -type f | \
         sed 's/\/usr\/bin\///g' | \
         sed 's/\/bin\///g' | \
         sed 's/\/sbin\///g' | \
@@ -43,15 +59,13 @@ if [ -z "$binary" ]; then
             -i -dmenu \
             -p "Man Search" 
     )
-else
-    SELECTED_BIN=$binary
 fi
 
 # save man content and open 
-if [ "$SELECTED_BIN" != "" ]; then
-  filename="$APP_HOME/man-$SELECTED_BIN.ps"
+if [ "$binary" != "" ]; then
+  filename="$APP_HOME/$binary.ps"
   if [ ! -f "$filename" ]; then
-    man -t "$SELECTED_BIN" > $filename
+    man -t "$binary" > $filename
   fi
   llppac -t ps $filename
 fi
