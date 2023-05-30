@@ -5,10 +5,10 @@
  Created: Friday, 2023/03/31 - 04:54:21
  Author.: @fbnmtz, (fabiano.matoz@gmail.com)
  ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
- Last Modified: Saturday, 2023/05/27 - 03:40:30
+ Last Modified: Tuesday, 2023/05/30 - 00:14:11
  Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
  ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
- Version: 0.0.1.41
+ Version: 0.0.1.47
  ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
  Description: 
   >
@@ -58,6 +58,7 @@
 - [`getMail`](#getmail)
 - [`mpvtube`](#mpvtube)
 - [`popcorn`](#popcorn)
+- [`quteprofiles`](#quteprofiles)
 - [`xclip-cmd`](#xclip-cmd)
 - [`xman`](#xman)
 - [`ytdl`](#ytdl)
@@ -106,7 +107,10 @@ Manage and watch youtube videos with ROFI and MPV
 ```
 Search torrents and watch on mpv
 ```
-
+## `quteprofiles`
+```
+profile manager to user with qutebrowser
+```
 
 ## `xclip-cmd`
 ```
@@ -124,8 +128,9 @@ xclip wrapper with some features:
 ```
 
 ## `ytinfo`
-
+```
 script to watch youtube videos using rofi and mpv.
+```
 
 [Go Back](#index)
 
