@@ -1,0 +1,49 @@
+#!/usr/bin/env bash
+#
+# ############################################################################
+# Project: scripts (none)
+# File...: mpv-webcam
+# Created: Thursday, 2020/04/23 - 01:15:41
+# Author.: @fbnmtz, (fabiano.matoz@gmail.com)
+# ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
+# Last Modified: Thursday, 2023/06/01 - 01:48:12
+# Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
+# ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
+# Version: 0.2.1.106
+# ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
+# Description: 
+#  >
+# ############################################################################
+# HISTORY:
+# https://wiki.archlinux.org/index.php/Webcam_setup
+#
+############################################
+#
+
+while true; do
+    # list all webcams and select one to use
+    device=$(ls /dev/video* | tr -s ' ' '\n' | dmenu -p "$(basename "$0") -> select a device:")
+    
+    # device not empty?
+    if [ "${device}" != "" ]; then
+        # open MPV with webcam as source
+        mpv av://v4l2:"${device}" && exit;
+    else
+        # no input? escape on dmenu. lets leave.
+        exit 1
+    fi
+done
+
+# To use MJPEG as the pixelformat instead of the default, which in most cases is YUYV, you can run the following instead:
+# mpv --demuxer-lavf-format=video4linux2 --demuxer-lavf-o-set=input_format=mjpeg av://v4l2:/dev/video0
+
+# FFmpeg includes the video4linux2 and ALSA input devices that enable capturing webcam and audio input.
+
+# The following command will record a video webcam.mp4 from the webcam without audio, assuming that the webcam is correctly recognized under /dev/video0:
+
+# $ ffmpeg -f v4l2 -video_size 640x480 -i /dev/video0 -c:v libx264 -preset ultrafast webcam.mp4
+# where -video_size specifies the largest allowed image size from the webcam.
+
+# The above produces a silent video. To record a video webcam.mp4 from the webcam with audio:
+
+# $ ffmpeg -f v4l2 -video_size 640x480 -i /dev/video0 -f alsa -i default -c:v libx264 -preset ultrafast -c:a aac webcam.mp4
