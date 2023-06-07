@@ -1,0 +1,65 @@
+#!/usr/bin/env bash
+#
+# ############################################################################
+# Project: scripts (none)
+# File...: ocr
+# Created: unknown, 2020
+# Author.: @sdushantha, (Siddharth Dushantha)
+# ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
+# Last Modified: Wednesday, 2023/06/07 - 15:50:14
+# Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
+# ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
+# Version: 1.0.2.15
+# ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
+# Description: 
+#  > https://github.com/sdushantha/bin
+# ############################################################################
+# HISTORY:
+#
+
+# ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~    
+# shellcheck disable=SC1090,SC2154    
+# ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~    
+source ~/bin/xSHELL/init    
+use args 
+xrequirements tesseract maim xclip-cmd 
+
+TEXT_FILE="/tmp/ocr.txt"
+IMAGE_FILE="/tmp/ocr.png"
+
+# kill compton/picom
+toggleService --kill picom
+
+# Take screenshot by selecting the area
+maim -s "$IMAGE_FILE"
+
+# Get the exit code of the previous command.
+# So in this case, it is the screenshot command. If it did not exit with an
+# exit code 0, then it means the user canceled the process of taking a
+# screenshot by doing something like pressing the escape key
+STATUS=$?
+
+# If the user pressed the escape key or did something to terminate the proccess
+# taking a screenshot, then just exit
+[ $STATUS -ne 0 ] && exit 1
+
+# Do the magic (∩^o^)⊃━☆ﾟ.*･｡ﾟ
+# Notice how I have removing the extension .txt from the file path. This is
+# because tesseract adds .txt to the given file path anyways. So if we were to
+# specify /tmp/ocr.txt as the file path, tesseract would out the text to 
+# /tmp/ocr.txt.txt
+tesseract "$IMAGE_FILE" "${TEXT_FILE//\.txt/}"
+
+# Check if the text was detected by checking number
+# of lines in the file
+LINES=$(wc -l < $TEXT_FILE)
+if [ "$LINES" -eq 0 ]; then
+    notify-send "ocr" "no text was detected"
+    exit 1
+fi
+
+# Copy text to clipboard
+cat "$TEXT_FILE" | xclip-cmd --silent
+
+# Send a notification with the text that was grabbed using OCR
+notify-send "ocr" "$(cat $TEXT_FILE)"
