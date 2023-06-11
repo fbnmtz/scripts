@@ -1,0 +1,57 @@
+#!/usr/bin/env bash
+#
+# ############################################################################
+# Project: scripts (none)
+# File...: datesh
+# Created: Friday, 20/09/2019-01:13:35
+# Author.: @fbnmtz, (fabiano.matoz@gmail.com)
+# ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
+# Last Modified: Saturday, 2023/06/10 - 22:11:01
+# Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
+# ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
+# Version: 0.1.2.21
+# ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
+# Description: 
+#  >
+# ############################################################################
+# HISTORY:
+#
+
+default_format="+%Y/%m/%d-%H:%M:%S"
+
+while [ "$1" != "" ]; do
+    # flags -f -D -T
+    # date formats: -br -us
+    case "$1" in
+        # str formated to be used in filenames (sub '/',':' for '.')
+        -f | --formated) 
+            filename_format="| tr -d ' ' | tr -s ',' '.' | tr -s '/' '.' | tr -s ':' '.'" ;;
+        # return only date
+        -D | --date) 
+            cut_date_or_time="| tr -d ' ' | cut -d '-' -f1" ;;
+        # return only time
+        -T | --time) 
+            cut_date_or_time="| tr -d ' ' | cut -d '-' -f2" ;;
+        
+        # US format 
+        -us) args="+%Y/%m/%d-%H:%M:%S" ;;
+        # BR format 
+        -br) args="+%d/%m/%Y-%H:%M:%S" ;;
+        # header format (for bins header comment)
+        -hr|--header) args="+%A, %Y/%m/%d - %H:%M:%S" ;;
+        # date parts
+            -y) args="+%y" ;; # year (xx)
+            -Y) args="+%Y" ;; # year (xxxx)
+            -m) args="+%m" ;; # month
+            -d) args="+%d" ;; # day
+
+        # default format
+        *) args="$default_format"
+    esac
+    shift
+done
+
+# set format when no arg given
+[ -z "$args" ] && args="$default_format"
+
+eval "date \"$args\"" $cut_date_or_time $filename_format
