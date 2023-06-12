@@ -1,0 +1,165 @@
+#!/usr/bin/env bash
+#
+# ############################################################################
+# Project: scripts (none)
+# File...: xcolors
+# Created: Saturday, 2020/03/28 - 20:13:33
+# Author.: @fbnmtz, (fabiano.matoz@gmail.com)
+# ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
+# Last Modified: Monday, 2023/06/12 - 02:06:44
+# Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
+# ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
+# Version: 0.0.1.3
+# ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
+# Description: 
+#  >
+# ############################################################################
+# HISTORY:
+#
+
+configure(){
+    # app name
+    APP=$(basename $0)
+    
+    COLORS=(black red green brown blue purple cyan grey)
+    # normal mode or ligth mode
+    MODE=(0 1)
+    # 3 foregroud - 4 background
+    TYPE=(3 4)
+    START='\e['
+    END='\e[0m'
+    # COLOR['black']=30
+    # COLOR['red']=31
+    # COLOR['green']=32
+    # COLOR['brown']=33
+    # COLOR['blue']=34
+    # COLOR['purple']=35
+    # COLOR['cyan']=36
+    # COLOR['grey']=37
+
+    # Dark Gray     1;30
+    # Light Red     1;31
+    # Light Green   1;32
+    # Yellow        1;33
+    # Light Blue    1;34
+    # Light Purple  1;35
+    # Light Cyan    1;36
+    # White         1;37
+
+}
+
+usage(){
+    echo "usage: $APP [color] [text]"
+    echo -e "prints some text with color\n\nFOREGROUND COLORS"
+    echo -e "black  | b) color"
+    echo -e "red    | r) color"
+    echo -e "green  | g) color"
+    echo -e "yellow | y) color"
+    echo -e "blue   | B) color"
+    echo -e "pink   | p) color"
+    echo -e "cyan   | c) color"
+    echo -e "white  | w) color"
+    echo -e "\nBACKGROUND COLORS"
+    echo -e "bg-black  | -b) bgcolor"
+    echo -e "bg-red    | -r) bgcolor"
+    echo -e "bg-green  | -g) bgcolor"
+    echo -e "bg-yellow | -y) bgcolor"
+    echo -e "bg-blue   | -B) bgcolor"
+    echo -e "bg-pink   | -p) bgcolor"
+    echo -e "bg-cyan   | -c) bgcolor"
+    echo -e "bg-white  | -w) bgcolor"
+    echo -e "\nOPTIONS"
+    echo -e "--bold " 
+    echo -e "--dim " 
+    echo -e "--italic " 
+    echo -e "--underline " 
+    
+}
+
+# rum main code
+configure
+# requirements
+
+# quit if no param
+if [ "$1" == "" ]; then
+    usage
+    exit 1
+fi
+
+# output COMMAND
+CMD=echo
+# output cmd args
+ARGS=-e
+
+# ansi code escpe
+code="\033["
+# foreground colors
+color=""
+# background color
+bgcolor=""
+# formating option
+options=""
+# mode of color: normal or ligth
+mode='0'
+
+start=$code
+end=${code}0m
+
+# check all params
+while [ "$1" != "" ]; do
+    case "$1" in
+        black  | b) color="30";;
+        red    | r) color="31";;
+        green  | g) color="32";;
+        yellow | y) color="33";;
+        blue   | B) color="34";;
+        pink   | p) color="35";;
+        cyan   | c) color="36";;
+        white  | w) color="37";;
+
+        bg-black  | -b) bgcolor="40";;
+        bg-red    | -r) bgcolor="41";;
+        bg-green  | -g) bgcolor="42";;
+        bg-yellow | -y) bgcolor="43";;
+        bg-blue   | -B) bgcolor="44";;
+        bg-pink   | -p) bgcolor="45";;
+        bg-cyan   | -c) bgcolor="46";;
+        bg-white  | -w) bgcolor="47";;
+
+        --bold)      options+=";1";;
+        --dim)       options+=";2";;
+        --italic)    options+=";3";;
+        --underline) options+=";4";;
+        --blink)     options+=";5";;
+        # fix unespected behavior; when printing some text that have an param equals $APP 
+        #  this param was interpreted instead printed; now use escape '\' to avoid this
+        '\-'*) text+=" $(echo $1 | sed 's/\\//g') ";;
+        # \\-r) slash=$1; text+="${slash%\\} ";;
+        -n) ARGS+=" "-n
+            text+=" "
+            ;;
+        "\\") text+=" " ;;
+        --help | -h) usage;;
+        *) 
+            if [ -z "$text" ]; then
+                text+="$1"
+            else
+                text+=" $1"
+            fi
+  esac
+    # remove current $1 arg, and assing $2 to $1
+    shift
+done
+
+for i in $options $color $bgcolor; do
+    if [ -z "$codes" ]; then
+        codes+="$i"
+    else
+        codes+=";$i"
+    fi
+done
+
+output=$start$codes"m"$text$end
+
+# echo $output
+$CMD $ARGS $output
