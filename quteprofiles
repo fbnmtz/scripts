@@ -6,10 +6,10 @@
 # Created: Saturday, 2023/04/22 - 21:31:31
 # Author.: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Last Modified: Monday, 2023/05/29 - 00:20:24
+# Last Modified: Tuesday, 2023/06/13 - 00:07:06
 # Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Version: 0.0.2.46
+# Version: 0.0.2.50
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
 # Description: 
 #  >
@@ -31,26 +31,22 @@ use args qute.lib
 xrequirements qutebrowser dmenu
 
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~
-# define your arguments with 'xarg' function. Example below:
 xarg --id -c,--choose --var run:choose      --desc "choose and open a profile"
 xarg --id -l,--list   --var run:list        --desc "list profiles"
 xarg --id -n,--new    --var run:new,name+r  --desc "create a profile"
-xarg --id -o,--open   --var run:open,name+r   --desc "open a given profile"
-
-# ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~
-# initilizae values before xrun (if you need to)
+xarg --id -o,--open   --var run:open,name+r --desc "open a given profile"
+xarg --id -q,--quit   --var run:quit        --desc "quit qutebrowser"
 
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~
 # arguments will be checked/validated here (use --xhelp arg for more info)
 xrun --xreject-unknow --xrequire-one --xcolors "$@"
 
-# ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~
-# now put your code below
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~    
 case "$run" in    
     choose) qChoose      ;;
     list  ) qList        ;;
     new   ) qNew "$name" ;;
     open  ) qOpen "$name";;
+    quit  ) qQuit        ;;
 esac    
 

@@ -6,10 +6,10 @@
 # Created: Saturday, 2023/04/22 - 22:17:30
 # Author.: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Last Modified: Monday, 2023/05/29 - 00:22:00
+# Last Modified: Tuesday, 2023/06/13 - 00:07:47
 # Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Version: 0.0.3.50
+# Version: 0.0.3.51
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
 # Description: 
 #  >
@@ -50,6 +50,10 @@ qOpen(){
     echo "profile '$1' not found."
     exit
   fi
+}
+
+qQuit(){
+  pkill qutebrowser
 }
 
 xrequirements mkdir ln 
