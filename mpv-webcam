@@ -6,10 +6,10 @@
 # Created: Thursday, 2020/04/23 - 01:15:41
 # Author.: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Last Modified: Thursday, 2023/06/01 - 01:48:12
+# Last Modified: Wednesday, 2023/06/14 - 00:54:32
 # Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Version: 0.2.1.106
+# Version: 0.2.1.116
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
 # Description: 
 #  >
@@ -20,9 +20,21 @@
 ############################################
 #
 
+# ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~
+# shellcheck disable=SC1090,SC2154
+#   * SC1090: Can't follow non-constant source. Use a directive to specify location.
+#       -> cant follow or source usage
+#   * SC2154: var is referenced but not assigned.
+#       -> variables created by or library system (don't worry)
+
+source ~/bin/xSHELL/init
+xrequirements dmenu mpv
+
+# use args
+
 while true; do
     # list all webcams and select one to use
-    device=$(ls /dev/video* | tr -s ' ' '\n' | dmenu -p "$(basename "$0") -> select a device:")
+    device=$(ls /dev/video* | tr -s ' ' '\n' | dmenu -p "$APP -> select a device:")
     
     # device not empty?
     if [ "${device}" != "" ]; then
