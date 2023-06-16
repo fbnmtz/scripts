@@ -6,10 +6,10 @@
 # Created: Thursday, 2020/04/23 - 01:15:41
 # Author.: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Last Modified: Wednesday, 2023/06/14 - 00:54:32
+# Last Modified: Friday, 2023/06/16 - 00:26:53
 # Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Version: 0.2.1.116
+# Version: 0.2.1.132
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
 # Description: 
 #  >
@@ -28,13 +28,21 @@
 #       -> variables created by or library system (don't worry)
 
 source ~/bin/xSHELL/init
-xrequirements dmenu mpv
+xrequirements dmenu:rofi mpv
 
-# use args
+use utils io
+
+# create default data directory
+xsetHome
+
+# app config file
+APP_CONFIG=$APP_HOME/$APP.cfg
+[ ! -f "$APP_CONFIG" ] && echo "menu_app=dmenu" > "$APP_CONFIG"
+_MENU=$(rconfig menu_app "$APP_CONFIG")
 
 while true; do
     # list all webcams and select one to use
-    device=$(ls /dev/video* | tr -s ' ' '\n' | dmenu -p "$APP -> select a device:")
+    device=$(ls /dev/video* | tr -s ' ' '\n' | $_MENU -p "$APP -> select a device:")
     
     # device not empty?
     if [ "${device}" != "" ]; then
