@@ -6,10 +6,10 @@
 # Created: Thursday, 2020/04/23 - 01:15:41
 # Author.: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Last Modified: Friday, 2023/06/16 - 00:26:53
+# Last Modified: Saturday, 2023/06/17 - 00:11:08
 # Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Version: 0.2.1.132
+# Version: 0.2.1.140
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
 # Description: 
 #  >
@@ -28,7 +28,7 @@
 #       -> variables created by or library system (don't worry)
 
 source ~/bin/xSHELL/init
-xrequirements dmenu:rofi mpv
+xrequirements dmenu:rofi mpv tr
 
 use utils io
 
@@ -41,11 +41,15 @@ APP_CONFIG=$APP_HOME/$APP.cfg
 _MENU=$(rconfig menu_app "$APP_CONFIG")
 
 while true; do
+    # shellcheck disable=SC2012
     # list all webcams and select one to use
-    device=$(ls /dev/video* | tr -s ' ' '\n' | $_MENU -p "$APP -> select a device:")
+    device=$(ls /dev/video* | \
+        tr -s ' ' '\n' | \
+        $_MENU -p "$APP -> select a device:"
+    )
     
     # device not empty?
-    if [ "${device}" != "" ]; then
+    if [ -n "${device}" ]; then
         # open MPV with webcam as source
         mpv av://v4l2:"${device}" && exit;
     else
