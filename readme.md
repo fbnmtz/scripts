@@ -5,10 +5,10 @@
  Created: Friday, 2023/03/31 - 04:54:21
  Author.: @fbnmtz, (fabiano.matoz@gmail.com)
  ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
- Last Modified: Sunday, 2023/06/18 - 00:08:53
+ Last Modified: Monday, 2023/06/19 - 00:05:19
  Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
  ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
- Version: 0.0.1.48
+ Version: 0.0.1.51
  ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
  Description: 
   >
@@ -80,7 +80,7 @@ curl -sSL https://raw.githubusercontent.com/fbnmtz/scripts/master/install | bash
 ## `aw`
 
 ```
-awk wrapper: simplify the syntax to use awk
+awk wrapper to simplify usage
 ```
 
 ## `cmx`
@@ -127,12 +127,12 @@ show the man of selected binary to in a .ps format
 
 ## `ytdl`
 ```
-    download a video/audio from a youtube url
+download a video/audio from a youtube url
 ```
 
 ## `ytinfo`
 ```
-script to watch youtube videos using rofi and mpv.
+get info about vides/channels from YouTube.
 ```
 
 [Go Back](#index)
