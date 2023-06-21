@@ -5,10 +5,10 @@
  Created: Friday, 2023/03/31 - 04:54:21
  Author.: @fbnmtz, (fabiano.matoz@gmail.com)
  ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
- Last Modified: Monday, 2023/06/19 - 00:05:19
+ Last Modified: Wednesday, 2023/06/21 - 00:10:42
  Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
  ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
- Version: 0.0.1.51
+ Version: 0.0.1.55
  ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
  Description: 
   >
@@ -54,6 +54,7 @@
 - [Install](#install)
 - [`aw`](#aw)
 - [`cmx`](#cmx)
+- [`dmount`](#dmount)
 - [`gclone`](#gclone)
 - [`getMail`](#getmail)
 - [`mpvtube`](#mpvtube)
@@ -87,6 +88,11 @@ awk wrapper to simplify usage
 ```
 shortcut to add 'x' permission to a file
 ```
+## `dmount`
+```
+use 'dmenu' to mount a avaiable disk/partition
+```
+
 ## `gclone`
 ```
 clone git repository to a default destination and open it on ranger
