@@ -5,10 +5,10 @@
  Created: Friday, 2023/03/31 - 04:54:21
  Author.: @fbnmtz, (fabiano.matoz@gmail.com)
  ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
- Last Modified: Wednesday, 2023/06/21 - 00:10:42
+ Last Modified: Thursday, 2023/06/22 - 15:05:50
  Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
  ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
- Version: 0.0.1.55
+ Version: 0.0.1.58
  ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
  Description: 
   >
@@ -58,6 +58,7 @@
 - [`gclone`](#gclone)
 - [`getMail`](#getmail)
 - [`mpvtube`](#mpvtube)
+- [`ocr`](#ocr)
 - [`popcorn`](#popcorn)
 - [`quteprofiles`](#quteprofiles)
 - [`xclip-cmd`](#xclip-cmd)
@@ -90,7 +91,7 @@ shortcut to add 'x' permission to a file
 ```
 ## `dmount`
 ```
-use 'dmenu' to mount a avaiable disk/partition
+use 'dmenu' to mount an avaiable disk/partition
 ```
 
 ## `gclone`
@@ -107,7 +108,10 @@ save all your email addresses. Select one and copy to clipboard.
 ```
 Manage and watch youtube videos with ROFI and MPV
 ```
-
+## `ocr`
+```
+uses 'maim' and 'tesseract' to get a text with 'ocr'
+```
 
 ## `popcorn`
 ```
