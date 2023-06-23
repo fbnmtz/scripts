@@ -5,10 +5,10 @@
  Created: Friday, 2023/03/31 - 04:54:21
  Author.: @fbnmtz, (fabiano.matoz@gmail.com)
  ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
- Last Modified: Thursday, 2023/06/22 - 15:05:50
+ Last Modified: Friday, 2023/06/23 - 11:06:09
  Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
  ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
- Version: 0.0.1.58
+ Version: 0.0.1.61
  ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
  Description: 
   >
@@ -57,6 +57,7 @@
 - [`dmount`](#dmount)
 - [`gclone`](#gclone)
 - [`getMail`](#getmail)
+- [`mdisk`](#mdisk)
 - [`mpvtube`](#mpvtube)
 - [`ocr`](#ocr)
 - [`popcorn`](#popcorn)
@@ -102,6 +103,10 @@ clone git repository to a default destination and open it on ranger
 ## `getMail`
 ```
 save all your email addresses. Select one and copy to clipboard.
+```
+## `mdisk`
+```
+tool to verify, make mbr backups and mount/unmount disks
 ```
 
 ## `mpvtube`
