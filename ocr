@@ -6,10 +6,10 @@
 # Created: unknown, 2020
 # Author.: @sdushantha, (Siddharth Dushantha)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Last Modified: Wednesday, 2023/06/07 - 15:50:14
+# Last Modified: Saturday, 2023/06/24 - 01:21:07
 # Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Version: 1.0.2.15
+# Version: 1.0.2.27
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
 # Description: 
 #  > https://github.com/sdushantha/bin
@@ -24,11 +24,15 @@ source ~/bin/xSHELL/init
 use args 
 xrequirements tesseract maim xclip-cmd 
 
+xarg --id -d,--disable --var disable:true --desc "disable compositor (picom)"
+xarg --header "extract a text from screen/image with OCR"
+xrun --xreject-unknow --xversionrc --xcolors "$@"    
+
 TEXT_FILE="/tmp/ocr.txt"
 IMAGE_FILE="/tmp/ocr.png"
 
 # kill compton/picom
-toggleService --kill picom
+[ -n "$disable" ] && pkill picom
 
 # Take screenshot by selecting the area
 maim -s "$IMAGE_FILE"
