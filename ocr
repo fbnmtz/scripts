@@ -6,10 +6,10 @@
 # Created: unknown, 2020
 # Author.: @sdushantha, (Siddharth Dushantha)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Last Modified: Saturday, 2023/06/24 - 01:21:07
+# Last Modified: Sunday, 2023/06/25 - 10:04:38
 # Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Version: 1.0.2.27
+# Version: 1.0.2.37
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
 # Description: 
 #  > https://github.com/sdushantha/bin
@@ -24,15 +24,19 @@ source ~/bin/xSHELL/init
 use args 
 xrequirements tesseract maim xclip-cmd 
 
-xarg --id -d,--disable --var disable:true --desc "disable compositor (picom)"
+xarg --id -n,--no-compositor --var compositor:false --desc "disable compositor (picom)"
 xarg --header "extract a text from screen/image with OCR"
 xrun --xreject-unknow --xversionrc --xcolors "$@"    
 
 TEXT_FILE="/tmp/ocr.txt"
 IMAGE_FILE="/tmp/ocr.png"
 
-# kill compton/picom
-[ -n "$disable" ] && pkill picom
+# kill compositors
+[ -n "$compositor" ] && {
+    echo "killing compositors:" 
+    echo " '-> picom";   pkill picom; 
+    echo " '-> compton"; pkill compton; 
+}
 
 # Take screenshot by selecting the area
 maim -s "$IMAGE_FILE"
