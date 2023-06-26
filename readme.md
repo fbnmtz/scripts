@@ -5,10 +5,10 @@
  Created: Friday, 2023/03/31 - 04:54:21
  Author.: @fbnmtz, (fabiano.matoz@gmail.com)
  ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
- Last Modified: Friday, 2023/06/23 - 11:06:09
+ Last Modified: Sunday, 2023/09/10 - 09:40:25
  Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
  ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
- Version: 0.0.1.61
+ Version: 0.0.1.64
  ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
  Description: 
   >
@@ -55,6 +55,7 @@
 - [`aw`](#aw)
 - [`cmx`](#cmx)
 - [`dmount`](#dmount)
+- [`dumount`](#dumount)
 - [`gclone`](#gclone)
 - [`getMail`](#getmail)
 - [`mdisk`](#mdisk)
@@ -93,6 +94,10 @@ shortcut to add 'x' permission to a file
 ## `dmount`
 ```
 use 'dmenu' to mount an avaiable disk/partition
+```
+## `dumount`
+```
+use 'dmenu' to umount an avaiable disk/partition
 ```
 
 ## `gclone`
@@ -147,7 +152,7 @@ download a video/audio from a youtube url
 
 ## `ytinfo`
 ```
-get info about vides/channels from YouTube.
+get info about videos/channels from YouTube.
 ```
 
 [Go Back](#index)
