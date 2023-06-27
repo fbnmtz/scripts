@@ -6,10 +6,10 @@
 # Created: unknown, 2020
 # Author.: @sdushantha, (Siddharth Dushantha)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Last Modified: Sunday, 2023/06/25 - 10:04:38
+# Last Modified: Tuesday, 2023/06/27 - 09:04:34
 # Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Version: 1.0.2.37
+# Version: 1.0.3.44
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
 # Description: 
 #  > https://github.com/sdushantha/bin
@@ -39,17 +39,11 @@ IMAGE_FILE="/tmp/ocr.png"
 }
 
 # Take screenshot by selecting the area
-maim -s "$IMAGE_FILE"
-
-# Get the exit code of the previous command.
-# So in this case, it is the screenshot command. If it did not exit with an
-# exit code 0, then it means the user canceled the process of taking a
-# screenshot by doing something like pressing the escape key
-STATUS=$?
-
-# If the user pressed the escape key or did something to terminate the proccess
-# taking a screenshot, then just exit
-[ $STATUS -ne 0 ] && exit 1
+if ! maim -s "$IMAGE_FILE"; then 
+    # If the user pressed the escape key or did something to terminate the proccess
+    # taking a screenshot, then just exit
+    echo "quit" && exit 1
+fi
 
 # Do the magic (∩^o^)⊃━☆ﾟ.*･｡ﾟ
 # Notice how I have removing the extension .txt from the file path. This is
