@@ -6,10 +6,10 @@
 # Created: Wednesday, 2021/01/27 - 10:46:26
 # Author.: @fbnmtz, (devel.fgm@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Last Modified: Wednesday, 2023/05/24 - 01:38:10
+# Last Modified: Wednesday, 2023/06/28 - 13:13:00
 # Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Version: 0.2.3.109
+# Version: 0.2.4.123
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
 # Description: 
 #  > https://unix.stackexchange.com/questions/61183/bash-script-that-reads-filenames-from-a-pipe-or-from-command-line-args
@@ -21,7 +21,12 @@
 # shellcheck disable=SC1090,SC2154    
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~    
 source ~/bin/xSHELL/init
+use args 
 xrequirements xclip tee
+
+xarg --id -s,--silent --var xsilent:true --desc "disable notifications"
+xarg --header "wrapper to xclip"
+xrun --xversionrc --xcolors "$@"    
 
 # format an array with received args
     # ex:
@@ -34,9 +39,7 @@ done
 
 # join all args to pass everything to xclip
 for arg in "${ARGS[@]}" ; do
-    if [ "$arg" == "--silent" ] || [ "$arg" == "-s" ]; then
-        NO_ALERT=true
-    else
+    if [ "$arg" != "--silent" ] && [ "$arg" != "-s" ]; then
         output+="$arg "
     fi
 done
@@ -49,4 +52,4 @@ done
 # save clipboard history
 echo "$output" | tee -a ~/.fbnmtz/clipboard
 
-[ -z "$NO_ALERT" ] && notify-send "xclip" "$output"
+[ -z "$xsilent" ] && notify-send "xclip" "$output"
