@@ -6,10 +6,10 @@
 # Created: 2020/02/27 - 00:04:23
 # Author.: @fbnmtz, fgm (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Last Modified: Sunday, 2023/05/28 - 01:48:20
+# Last Modified: Thursday, 2023/06/29 - 01:26:08
 # Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Version: 1.0.1.92
+# Version: 1.0.2.118
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
 # Description: 
 #  >
@@ -32,40 +32,33 @@ xarg --id -l,--list   --var list:true --desc "list already generated man"
 xrun --xversionrc --xcolors "$@"
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~
 
+rofi_cmd="rofi -no-config -columns 1 -lines 10 -i -dmenu -p "
+
 if [ -n "$list" ]; then
-  binary=$(ls $APP_HOME/* | \
+  binary=$(find "$APP_HOME/" | \
     rev | \
     cut -d '/' -f1 |
     rev |
     cut -d '.' -f1 |
     sort -u | \
-    rofi -no-config  \
-        -columns 1 \
-        -lines 10 \
-        -i -dmenu \
-        -p "Man Found")
-fi
-
-if [ -z "$binary" ]; then
-    binary=$( find /usr/bin/ /bin/ /sbin/ -type f | \
-        sed 's/\/usr\/bin\///g' | \
-        sed 's/\/bin\///g' | \
-        sed 's/\/sbin\///g' | \
-        awk '{print $1}' | \
-        sort -u | \
-        rofi -no-config  \
-            -columns 1 \
-            -lines 10 \
-            -i -dmenu \
-            -p "Man Search" 
-    )
+    $rofi_cmd "Man Found" 
+  )
+elif [ -z "$binary" ]; then
+  binary=$( find /usr/bin/ /bin/ /sbin/ -type f | \
+    sed 's/\/usr\/bin\///g' | \
+    sed 's/\/bin\///g' | \
+    sed 's/\/sbin\///g' | \
+    awk '{print $1}' | \
+    sort -u | \
+    $rofi_cmd "Man Search" 
+  )
 fi
 
 # save man content and open 
-if [ "$binary" != "" ]; then
+if [ -n "$binary" ]; then
   filename="$APP_HOME/$binary.ps"
   if [ ! -f "$filename" ]; then
-    man -t "$binary" > $filename
+    man -t "$binary" > "$filename"
   fi
-  llppac -t ps $filename
+  llppac -t ps "$filename"
 fi
