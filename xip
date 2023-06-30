@@ -6,10 +6,10 @@
 # Created: Monday, 2022/01/31 - 20:28:15
 # Author.: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Last Modified: Friday, 2023/06/02 - 21:01:45
+# Last Modified: Friday, 2023/06/30 - 04:20:36
 # Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Version: 1.0.1.74
+# Version: 1.0.2.111
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
 # Description: 
 #  >
@@ -18,20 +18,23 @@
 #
 
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~
-# shellcheck disable=SC1091,SC2154
-
-# ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~
+# shellcheck disable=SC1090
 source ~/bin/xSHELL/init
-use utils
-xrequirements lshw grep aw tr ip
+use args utils
+xrequirements lshw grep aw tr ip curl
+
+xarg --id -i,--interfaces   --var action:interfaces --desc "available interfaces"
+xarg --id -a,--all          --var action:all        --desc "detailed information"
+xarg --id -e,--external-ip  --var action:external   --desc "external IP address"
+xarg --header "interfaces / IP information" 
+xrun --xreject-unknow --xversionrc --xcolors "$@"
 
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~
-# get physical interfaces
-IFACES=$(lshw 2> /dev/null | grep -A5 interface | grep logical | aw 3 | tr -s '\n' ' ')
+_IFACES=$(lshw 2> /dev/null | grep -A5 interface | grep logical | aw 3 | tr -s '\n' ' ')
+_FILTER="$(echo "${_IFACES[@]::-1}" | sed 's/ /\\|/g' )"
 
-# ${variable//search/replace}
-# filter="${IFACES[*]// /\\\|}"
-filter="$(echo "${IFACES[@]::-1}" | sed 's/ /\\|/g' )"
-echo -e "${IFACES[*]}\n"
-
-ip a | grep -A2 "$filter" | grep -v "inet6\|link\|valid_lft"
+case "$action" in
+  interfaces)  echo -e "${_IFACES[*]}\n" ;;
+  all       ) ip a | grep -A2 "$_FILTER" | grep -v "inet6\|link\|valid_lft" ;;
+  external  ) curl ifconfig.me ;;
+esac
