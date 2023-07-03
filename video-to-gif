@@ -1,0 +1,33 @@
+#!/usr/bin/env bash
+#
+# ############################################################################
+# Project: scripts (none)
+# File...: video-to-gif
+# Created: Tuesday, 2020/02/04 - 12:15:50
+# Author.: @fbnmtz, (fabiano.matoz@gmail.com)
+# ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
+# Last Modified: Sunday, 2023/07/02 - 21:06:02
+# Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
+# ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
+# Version: 1.0.3.14
+# ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
+# Description: 
+#  >
+# ############################################################################
+# HISTORY:
+#
+
+APPHOME="$HOME/videos/myGifs"
+mkdir -p "$APPHOME"
+
+# convert video into jpeg image in linux
+mplayer -ao null "$1" -vo jpeg:outdir="$APPHOME/$1.output"
+
+# convert video into jpeg image in linux
+convert "$APPHOME/$1.output"/* "$APPHOME/$1.output".gif
+
+# We can optimize the screenshots using convert command
+convert "$APPHOME/$1.output".gif -fuzz 10% -layers Optimize "$1".gif
+
+# remove unnecessary files
+rm -rf "$APPHOME/$1.output"/ "$APPHOME/$1.output".gif
