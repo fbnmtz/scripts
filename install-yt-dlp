@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+#
+# #############################################################
+# Project: scripts (none)
+# File...: install-yt-dlp
+# Created: quinta, 2022/02/10 - 12:53:52
+# Author.: Fabiano Matos, fgm (fabiano.matoz@gmail.com)  (fgm@7c4)
+# ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
+# Last Modified: Monday, 2023/07/03 - 01:29:40
+# Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
+# ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
+# Version: 0.0.1.2
+# ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
+# Description: 
+#  >
+# ############################################################################
+# HISTORY:
+#
+# #############################################################
+#
+
+curl -L https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp -o $HOME/bin/yt-dlp
+chmod a+rx $HOME/bin/yt-dlp
