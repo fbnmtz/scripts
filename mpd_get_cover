@@ -1,0 +1,78 @@
+#!/usr/bin/env bash
+#
+# ############################################################################
+# Project: scripts (none)
+# File...: /home/fgm/bin/mpd_get_cover
+# Created: Monday, 2013/00/00 - 00:00:00
+# Author.: @VyacheslavLevit, (unknown)
+# ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
+# Last Modified: Wednesday, 2023/07/05 - 14:05:23
+# Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
+# ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
+# Version: 1.0.2.10
+# ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
+# Description: 
+#  > Dirty script to download covers for the album of currently playing song by mpd
+# ############################################################################
+# HISTORY:
+
+MUSIC_DIR="$HOME/music"
+TEMPDIR=/var/tmp
+MAX_DOWNLOADS=20
+VIEWER=(qiv -tBI)
+GLYRC_ARGS=(--plugmax 2 --minsize 490)
+COVER='cover.$ext'               # might be '$artist - $album.$ext'
+COVERTXT="/tmp/cover.txt"
+
+if ! type mpc &>/dev/null || ! type glyrc &>/dev/null ; then
+    echo "mpc and glyrc are required"
+    exit 1
+fi
+
+artist="$(mpc --format %artist% current)"
+[[ $? != 0 ]] && { echo "mpd not running?" ; exit 1; }
+album="$(mpc --format %album% current)"
+file="$MUSIC_DIR/$(mpc --format %file% current)"
+
+echo "artist:$artist"
+echo "album:$album"
+
+if [[ -z "$artist" ]] || [[ -z "$album" ]] ; then
+    echo "artist or/and album field is empty"
+    exit 1
+fi
+
+if [[ ! -e "$file" ]] ; then
+    echo "File doesn't exist. Wrong MUSIC_DIR?"
+    exit 1
+fi
+
+album_dir="${file%/*}"
+glyrcdir="$TEMPDIR/glyrc"
+coverdir="$glyrcdir/$artist - $album"
+
+mkdir -p "$coverdir"
+# cd "$coverdir"
+glyrc cover -n "$MAX_DOWNLOADS" --artist "$artist" --album "$album" "${GLYRC_ARGS[@]}" -w "$coverdir"
+# glyrc cover -n "$MAX_DOWNLOADS" --artist "$artist" --album "$album" "${GLYRC_ARGS[@]}" -w /tmp
+"${VIEWER[@]}" "$coverdir"
+
+# if [[ ! -e "$COVERTXT" ]] ; then
+#     echo "No images selected ($COVERTXT does not exist)"
+#     exit 1
+# fi
+# coverfile="$(cat "$COVERTXT")"
+
+
+coverfile=$(ls "$coverdir" | tr -d '\n')
+# rm -f "$COVERTXT"
+if [[ ! -e "$coverdir/$coverfile" ]] ; then
+    echo "$coverfile doesn't exist"
+    exit 1
+fi
+
+ext="${coverfile##*.}"
+[[ "$ext" == "jpeg" ]] && ext=jpg
+eval dest=\"$COVER\"
+dest="$album_dir/$dest"
+cp "$coverdir/$coverfile" "$dest"
