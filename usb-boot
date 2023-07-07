@@ -1,0 +1,36 @@
+#!/usr/bin/env bash
+#
+# ############################################################################
+# Project: scripts (none)
+# File...: usb-boot
+# Created: Tuesday, 2020/02/04 - 00:07:38
+# Author.: @fbnmtz, (fabiano.matoz@gmail.com)
+# ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
+# Last Modified: Friday, 2023/07/07 - 00:11:07
+# Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
+# ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
+# Version: 0.0.1.17
+# ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
+# Description: 
+#  >
+# ############################################################################
+# HISTORY:
+#
+
+# ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~    
+# shellcheck disable=SC1090,SC2154    
+source ~/bin/xSHELL/init    
+use args ytdl.lib
+# ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~    
+xrequirements qemu-system-x86_64
+
+# ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~    
+xarg --id -u,--usb --var flag:usb,disk+r --desc "disk to test boot"      
+xarg --header "test boot on a USB device"
+xarg --footer "* this script uses 'qemu' and requires root privileges"
+    
+xrun --xreject-unknow --xrequire-one --xversionrc --xcolors "$@"    
+
+if [ -n "$disk" ]; then
+	sudo qemu-system-x86_64 -usb -usbdevice disk:$1  -boot menu=on  -m 512
+fi
