@@ -1,0 +1,241 @@
+#!/usr/bin/env bash
+#
+# ############################################################################
+# Project: scripts (none)
+# File...: wpm
+# Created: Tuesday, 2019/12/20 - 09:55:58
+# Author.: @fbnmtz, (fabiano.matoz@gmail.com)
+# ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
+# Last Modified: Thursday, 2023/07/13 - 00:07:59
+# Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
+# ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
+# Version: 1.2.3.119
+# ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
+# Description: 
+#  >
+# ############################################################################
+# HISTORY:
+#
+
+
+configure(){
+	# script name
+	APP=$(basename "$0")
+
+	# wallpapers directory
+	WALLPAPERS_DIR=~/wallpapers
+
+	# scritp home for temp files
+	MYHOME=/tmp/$APP
+	mkdir -p $MYHOME
+
+	# store all wallpapers
+	FILES=$MYHOME/files
+	# updateLIST
+
+	# status files to avoid multiple runs
+	statusfile=$MYHOME/status.log
+
+	GIFFILE=$MYHOME/gifs
+	mkdir -p $GIFFILE
+}
+status.create(){
+	# create temp status file
+	if [ ! -f $statusfile ]; then
+		touch $statusfile
+	fi
+
+	sts=$(cat $statusfile | grep -m 1 'status=' | cut -d '=' -f 2)
+	if [ "$sts" != "running" ]; then
+		# echo "status=running" > $statusfile
+		echo "seconds=$TIME" >> $statusfile
+		echo "root=$WALLPAPERS_DIR" >> $statusfile
+	fi
+}
+
+
+setWallpaper(){
+	file=$1
+	filetype="$(basename $file | cut -d '.' -f 2)"
+	# [ -z "$lastpid" ] && lastpid='x'
+	if [ "$filetype" == "gif" ]; then 
+			# pkill setGifWallpaper 2> /dev/null
+			# setGifWallpaper -w 0.010 -f $file &
+			
+			# pkill wallpaper-video 2> /dev/null
+			# for i in $(ps -aux | grep mpv | grep "\-\-mute \-\-wid=0" | aw 2); do 
+			# 	kill -9 $i
+			# done
+			for i in $(ps -aux | grep mpv | grep "\-\-mute \-\-wid=0" | aw 2); do kill -9 $i; done
+
+			# kill -9 $lastpid 
+			wallpaper-video $file &
+			# lastpid=$!
+	else
+			# pkill setGifWallpaper 2> /dev/null
+			# pkill wallpaper-video 2> /dev/null
+			# kill -9 $lastpid 
+
+			feh --bg-fill "$file"
+			# for i in $(ps -aux | grep mpv | grep "\-\-mute \-\-wid=0" | aw 2); do kill -9 $i; done
+	fi
+}
+
+setTime(){
+	requireARGS "$@"
+	ptime=${1}
+	# get current time in status file
+	ctime=$(cat $statusfile | grep -m 1 'seconds=' )
+	if [ "$ctime" != "" ]; then
+		if [ "$(echo $ctime | cut -d '=' -f2 )" != "$ptime" ]; then
+			sed -i -e "/seconds=/d" $statusfile
+			TIME=$ptime
+			echo "seconds=$TIME" >> $statusfile	
+			return 1
+		fi
+		sed -i -e "/seconds=/d" $statusfile
+	fi
+	TIME=$ptime
+	echo "seconds=$TIME" >> $statusfile
+}
+usage(){
+	usage_info="
+usage: $APP -t [SECONDS] -r [PATH] -d
+   -t, --time [value] 	time to daemon wait in each wallpaper
+   -r, --root [path]  	folder with images to use as wallpaper
+   -d, --daemon		starts a daemon to change wallpaper after \$time
+   -s, --status		prints daemon info
+   -w, --wallpaper	prints current wallpaper 
+   -q, --quit		stop daemon"
+	echo -e "$usage_info"
+}
+
+# catch ctrl-c interrupt
+function interruptManager {
+		echo "-- $APP interrupted $@"
+	# if [ "$1" == "2" ];then
+		rm $MYHOME/*
+		exit 2
+	# fi
+}
+
+wploop(){
+	
+	sts=$(cat $statusfile | grep -m 1 'status=' | cut -d '=' -f 2)
+	if [ "$sts" != "running" ]; then
+
+		echo "status=running" >> $statusfile
+		
+		while true; do
+			# for file in ${FILES[@]}; do
+			while IFS= read file; do
+				# wait time with each wallpaper
+				wtime=$(cat $statusfile | grep -m 1 'seconds=' | cut -d '=' -f 2)
+				
+				# set image file as backgroud (convert to create a FADE effect)
+				# convert $lastfile -fill black -colorize 50% transition.bg
+				# feh --bg-scale transition.bg
+				# convert $file -fill black -colorize 50% transition.bg
+				# feh --bg-scale transition.bg
+				
+				# feh --bg-fill "$file"
+				setWallpaper $file
+				
+				# if set BG is executed with no erros
+				if [[ ${PIPESTATUS[0]} -eq 0 ]]; then
+					# get current wallpaper name to 
+					# set new gif update
+					current=$(cat $statusfile | grep -m 1 'wallpaper=')
+					if [ "$current" == "" ]; then
+						echo "wallpaper=$file" >> $statusfile
+					else
+						# sed -i -e "s/[^=]*$/$file/g;t;d" $statusfile
+						sed -i -e "/wallpaper=/d" $statusfile
+						echo "wallpaper=$file" >> $statusfile
+					fi
+					#feh --randomize --bg-fill -r $1
+					sleep $wtime
+				fi
+				# save current file to make a FADE EFFECT
+				lastfile=$file
+			done < $FILES
+		done
+	else
+		puts r "$APP already running"
+	fi
+}
+
+setROOT(){
+	requireARGS "$@"
+	
+	WALLPAPERS_DIR=$1
+	sed -i -e "/root=/d" $statusfile
+	echo "root=$WALLPAPERS_DIR" >> $statusfile
+	updateLIST
+}
+updateLIST(){
+	find "$WALLPAPERS_DIR" -type f | sort -R > $FILES
+}
+
+requireARGS(){
+	if [ "$1" == "" ]; then
+		usage
+		exit 1
+	fi
+}
+
+# main app
+configure
+
+requireARGS "$@"
+
+# if [[ $# -eq 0 ]]; then
+# 	usage
+# 	exit 1
+# fi
+
+trap "interruptManager" 2 KILL QUIT SIGTERM
+# INT TERM KILL QUIT EXIT SIGTERM
+# 2 3 6 9 14 15
+
+while [ "$1" != "" ]; do
+    case "$1" in
+		-n | --next) puts next ;;
+		-p | --prev) puts prev ;;
+		-d | --daemon) 
+			# status.create
+			updateLIST
+			wploop &
+			;;
+		-t | --time)
+			shift
+			setTime $1
+			;;
+		-r | --root) 
+			shift
+			setROOT $1
+			puts "updated root folder to: $1"
+			;;
+		-s | --status)
+			if [ -f $statusfile ]; then 
+				cat $statusfile
+			else
+				puts "$APP daemon not running. use -d option to start a daemon."
+			fi
+			exit 1
+			;;
+		-w | --wallpaper)
+			if [ -f $statusfile ]; then 
+				wpp="$(cat $statusfile | grep -m 1 'wallpaper=' | cut -d '=' -f2)"
+				echo $wpp
+				# echo $wpp | xclip-cmd
+			else
+				puts "$APP daemon not running. use -d option to start a daemon."
+			fi
+			;;
+		-q | --quit)
+				pkill -x wpm && rm -rf $MYHOME && pkill setGifWallpaper
+			;;
+	esac
+	shift
+done
