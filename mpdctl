@@ -1,0 +1,39 @@
+#!/usr/bin/env bash
+#
+# ############################################################################
+# Project: scripts (none)
+# File...: mpdctl
+# Created: Sunday, 2023/07/16 - 12:05:00
+# Author.: @fbnmtz, (fabiano.matoz@gmail.com)
+# ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
+# Last Modified: Sunday, 2023/07/16 - 12:17:12
+# Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
+# ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
+# Version: 1.0.0.30
+# ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
+# Description: 
+#  >
+# ############################################################################
+# HISTORY:
+#
+source ~/bin/xSHELL/init
+use args
+xrequirements mpd mpc
+# ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~
+xarg --id -n,--next     --var action:next   --desc "next music"
+xarg --id -p,--prev     --var action:prev   --desc "previous music"
+xarg --block "Server Options"
+xarg --id -s,--start  --var action:start  --desc "start MPD server"
+xarg --id -q,--quit   --var action:quit   --desc "stop MPD server"
+xarg --id -u,--update --var action:update --desc "update MPD database"
+
+xrun --xreject-unknow --xrequire-one --xversionrc --xcolors "$@"
+
+# ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~
+case "$action" in
+  next  ) mpc next  ;;
+  prev  ) mpc prev  ;;
+  start ) mpd &     ;;
+  stop  ) pkill mpd ;;
+  update) mpc update --wait; mpc rescan --wait ;;
+esac
