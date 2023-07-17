@@ -6,10 +6,10 @@
 # Created: Sunday, 2023/07/16 - 12:05:00
 # Author.: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Last Modified: Sunday, 2023/07/16 - 12:17:12
+# Last Modified: Monday, 2023/07/17 - 00:07:42
 # Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Version: 1.0.0.30
+# Version: 1.0.2.40
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
 # Description: 
 #  >
@@ -18,10 +18,12 @@
 #
 source ~/bin/xSHELL/init
 use args
-xrequirements mpd mpc
+xrequirements mpd mpc pkill
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~
+xarg --block "Music Options"
 xarg --id -n,--next     --var action:next   --desc "next music"
 xarg --id -p,--prev     --var action:prev   --desc "previous music"
+xarg --id -P,--play-all --var action:pall   --desc "play all music on database"
 xarg --block "Server Options"
 xarg --id -s,--start  --var action:start  --desc "start MPD server"
 xarg --id -q,--quit   --var action:quit   --desc "stop MPD server"
@@ -36,4 +38,5 @@ case "$action" in
   start ) mpd &     ;;
   stop  ) pkill mpd ;;
   update) mpc update --wait; mpc rescan --wait ;;
+  pall  ) mpc listall | mpc add; mpc play ;;
 esac
