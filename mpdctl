@@ -6,10 +6,10 @@
 # Created: Sunday, 2023/07/16 - 12:05:00
 # Author.: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Last Modified: Monday, 2023/07/17 - 00:07:42
+# Last Modified: Tuesday, 2023/07/18 - 19:11:12
 # Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Version: 1.0.2.40
+# Version: 1.0.2.56
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
 # Description: 
 #  >
@@ -21,11 +21,15 @@ use args
 xrequirements mpd mpc pkill
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~
 xarg --block "Music Options"
-xarg --id -n,--next     --var action:next   --desc "next music"
-xarg --id -p,--prev     --var action:prev   --desc "previous music"
-xarg --id -P,--play-all --var action:pall   --desc "play all music on database"
+xarg --id -p,--play     --var action:play    --desc "play music of current playlist"
+xarg --id -n,--next     --var action:next    --desc "next music"
+xarg --id -p,--prev     --var action:prev    --desc "previous music"
+xarg --id -t,--toggle   --var action:toggle  --desc "toggle music"
+xarg --id -a,--play-all --var action:pall    --desc "play all music on database"
+xarg --id -c,--current  --var action:current --desc "show current music"
 xarg --block "Server Options"
 xarg --id -s,--start  --var action:start  --desc "start MPD server"
+xarg --id -S,--status --var action:status --desc "status of MPD server"
 xarg --id -q,--quit   --var action:quit   --desc "stop MPD server"
 xarg --id -u,--update --var action:update --desc "update MPD database"
 
@@ -33,10 +37,14 @@ xrun --xreject-unknow --xrequire-one --xversionrc --xcolors "$@"
 
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~
 case "$action" in
-  next  ) mpc next  ;;
-  prev  ) mpc prev  ;;
-  start ) mpd &     ;;
-  stop  ) pkill mpd ;;
-  update) mpc update --wait; mpc rescan --wait ;;
-  pall  ) mpc listall | mpc add; mpc play ;;
+  play   ) mpc play    ;;
+  next   ) mpc next    ;;
+  prev   ) mpc prev    ;;
+  toggle ) mpc toggle  ;;
+  current) mpc current ;;
+  start  ) mpd &       ;;
+  stop   ) pkill mpd   ;;
+  status ) mpc status  ;;
+  update ) mpc update --wait; mpc rescan --wait ;;
+  pall   ) mpc listall | mpc add; mpc play ;;
 esac
