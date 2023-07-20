@@ -1,0 +1,36 @@
+#!/usr/bin/env bash
+#
+# ############################################################################
+# Project: scripts (none)
+# File...: mpdctl.lib
+# Created: Thursday, 2023/07/20 - 00:02:53
+# Author.: @fbnmtz, (fabiano.matoz@gmail.com)
+# ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
+# Last Modified: Thursday, 2023/07/20 - 00:06:52
+# Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
+# ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
+# Version: 0.0.1.11
+# ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
+# Description: 
+#  >
+# ############################################################################
+# HISTORY:
+#
+
+_xLIB_MPDCTL_=true
+
+mUpdate(){
+  mpc update --wait; mpc rescan --wait
+}
+
+mPlayAll(){
+  mpc listall | mpc add; mpc play
+}
+
+mListPlay(){
+  music=$(mpc listall | rofi -dmenu -i -p "Select one Music"); 
+  [ -n "$music" ] && { 
+    echo "$music"; mpc clear; 
+    mpc search "(filename == '$music')" | mpc add && mpc play; 
+  } 
+}

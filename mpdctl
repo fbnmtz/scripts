@@ -6,10 +6,10 @@
 # Created: Sunday, 2023/07/16 - 12:05:00
 # Author.: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Last Modified: Sunday, 2023/09/10 - 15:21:44
+# Last Modified: Thursday, 2023/07/20 - 00:07:58
 # Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Version: 1.0.2.79
+# Version: 1.0.2.85
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
 # Description: 
 #  >
@@ -17,7 +17,7 @@
 # HISTORY:
 #
 source ~/bin/xSHELL/init
-use args
+use args mpdctl.lib
 xrequirements mpd mpc pkill
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~
 xarg --block "Music Options"
@@ -43,11 +43,10 @@ case "$action" in
   prev   ) mpc prev    ;;
   toggle ) mpc toggle  ;;
   current) mpc current ;;
-  lplay  ) m=$(mpc listall | rofi -dmenu -p "Select one Music"); [ -n "$m" ] && \
-    { echo $m; mpc clear; mpc search "(filename == '$m')" | mpc add && mpc play; } ;;
+  lplay  ) mListPlay   ;;
   start  ) mpd &       ;;
   stop   ) pkill mpd   ;;
   status ) mpc status  ;;
-  update ) mpc update --wait; mpc rescan --wait ;;
-  pall   ) mpc listall | mpc add; mpc play ;;
+  update ) mUpdate     ;;
+  pall   ) mPlayAll    ;;
 esac
