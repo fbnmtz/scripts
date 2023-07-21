@@ -6,10 +6,10 @@
 # Created: Thursday, 2023/07/20 - 00:02:53
 # Author.: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Last Modified: Thursday, 2023/07/20 - 00:06:52
+# Last Modified: Friday, 2023/07/21 - 07:54:00
 # Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Version: 0.0.1.11
+# Version: 0.0.2.42
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
 # Description: 
 #  >
@@ -28,9 +28,13 @@ mPlayAll(){
 }
 
 mListPlay(){
-  music=$(mpc listall | rofi -dmenu -i -p "Select one Music"); 
-  [ -n "$music" ] && { 
-    echo "$music"; mpc clear; 
-    mpc search "(filename == '$music')" | mpc add && mpc play; 
-  } 
+  # music=$(mpc listall | rofi -dmenu -i -p "Select one Music"); 
+  # music=$(mpc playlist | rofi -dmenu -i  -format "i%s" \ -p "Select one Music"); 
+  music=$(mpc playlist | rofi -dmenu -i  -format "d%s" \ -p "Select one Music"); 
+  if [ -n "$music" ]; then 
+    index=$(echo "$music" | cut -d '%' -f1) 
+    echo "$music";
+    echo $index
+    mpc play "$index"
+  fi
 }

@@ -6,10 +6,10 @@
 # Created: Sunday, 2023/07/16 - 12:05:00
 # Author.: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Last Modified: Thursday, 2023/07/20 - 00:07:58
+# Last Modified: Friday, 2023/07/21 - 07:53:52
 # Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Version: 1.0.2.85
+# Version: 1.0.3.88
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
 # Description: 
 #  >
@@ -23,11 +23,11 @@ xrequirements mpd mpc pkill
 xarg --block "Music Options"
 xarg --id -p,--play      --var action:play    --desc "play music of current playlist"
 xarg --id -n,--next      --var action:next    --desc "next music"
-xarg --id -p,--prev      --var action:prev    --desc "previous music"
+xarg --id -P,--prev      --var action:prev    --desc "previous music"
 xarg --id -t,--toggle    --var action:toggle  --desc "toggle music"
 xarg --id -a,--play-all  --var action:pall    --desc "play all music on database"
 xarg --id -c,--current   --var action:current --desc "show current music"
-xarg --id -l,--list-play --var action:lplay   --desc "list musics, select one and play it"
+xarg --id -l,--list-play --var action:lplay   --desc "list, select one and play it"
 xarg --block "Server Options"
 xarg --id -s,--start  --var action:start  --desc "start MPD server"
 xarg --id -S,--status --var action:status --desc "status of MPD server"
