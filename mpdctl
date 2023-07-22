@@ -6,10 +6,10 @@
 # Created: Sunday, 2023/07/16 - 12:05:00
 # Author.: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Last Modified: Friday, 2023/07/21 - 07:53:52
+# Last Modified: Saturday, 2023/07/22 - 13:04:53
 # Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Version: 1.0.3.88
+# Version: 1.0.4.93
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
 # Description: 
 #  >
@@ -28,6 +28,7 @@ xarg --id -t,--toggle    --var action:toggle  --desc "toggle music"
 xarg --id -a,--play-all  --var action:pall    --desc "play all music on database"
 xarg --id -c,--current   --var action:current --desc "show current music"
 xarg --id -l,--list-play --var action:lplay   --desc "list, select one and play it"
+xarg --id -L,--load      --var action:load    --desc "menu with load functions"
 xarg --block "Server Options"
 xarg --id -s,--start  --var action:start  --desc "start MPD server"
 xarg --id -S,--status --var action:status --desc "status of MPD server"
@@ -44,6 +45,7 @@ case "$action" in
   toggle ) mpc toggle  ;;
   current) mpc current ;;
   lplay  ) mListPlay   ;;
+  load   ) mLoad       ;;
   start  ) mpd &       ;;
   stop   ) pkill mpd   ;;
   status ) mpc status  ;;

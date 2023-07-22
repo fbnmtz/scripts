@@ -6,10 +6,10 @@
 # Created: Thursday, 2023/07/20 - 00:02:53
 # Author.: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Last Modified: Friday, 2023/07/21 - 07:54:00
+# Last Modified: Saturday, 2023/07/22 - 13:44:35
 # Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Version: 0.0.2.42
+# Version: 0.0.2.90
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
 # Description: 
 #  >
@@ -28,13 +28,25 @@ mPlayAll(){
 }
 
 mListPlay(){
-  # music=$(mpc listall | rofi -dmenu -i -p "Select one Music"); 
-  # music=$(mpc playlist | rofi -dmenu -i  -format "i%s" \ -p "Select one Music"); 
-  music=$(mpc playlist | rofi -dmenu -i  -format "d%s" \ -p "Select one Music"); 
+  local music=$(mpc playlist | rofi -dmenu -i  -format "d%s" \ -p "Select one Music"); 
   if [ -n "$music" ]; then 
-    index=$(echo "$music" | cut -d '%' -f1) 
+    local index=$(echo "$music" | cut -d '%' -f1) 
     echo "$music";
     echo $index
     mpc play "$index"
+  fi
+}
+
+mLoad(){
+  local menu="clear\nall\n"
+  menu+=$(mpc lsplaylists)
+  choice=$(echo -e "$menu" | rofi -dmenu -i -p "Playlist Functions")
+
+  if [ -n "$choice" ]; then
+    case "$choice" in
+      clear) mpc clear ;;
+      all  ) mpc listall | mpc add ;;
+      *    ) mpc clear && mpc load "$choice" && mpc play ;;
+    esac
   fi
 }
