@@ -5,10 +5,10 @@
  Created: Friday, 2023/03/31 - 04:54:21
  Author.: @fbnmtz, (fabiano.matoz@gmail.com)
  ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
- Last Modified: Sunday, 2023/09/10 - 09:40:25
+ Last Modified: Sunday, 2023/07/23 - 00:05:51
  Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
  ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
- Version: 0.0.1.64
+ Version: 0.0.1.69
  ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
  Description: 
   >
@@ -59,6 +59,7 @@
 - [`gclone`](#gclone)
 - [`getMail`](#getmail)
 - [`mdisk`](#mdisk)
+- [`mpdctl`](#mpdctl)
 - [`mpvtube`](#mpvtube)
 - [`ocr`](#ocr)
 - [`popcorn`](#popcorn)
@@ -76,13 +77,11 @@ Install `scripts collection` to your system
 
 ```bash
 curl -sSL https://raw.githubusercontent.com/fbnmtz/scripts/master/install | bash 
-
 ```
 
 ---
 
 ## `aw`
-
 ```
 awk wrapper to simplify usage
 ```
@@ -113,7 +112,10 @@ save all your email addresses. Select one and copy to clipboard.
 ```
 tool to verify, make mbr backups and mount/unmount disks
 ```
-
+## `mpdctl`
+```
+script to control MPD music server
+```
 ## `mpvtube`
 ```
 Manage and watch youtube videos with ROFI and MPV
