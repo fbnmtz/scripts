@@ -6,10 +6,10 @@
 # Created: unknown, 2020
 # Author.: @sdushantha, (Siddharth Dushantha)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Last Modified: Tuesday, 2023/06/27 - 09:04:34
+# Last Modified: Monday, 2023/07/24 - 01:09:30
 # Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Version: 1.0.3.44
+# Version: 1.0.3.45
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
 # Description: 
 #  > https://github.com/sdushantha/bin
@@ -61,7 +61,7 @@ if [ "$LINES" -eq 0 ]; then
 fi
 
 # Copy text to clipboard
-cat "$TEXT_FILE" | xclip-cmd --silent
+xclip-cmd --silent < $TEXT_FILE
 
 # Send a notification with the text that was grabbed using OCR
 notify-send "ocr" "$(cat $TEXT_FILE)"
