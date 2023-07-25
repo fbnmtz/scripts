@@ -6,10 +6,10 @@
 # Created: Saturday, 2023/04/22 - 21:31:31
 # Author.: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Last Modified: Tuesday, 2023/06/13 - 00:07:06
+# Last Modified: Tuesday, 2023/07/25 - 20:05:58
 # Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Version: 0.0.2.50
+# Version: 0.0.3.55
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
 # Description: 
 #  >
@@ -19,15 +19,8 @@
 
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~
 # shellcheck disable=SC1090,SC2154
-#   * SC1090: Can't follow non-constant source. Use a directive to specify location.
-#       -> cant follow or source usage
-#   * SC2154: var is referenced but not assigned.
-#       -> variables created by or library system (don't worry)
-
-# ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~
 source ~/bin/xSHELL/init
 use args qute.lib
-
 xrequirements qutebrowser dmenu
 
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~
@@ -37,8 +30,6 @@ xarg --id -n,--new    --var run:new,name+r  --desc "create a profile"
 xarg --id -o,--open   --var run:open,name+r --desc "open a given profile"
 xarg --id -q,--quit   --var run:quit        --desc "quit qutebrowser"
 
-# ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~
-# arguments will be checked/validated here (use --xhelp arg for more info)
 xrun --xreject-unknow --xrequire-one --xcolors "$@"
 
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~    
