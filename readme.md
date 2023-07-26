@@ -5,10 +5,10 @@
  Created: Friday, 2023/03/31 - 04:54:21
  Author.: @fbnmtz, (fabiano.matoz@gmail.com)
  ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
- Last Modified: Sunday, 2023/07/23 - 00:05:51
+ Last Modified: Wednesday, 2023/07/26 - 00:05:07
  Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
  ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
- Version: 0.0.1.69
+ Version: 0.0.1.70
  ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
  Description: 
   >
@@ -58,6 +58,7 @@
 - [`dumount`](#dumount)
 - [`gclone`](#gclone)
 - [`getMail`](#getmail)
+- [`mdate`](#mdate)
 - [`mdisk`](#mdisk)
 - [`mpdctl`](#mpdctl)
 - [`mpvtube`](#mpvtube)
@@ -108,6 +109,11 @@ clone git repository to a default destination and open it on ranger
 ```
 save all your email addresses. Select one and copy to clipboard.
 ```
+## `mdate`
+```
+some date functions
+```
+
 ## `mdisk`
 ```
 tool to verify, make mbr backups and mount/unmount disks
