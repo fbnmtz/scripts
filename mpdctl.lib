@@ -6,10 +6,10 @@
 # Created: Thursday, 2023/07/20 - 00:02:53
 # Author.: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Last Modified: Saturday, 2023/07/22 - 13:44:35
+# Last Modified: Friday, 2023/07/28 - 10:00:14
 # Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Version: 0.0.2.90
+# Version: 0.0.3.96
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
 # Description: 
 #  >
@@ -40,7 +40,7 @@ mListPlay(){
 mLoad(){
   local menu="clear\nall\n"
   menu+=$(mpc lsplaylists)
-  choice=$(echo -e "$menu" | rofi -dmenu -i -p "Playlist Functions")
+  choice=$(echo -e "$menu" | rofi -no-config -dmenu -i -p "Playlist Functions")
 
   if [ -n "$choice" ]; then
     case "$choice" in
