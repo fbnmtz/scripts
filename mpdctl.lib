@@ -6,10 +6,10 @@
 # Created: Thursday, 2023/07/20 - 00:02:53
 # Author.: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Last Modified: Saturday, 2023/07/29 - 18:05:40
+# Last Modified: Sunday, 2023/07/30 - 01:07:14
 # Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Version: 0.0.4.107
+# Version: 0.0.5.115
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
 # Description: 
 #  >
@@ -24,6 +24,13 @@ _ROFI="rofi -no-config -dmenu -i -p"
 
 # validates rofi installation
 xrequirements rofi
+
+_mpd_check(){
+  if ! pgrep mpd; then 
+    echo "Error! MPD is not running."
+    exit 1
+  fi
+}
 
 mUpdate(){
   mpc update --wait; mpc rescan --wait

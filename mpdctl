@@ -6,10 +6,10 @@
 # Created: Sunday, 2023/07/16 - 12:05:00
 # Author.: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Last Modified: Thursday, 2023/07/27 - 00:02:36
+# Last Modified: Sunday, 2023/07/30 - 01:05:54
 # Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Version: 1.0.5.115
+# Version: 1.0.6.118
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
 # Description: 
 #  >
@@ -37,6 +37,9 @@ xarg --id -q,--quit   --var action:quit   --desc "stop MPD server"
 xarg --id -u,--update --var action:update --desc "update MPD database"
 
 xrun --xreject-unknow --xrequire-one --xversionrc --xcolors "$@"
+
+# verify MPD
+_mpd_check
 
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~
 case "$action" in
