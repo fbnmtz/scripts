@@ -6,16 +6,18 @@
 # Created: Sunday, 2023/07/16 - 12:05:00
 # Author.: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Last Modified: Sunday, 2023/07/30 - 01:05:54
+# Last Modified: Monday, 2023/07/31 - 01:04:34
 # Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Version: 1.0.6.118
+# Version: 1.0.7.122
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
 # Description: 
 #  >
 # ############################################################################
 # HISTORY:
 #
+# 
+# shellcheck disable=SC1090
 source ~/bin/xSHELL/init
 use args mpdctl.lib
 xrequirements mpd mpc pkill
@@ -42,6 +44,7 @@ xrun --xreject-unknow --xrequire-one --xversionrc --xcolors "$@"
 _mpd_check
 
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~
+# shellcheck disable=SC2154
 case "$action" in
   play   ) mpc play    ;;
   next   ) mpc next    ;;
