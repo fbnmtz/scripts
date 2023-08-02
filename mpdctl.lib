@@ -6,10 +6,10 @@
 # Created: Thursday, 2023/07/20 - 00:02:53
 # Author.: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Last Modified: Sunday, 2023/07/30 - 01:07:14
+# Last Modified: Tuesday, 2023/08/01 - 23:09:02
 # Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Version: 0.0.5.115
+# Version: 0.0.6.121
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
 # Description: 
 #  >
@@ -41,17 +41,19 @@ mPlayAll(){
 }
 
 mListPlay(){
-  local music=$(mpc playlist | $_ROFI "Select one Music" -format "d%s"); 
+  local music index
+  music=$(mpc playlist | $_ROFI "Select one Music" -format "d%s"); 
   if [ -n "$music" ]; then 
-    local index=$(echo "$music" | cut -d '%' -f1) 
+    index=$(echo "$music" | cut -d '%' -f1) 
     echo "$music";
-    echo $index
+    echo "$index"
     mpc play "$index"
   fi
 }
 
 mLoad(){
-  local menu="clear\nall\n"
+  local menu choice
+  menu="clear\nall\n"
   menu+=$(mpc lsplaylists)
   choice=$(echo -e "$menu" | $_ROFI "Playlist Functions")
 
