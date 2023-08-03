@@ -6,10 +6,10 @@
 # Created: Sunday, 2023/07/16 - 12:05:00
 # Author.: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Last Modified: Wednesday, 2023/08/02 - 00:06:03
+# Last Modified: Thursday, 2023/08/03 - 10:11:08
 # Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Version: 1.0.8.131
+# Version: 1.0.9.134
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
 # Description: 
 #  >
@@ -32,6 +32,8 @@ xarg --id -c,--current   --var action:current   --desc "show current music"
 xarg --id -l,--list-play --var action:lplay     --desc "select and play music"
 xarg --id -p,--playlist  --var action:playlists --desc "playlists functions"
 xarg --id -s,--status    --var action:status    --desc "music status"
+xarg --id -w,--watch     --var action:watch     --desc "watch music status"
+
 xarg --group "Server Options"
 xarg --id -r,--run    --var action:run    --desc "start MPD server"
 xarg --id -S,--stats  --var action:stats  --desc "stats of MPD server"
@@ -59,4 +61,5 @@ case "$action" in
   status   ) mpc status  ;;
   update   ) mUpdate     ;;
   pall     ) mPlayAll    ;;
+  watch    ) mWatch      ;;
 esac
