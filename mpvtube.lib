@@ -6,10 +6,10 @@
 # Created: Friday, 2022/02/11 - 23:14:08
 # Author.: @fbnmtz, fgm (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Last Modified: Tuesday, 2023/04/25 - 23:24:57
+# Last Modified: Friday, 2023/08/04 - 16:00:56
 # Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Version: 0.1.8.761
+# Version: 0.1.9.775
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
 # Description: 
 #  >
@@ -302,7 +302,7 @@ createPlaylistForChannel(){
     fi
 
     if [ "$channel_name" == "" ]; then
-        channel_name=$(ytctl -cn $linktoplay | tr -s ' ' '-' | tr '[:upper:]' '[:lower:]' )
+        channel_name=$(ytinfo -cn $linktoplay | tr -s ' ' '-' | tr '[:upper:]' '[:lower:]' )
         sed -i 's,'"$linktoplay"','"$linktoplay@$channel_name"',g' "$playlist"
     fi
 
