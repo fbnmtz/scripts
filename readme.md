@@ -5,10 +5,10 @@
  Created: Friday, 2023/03/31 - 04:54:21
  Author.: @fbnmtz, (fabiano.matoz@gmail.com)
  ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
- Last Modified: Wednesday, 2023/07/26 - 00:05:07
+ Last Modified: Saturday, 2023/08/05 - 22:01:28
  Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
  ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
- Version: 0.0.1.70
+ Version: 0.0.1.74
  ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
  Description: 
   >
@@ -122,6 +122,38 @@ tool to verify, make mbr backups and mount/unmount disks
 ```
 script to control MPD music server
 ```
+```bash
+mpdctl -h
+
+usage:
+  mpdctl [OPTIONS]
+
+-> Music Options:
+   -p,  --play            play music of current playlist
+   -N,  --next            next music
+   -P,  --prev            previous music
+   -t,  --toggle          toggle music
+   -A,  --all             play all music on database
+   -c,  --current         show current music
+   -l,  --list-play       select and play music
+   -p,  --playlist        playlists functions
+   -s,  --status          music status
+   -w,  --watch           watch music status
+
+-> Server Options:
+   -r,  --run             start MPD server
+   -S,  --stats           stats of MPD server
+   -q,  --quit            stop MPD server
+   -u,  --update          update MPD database
+
+-> Information Options:
+   -h,  --help            show this help
+   -v,  --version         print version and exit
+
+v1.0.9-rc134 - writen by @fbnmtz 2023
+
+```
+
 ## `mpvtube`
 ```
 Manage and watch youtube videos with ROFI and MPV
