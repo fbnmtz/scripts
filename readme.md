@@ -5,10 +5,10 @@
  Created: Friday, 2023/03/31 - 04:54:21
  Author.: @fbnmtz, (fabiano.matoz@gmail.com)
  ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
- Last Modified: Saturday, 2023/08/05 - 22:01:28
+ Last Modified: Sunday, 2023/08/06 - 07:02:48
  Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
  ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
- Version: 0.0.1.74
+ Version: 0.0.1.78
  ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
  Description: 
   >
@@ -122,6 +122,8 @@ tool to verify, make mbr backups and mount/unmount disks
 ```
 script to control MPD music server
 ```
+<details close="true">
+
 ```bash
 mpdctl -h
 
@@ -153,6 +155,7 @@ usage:
 v1.0.9-rc134 - writen by @fbnmtz 2023
 
 ```
+</details>
 
 ## `mpvtube`
 ```
