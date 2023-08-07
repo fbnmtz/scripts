@@ -6,10 +6,10 @@
 # Created: Sunday, 2023/07/16 - 12:05:00
 # Author.: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Last Modified: Thursday, 2023/08/03 - 10:11:08
+# Last Modified: Tuesday, 2023/09/26 - 18:48:19
 # Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Version: 1.0.9.134
+# Version: 1.0.9.135
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
 # Description: 
 #  >
@@ -30,7 +30,7 @@ xarg --id -t,--toggle    --var action:toggle    --desc "toggle music"
 xarg --id -A,--all       --var action:pall      --desc "play all music on database"
 xarg --id -c,--current   --var action:current   --desc "show current music"
 xarg --id -l,--list-play --var action:lplay     --desc "select and play music"
-xarg --id -p,--playlist  --var action:playlists --desc "playlists functions"
+xarg --id -L,--playlist  --var action:playlists --desc "playlists functions"
 xarg --id -s,--status    --var action:status    --desc "music status"
 xarg --id -w,--watch     --var action:watch     --desc "watch music status"
 

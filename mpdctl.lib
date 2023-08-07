@@ -6,10 +6,10 @@
 # Created: Thursday, 2023/07/20 - 00:02:53
 # Author.: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Last Modified: Thursday, 2023/08/03 - 10:10:51
+# Last Modified: Tuesday, 2023/09/26 - 18:49:06
 # Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Version: 0.0.8.128
+# Version: 0.0.8.130
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
 # Description: 
 #  >
@@ -23,7 +23,7 @@ _xLIB_MPDCTL_=true
 _ROFI="rofi -no-config -dmenu -i -p"
 
 # validates installation of required binaries
-xrequirements rofi watch
+xrequirements rofi watch pgrep cut
 
 _mpd_check(){
   if ! pgrep mpd >/dev/null; then 
