@@ -6,10 +6,10 @@
 # Created: Tuesday, 2020/02/04 - 00:07:38
 # Author.: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Last Modified: Tuesday, 2023/08/08 - 20:03:21
+# Last Modified: Wednesday, 2023/08/09 - 00:00:26
 # Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Version: 0.0.2.27
+# Version: 0.0.3.36
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
 # Description: 
 #  >
@@ -32,7 +32,7 @@ xarg --footer "* this script uses 'qemu' and requires root privileges"
 xrun --xreject-unknow --xrequire-one --xversionrc --xcolors "$@"    
 
 if [ -n "$disk" ]; then
-	_cmd_=$(echo $_cmd_ | sed "s/<disk>/$disk/")
-	echo $_cmd_
-	sudo $_cmd_
+	_cmd_=${_cmd_/<disk>/$disk}
+	echo "$_cmd_"
+	sudo "$_cmd_"
 fi
