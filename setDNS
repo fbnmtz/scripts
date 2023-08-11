@@ -1,30 +1,61 @@
 #!/usr/bin/env bash
 #
-# #############################################################
+# ############################################################################
+# Project: scripts (none)
 # File...: setDNS
-# Project: bin (none)
-# Created: Tuesday, 2021/01/12-11:12:13
-# Author: bkn7c4 (none) - [bkn@7c4]
-# ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~
-# Last Modified: Thursday, 2022/06/23 - 03:43:19
-# Modified By: fgm
-# ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~
+# Created: Monday, 2021/01/12 - 11:12:40
+# Author.: @fbnmtz, (fabiano.matoz@gmail.com)
+# ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
+# Last Modified: Friday, 2023/08/11 - 02:43:36
+# Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
+# ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
+# Version: 0.1.3.62
+# ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
 # Description: 
 #  >
-# #############################################################
+# ############################################################################
+# HISTORY:
 #
+
+# shellcheck disable=SC1090
+source ~/bin/xSHELL/init
+use args utils
+xrequirements tee sudo
+
+# initialize APP home
+xsetHome
 
 tee_cmd="sudo tee -a /etc/resolv.conf"
 # servers addresses
-DNS_ADDRS="
+DNS_ADDRS="# DNS config
 8.8.8.8:google
 8.8.4.4:google
+1.1.1.1:cloudflare
 "
-# 1.1.1.1:cloudflare
-# 191.36.0.94:ifsc
-while IFS=":" read -r ip provider; do
-    if [ "$ip" != "" ]; then
-        echo "# DNS provider: ${provider}" | $tee_cmd
-        echo "nameserver ${ip}" | $tee_cmd
-    fi
-done <<< "$DNS_ADDRS" 
+DNS_FILE="$APP_HOME/dns_list"
+if [ ! -f "$DNS_FILE" ]; then 
+    echo "$DNS_ADDRS" > "$DNS_FILE"
+fi
+
+
+# get one editor
+EDITOR=$(getPath micro vim nano)
+
+xarg --id -a,--all  --var m:all           --desc "add all DNS servers listed in the configuration"
+xarg --id -e,--edit --var m:edit,EDITOR+o --desc "edit config file"
+
+xrun --xreject-unknow --xrequire-one --xversionrc --xcolors "$@"
+
+mAll(){
+    while IFS=":" read -r ip provider; do
+        if [ "$ip" != "" ]; then
+            echo "# DNS provider: ${provider}" | $tee_cmd
+            echo "nameserver ${ip}" | $tee_cmd
+        fi
+    done <<< "$DNS_FILE" 
+}
+
+case "$m" in
+    all ) mAll ;;
+    edit) $EDITOR "$DNS_FILE" ;;
+esac
