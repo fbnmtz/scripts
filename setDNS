@@ -6,10 +6,10 @@
 # Created: Monday, 2021/01/12 - 11:12:40
 # Author.: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Last Modified: Friday, 2023/08/11 - 02:43:36
+# Last Modified: Saturday, 2023/08/12 - 18:09:47
 # Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Version: 0.1.3.62
+# Version: 0.1.4.89
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
 # Description: 
 #  >
@@ -37,11 +37,12 @@ if [ ! -f "$DNS_FILE" ]; then
     echo "$DNS_ADDRS" > "$DNS_FILE"
 fi
 
+# set default editor
+[ -z "$EDITOR" ] && EDITOR=$(getPath micro vim nano)
 
-# get one editor
-EDITOR=$(getPath micro vim nano)
-
-xarg --id -a,--all  --var m:all           --desc "add all DNS servers listed in the configuration"
+xarg --id -a,--add  --var m:add,str+r     --desc "add a new server to your list"
+xarg --id -s,--sys  --var sys:true        --desc "save on system (use with --add)"
+xarg --id -l,--laod --var m:load          --desc "load DNS_list on your system"
 xarg --id -e,--edit --var m:edit,EDITOR+o --desc "edit config file"
 
 xrun --xreject-unknow --xrequire-one --xversionrc --xcolors "$@"
@@ -55,7 +56,15 @@ mAll(){
     done <<< "$DNS_FILE" 
 }
 
+mAdd(){
+    echo "$str" >> "$DNS_FILE" 
+    if [ -n "$sys" ]; then
+        echo "$str" | "$tee_cmd"
+    fi
+}
+
 case "$m" in
-    all ) mAll ;;
+    add ) mAdd ;;
+    load) mAll ;;
     edit) $EDITOR "$DNS_FILE" ;;
 esac
