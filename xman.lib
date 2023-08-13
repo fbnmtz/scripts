@@ -1,0 +1,61 @@
+#!/usr/bin/env bash
+#
+# ############################################################################
+# Project: scripts (none)
+# File...: xman.lib
+# Created: Sunday, 2023/08/13 - 08:03:29
+# Author.: @fbnmtz, (fabiano.matoz@gmail.com)
+# ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
+# Last Modified: Sunday, 2023/08/13 - 08:13:46
+# Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
+# ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
+# Version: 0.1.1.8
+# ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
+# Description: 
+#  >
+# ############################################################################
+# HISTORY:
+#
+
+_xLIB_XMAN_=true
+
+rofi_cmd="rofi -no-config -columns 1 -lines 10 -i -dmenu -p "
+
+mList(){
+  if [ -n "$list" ]; then
+    binary=$(find "$APP_HOME/" | \
+      rev | \
+      cut -d '/' -f1 |
+      rev |
+      cut -d '.' -f1 |
+      sort -u | \
+      $rofi_cmd "Man Found" 
+    )
+  fi
+  mDefault
+}
+
+mBinary(){
+  if [ -z "$binary" ]; then
+    binary=$( find /usr/bin/ /bin/ /sbin/ -type f | \
+      sed 's/\/usr\/bin\///g' | \
+      sed 's/\/bin\///g' | \
+      sed 's/\/sbin\///g' | \
+      awk '{print $1}' | \
+      sort -u | \
+      $rofi_cmd "Man Search" 
+    )
+  fi
+  mDefault
+}
+
+mDefault(){
+  # save man content and open 
+  if [ -n "$binary" ]; then
+    filename="$APP_HOME/$binary.ps"
+    if [ ! -f "$filename" ]; then
+      man -t "$binary" > "$filename"
+    fi
+    llppac -t ps "$filename"
+  fi
+}
