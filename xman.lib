@@ -6,10 +6,10 @@
 # Created: Sunday, 2023/08/13 - 08:03:29
 # Author.: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Last Modified: Sunday, 2023/08/13 - 08:13:46
+# Last Modified: Monday, 2023/08/14 - 20:04:17
 # Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Version: 0.1.1.8
+# Version: 0.1.2.14
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
 # Description: 
 #  >
@@ -22,30 +22,26 @@ _xLIB_XMAN_=true
 rofi_cmd="rofi -no-config -columns 1 -lines 10 -i -dmenu -p "
 
 mList(){
-  if [ -n "$list" ]; then
-    binary=$(find "$APP_HOME/" | \
-      rev | \
-      cut -d '/' -f1 |
-      rev |
-      cut -d '.' -f1 |
-      sort -u | \
-      $rofi_cmd "Man Found" 
-    )
-  fi
+  binary=$(find "$APP_HOME/" | \
+    rev | \
+    cut -d '/' -f1 |
+    rev |
+    cut -d '.' -f1 |
+    sort -u | \
+    $rofi_cmd "Man Found" 
+  )
   mDefault
 }
 
 mBinary(){
-  if [ -z "$binary" ]; then
-    binary=$( find /usr/bin/ /bin/ /sbin/ -type f | \
-      sed 's/\/usr\/bin\///g' | \
-      sed 's/\/bin\///g' | \
-      sed 's/\/sbin\///g' | \
-      awk '{print $1}' | \
-      sort -u | \
-      $rofi_cmd "Man Search" 
-    )
-  fi
+  binary=$( find /usr/bin/ /bin/ /sbin/ -type f | \
+    sed 's/\/usr\/bin\///g' | \
+    sed 's/\/bin\///g' | \
+    sed 's/\/sbin\///g' | \
+    awk '{print $1}' | \
+    sort -u | \
+    $rofi_cmd "Man Search" 
+  )
   mDefault
 }
 
