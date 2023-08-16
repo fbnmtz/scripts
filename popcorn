@@ -7,10 +7,10 @@
 # Author.: Fabiano Matos, fgm (fabiano.matoz@gmail.com) 
 #        (take idea for another script)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Last Modified: Tuesday, 2023/05/23 - 21:23:21
+# Last Modified: Tuesday, 2023/08/15 - 22:09:29
 # Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Version: 1.1.9.247
+# Version: 1.1.10.257
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
 # Description: 
 #  > popcorn (term version)
@@ -29,6 +29,7 @@
 source ~/bin/xSHELL/init
 use args
 xrequirements pirate-get peerflix
+xsetHome
 
 # set default player
 player=mpv 
@@ -68,11 +69,12 @@ if [ -z "$magnet" ]; then
     _peerflix=${_peerflix//<link>/%s}
     # run command
     _pirateget="pirate-get -C '$_peerflix' '$search'"
+
+    history=$APP_HOME/search.txt
+    echo "$(mdate --us -f):$search" >> "$history"
     
     # validate selected player
     xrequirements $player
-    
-    echo "$_pirateget" && eval "$_pirateget"
 else
     # magnet is a valid link?
     if [[ "$magnet" =~ "magnet:?xt=" ]]; then
@@ -83,6 +85,7 @@ else
     fi
     # prepare 'pirete-get/peerflix' command
     _peerflix=${_peerflix//<link>/${link}}
-    # run command
-    echo "$_peerflix" && eval "$_peerflix"
 fi
+
+# run command
+echo "$_pirateget" && eval "$_pirateget"
