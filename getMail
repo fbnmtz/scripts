@@ -6,10 +6,10 @@
 # Created: Tuesday, 2023/04/25 - 20:11:57
 # Author.: fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Last Modified: Friday, 2023/04/28 - 02:08:37
+# Last Modified: Wednesday, 2023/08/16 - 08:29:28
 # Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Version: 0.0.2.58
+# Version: 0.0.3.61
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
 # Description: 
 #  >
@@ -47,5 +47,5 @@ xrun --xreject-unknow --xrequire-one --xcolors "$@"
 case "$action" in
   menu) xMenu ;;
   new ) xNew "$email" ;;
-  edit) $_EDITOR "$MAILSTORE" ;;
+  edit) xrequirements "$_EDITOR"; $_EDITOR "$MAILSTORE" ;;
 esac
