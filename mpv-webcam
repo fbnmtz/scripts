@@ -6,10 +6,10 @@
 # Created: Thursday, 2020/04/23 - 01:15:41
 # Author.: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Last Modified: Saturday, 2023/06/17 - 00:11:08
+# Last Modified: Saturday, 2023/08/19 - 01:45:29
 # Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Version: 0.2.1.140
+# Version: 0.2.2.163
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
 # Description: 
 #  >
@@ -28,9 +28,8 @@
 #       -> variables created by or library system (don't worry)
 
 source ~/bin/xSHELL/init
+use args utils io
 xrequirements dmenu:rofi mpv tr
-
-use utils io
 
 # create default data directory
 xsetHome
@@ -40,9 +39,20 @@ APP_CONFIG=$APP_HOME/$APP.cfg
 [ ! -f "$APP_CONFIG" ] && echo "menu_app=dmenu" > "$APP_CONFIG"
 _MENU=$(rconfig menu_app "$APP_CONFIG")
 
+
+xarg --id -m,--menu  --var menu+r    --desc "define menu to list webcam's"
+xrun --xreject-unknow --xrequire-one --xversionrc --xcolors "$@"
+
+[ -n "$menu" ] && { xrequirements "$menu"; _MENU=$menu; }
+
 while true; do
     # shellcheck disable=SC2012
     # list all webcams and select one to use
+
+    case "$_MENU" in
+        rofi) _MENU='rofi -dmenu -no-config ' ;;
+    esac
+
     device=$(ls /dev/video* | \
         tr -s ' ' '\n' | \
         $_MENU -p "$APP -> select a device:"
