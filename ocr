@@ -6,10 +6,10 @@
 # Created: unknown, 2020
 # Author.: @sdushantha, (Siddharth Dushantha)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Last Modified: Monday, 2023/07/24 - 01:09:30
+# Last Modified: Sunday, 2023/08/20 - 00:21:31
 # Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Version: 1.0.3.45
+# Version: 1.0.4.84
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
 # Description: 
 #  > https://github.com/sdushantha/bin
@@ -22,24 +22,27 @@
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~    
 source ~/bin/xSHELL/init    
 use args 
-xrequirements tesseract maim xclip-cmd 
+packages=(tesseract maim xclip-cmd)
+xrequirements "${packages[@]}" pkill wc notify-send cat
 
 xarg --id -n,--no-compositor --var compositor:false --desc "disable compositor (picom)"
-xarg --header "extract a text from screen/image with OCR"
+xarg --header "Extract a text from screen/image with OCR"
+xarg --footer "required: ${packages[*]}"
+
 xrun --xreject-unknow --xversionrc --xcolors "$@"    
 
-TEXT_FILE="/tmp/ocr.txt"
-IMAGE_FILE="/tmp/ocr.png"
+TXT_FILE="/tmp/ocr.txt"
+IMG_FILE="/tmp/ocr.png"
 
 # kill compositors
 [ -n "$compositor" ] && {
     echo "killing compositors:" 
-    echo " '-> picom";   pkill picom; 
-    echo " '-> compton"; pkill compton; 
+    echo -n " '-> picom";   pkill picom; echo " ....[done]" 
+    echo -n " '-> compton"; pkill compton; echo " ..[done]" 
 }
 
 # Take screenshot by selecting the area
-if ! maim -s "$IMAGE_FILE"; then 
+if ! maim -s "$IMG_FILE"; then 
     # If the user pressed the escape key or did something to terminate the proccess
     # taking a screenshot, then just exit
     echo "quit" && exit 1
@@ -50,18 +53,18 @@ fi
 # because tesseract adds .txt to the given file path anyways. So if we were to
 # specify /tmp/ocr.txt as the file path, tesseract would out the text to 
 # /tmp/ocr.txt.txt
-tesseract "$IMAGE_FILE" "${TEXT_FILE//\.txt/}"
+tesseract "$IMG_FILE" "${TXT_FILE//\.txt/}"
 
 # Check if the text was detected by checking number
 # of lines in the file
-LINES=$(wc -l < $TEXT_FILE)
+LINES=$(wc -l < $TXT_FILE)
 if [ "$LINES" -eq 0 ]; then
     notify-send "ocr" "no text was detected"
     exit 1
 fi
 
 # Copy text to clipboard
-xclip-cmd --silent < $TEXT_FILE
+xclip-cmd --silent < $TXT_FILE
 
 # Send a notification with the text that was grabbed using OCR
-notify-send "ocr" "$(cat $TEXT_FILE)"
+notify-send "ocr" "$(cat $TXT_FILE)"
