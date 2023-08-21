@@ -6,10 +6,10 @@
 # Created: Tuesday, 2020/02/04 - 00:07:38
 # Author.: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Last Modified: Thursday, 2023/08/10 - 00:00:25
+# Last Modified: Monday, 2023/08/21 - 19:11:36
 # Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Version: 0.0.3.40
+# Version: 0.0.4.48
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
 # Description: 
 #  >
@@ -25,9 +25,9 @@ use args
 xrequirements qemu-system-x86_64 sudo
 _cmd_="sudo qemu-system-x86_64 -usb -usbdevice disk:<disk>  -boot menu=on  -m 512"
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~    
-xarg --id -u,--usb --var flag:usb,disk+r --desc "disk to test boot"      
+xarg --id -u,--usb --var disk+r --desc "boot <disk> with qemu"      
 xarg --header "test boot on USB device"
-xarg --footer "* this script uses 'qemu' and requires root privileges"
+xarg --footer "* require 'qemu-system-x86_64' and root privilege"
     
 xrun --xreject-unknow --xrequire-one --xversionrc --xcolors "$@"    
 
