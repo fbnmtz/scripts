@@ -6,10 +6,10 @@
 # Created: Wednesday, 2021/05/26 - 23:45:50
 # Author.: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Last Modified: Tuesday, 2023/08/22 - 09:27:47
+# Last Modified: Thursday, 2023/08/24 - 22:15:49
 # Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Version: 0.1.3.26
+# Version: 0.1.4.38
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
 # Description: 
 #  >
@@ -21,18 +21,21 @@
 # shellcheck disable=SC1090
 source ~/bin/xSHELL/init
 use args
-xarg --id -s,--size  --var "size+r" --desc "set number of columns"
+xarg --id -s,--size  --var "size+r" --desc "columns of header"
+xarg --id -c,--char  --var "char+r" --desc "custom <char> for header"
 xrun --xrequire-one --xversionrc --xcolors "$@"
 
-case $1 in
-  1) char="~" ;;
-  2) char="*"  ;;
-  3) char="-"  ;;
-  4) char="+"  ;;
-  5) char="." ;;
-  5) char="/" ;;
-  *) char="#"  ;;
-esac
+if [ -z "$char" ]; then 
+  case $1 in
+    1) char="~" ;;
+    2) char="*"  ;;
+    3) char="-"  ;;
+    4) char="+"  ;;
+    5) char="." ;;
+    6) char="/" ;;
+    *) char="#"  ;;
+  esac
+fi
 
 [ -z "$size" ] && size=80 
 echo -n "# "
