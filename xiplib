@@ -1,0 +1,39 @@
+#!/usr/bin/env bash
+#
+# ############################################################################
+# Project: scripts (none)
+# File...: xiplib
+# Created: Friday, 2023/08/25 - 20:00:46
+# Author.: @fbnmtz, (fabiano.matoz@gmail.com)
+# ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
+# Last Modified: Friday, 2023/08/25 - 20:01:31
+# Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
+# ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
+# Version: 0.0.1.2
+# ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
+# Description: 
+#  >
+# ############################################################################
+# HISTORY:
+
+_xLIB_XIP_=true
+
+# ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~
+_IFACES=$(lshw 2> /dev/null | grep -A5 interface | grep logical | aw 3 | tr -s '\n' ' ')
+_FILTER="$(echo "${_IFACES[@]::-1}" | sed 's/ /\\|/g' )"
+
+_m1(){
+  curl -s ifconfig.me
+}
+_m2(){
+  dig +short myip.opendns.com @resolver1.opendns.com
+}
+_m3(){
+  curl -s -4 icanhazip.com
+}
+_getIP(){
+  for ip in _m1 _m2 _m3; do
+    _IP=$($ip)
+    [ -n "$_IP" ] && { echo "$_IP"; break; }
+  done
+}

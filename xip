@@ -6,10 +6,10 @@
 # Created: Monday, 2022/01/31 - 20:28:15
 # Author.: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Last Modified: Tuesday, 2023/07/11 - 18:06:48
+# Last Modified: Friday, 2023/08/25 - 20:05:36
 # Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Version: 1.0.2.123
+# Version: 1.0.3.127
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
 # Description: 
 #  >
@@ -20,36 +20,17 @@
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~
 # shellcheck disable=SC1090
 source ~/bin/xSHELL/init
-use args utils
+use args utils xiplib
 xrequirements lshw grep aw tr ip curl
 
-xarg --id -i,--interfaces   --var action:interfaces --desc "available interfaces"
-xarg --id -a,--all          --var action:all        --desc "detailed information"
-xarg --id -e,--external-ip  --var action:external   --desc "external IP address"
+xarg --id -i,--interfaces   --var action:iface --desc "available interfaces"
+xarg --id -a,--all          --var action:all   --desc "detailed information"
+xarg --id -e,--external-ip  --var action:ext   --desc "external IP address"
 xarg --header "interfaces / IP information" 
 xrun --xreject-unknow --xversionrc --xcolors "$@"
 
-# ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~
-_IFACES=$(lshw 2> /dev/null | grep -A5 interface | grep logical | aw 3 | tr -s '\n' ' ')
-_FILTER="$(echo "${_IFACES[@]::-1}" | sed 's/ /\\|/g' )"
-
-_m1(){
-  curl -s ifconfig.me
-}
-_m2(){
-  dig +short myip.opendns.com @resolver1.opendns.com
-}
-_m3(){
-  curl -s -4 icanhazip.com
-}
-_getIP(){
-  for ip in _m1 _m2 _m3; do
-    _IP=$($ip)
-    [ -n "$_IP" ] && { echo "$_IP"; break; }
-  done
-}
 case "$action" in
-  interfaces) echo -e "${_IFACES[*]}\n" ;;
-  all       ) ip a | grep -A2 "$_FILTER" | grep -v "inet6\|link\|valid_lft" ;;
-  external  ) _getIP ;;
+  iface) echo -e "${_IFACES[*]}\n" ;;
+  all  ) ip a | grep -A2 "$_FILTER" | grep -v "inet6\|link\|valid_lft" ;;
+  ext  ) _getIP ;;
 esac
