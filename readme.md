@@ -5,10 +5,10 @@
  Created: Friday, 2023/03/31 - 04:54:21
  Author.: @fbnmtz, (fabiano.matoz@gmail.com)
  ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
- Last Modified: Sunday, 2023/08/06 - 07:02:48
+ Last Modified: Sunday, 2023/08/27 - 05:49:22
  Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
  ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
- Version: 0.0.1.78
+ Version: 0.0.1.83
  ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
  Description: 
   >
@@ -109,10 +109,71 @@ clone git repository to a default destination and open it on ranger
 ```
 save all your email addresses. Select one and copy to clipboard.
 ```
+
+<details close="true">
+
+```bash
+getMail -h
+ 
+usage:
+  getMail [-m] [-n <email>] [-e {editor}] [-h] [-v]
+
+-> Available Options:
+   -m,  --menu          select a email with a dmenu
+   -n,  --new <email>   save new email
+   -e,  --edit {editor} edit email list
+   -h,  --help          show this help
+   -v,  --version       print version and exit
+
+v0.0.3 - writen by fbnmtz 2023
+
+```
+</details>
+
 ## `mdate`
 ```
 some date functions
 ```
+<details close="true">
+```
+mdate -h
+
+helper to get date in many formats
+
+usage:
+  mdate [OPTIONS]
+
+-> Date Options:
+   -d,  --day             current day (number)
+   -m,  --month           current month (number)
+   -y,  --year            current year (number)
+   -Y,  --year2           current year (two digits)
+   -D,  --date            current date (full)
+
+-> Time Options:
+   -H,  --hour            current hour (number)
+   -M,  --minutes         current minutes (number)
+   -s,  --seconds         current seconds (number)
+   -t,  --time            current time (H M S)
+
+-> General Options:
+   -u,  --us              full date in US format
+   -b,  --br              full date in BR format
+   -r,  --header          date/time for header
+   -R,  --header-en       date/time for header (us format)
+   -w,  --weekday         current weekday (name)
+   -W,  --weekday-en      current weekday (name) (us format)
+   -f,  --for-filename    full date formated for filename
+
+-> Information Options:
+   -h,  --help            show this help
+   -v,  --version         print version and exit
+
+v0.3.4-rc234 - writen by @fbnmtz 2020
+
+```
+</details>
+
 
 ## `mdisk`
 ```
