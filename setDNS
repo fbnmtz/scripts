@@ -6,10 +6,10 @@
 # Created: Monday, 2021/01/12 - 11:12:40
 # Author.: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Last Modified: Saturday, 2023/08/12 - 18:09:47
+# Last Modified: Monday, 2023/08/28 - 01:02:58
 # Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Version: 0.1.4.89
+# Version: 0.1.5.99
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
 # Description: 
 #  >
@@ -19,52 +19,23 @@
 
 # shellcheck disable=SC1090
 source ~/bin/xSHELL/init
-use args utils
+use args utils setDNS.lib
 xrequirements tee sudo
 
 # initialize APP home
 xsetHome
 
-tee_cmd="sudo tee -a /etc/resolv.conf"
-# servers addresses
-DNS_ADDRS="# DNS config
-8.8.8.8:google
-8.8.4.4:google
-1.1.1.1:cloudflare
-"
-DNS_FILE="$APP_HOME/dns_list"
-if [ ! -f "$DNS_FILE" ]; then 
-    echo "$DNS_ADDRS" > "$DNS_FILE"
-fi
-
-# set default editor
-[ -z "$EDITOR" ] && EDITOR=$(getPath micro vim nano)
-
-xarg --id -a,--add  --var m:add,str+r     --desc "add a new server to your list"
+xarg --id -a,--add  --var m:add,str+r     --desc "add 'ip;name' to your DNS list"
 xarg --id -s,--sys  --var sys:true        --desc "save on system (use with --add)"
 xarg --id -l,--laod --var m:load          --desc "load DNS_list on your system"
 xarg --id -e,--edit --var m:edit,EDITOR+o --desc "edit config file"
 
 xrun --xreject-unknow --xrequire-one --xversionrc --xcolors "$@"
 
-mAll(){
-    while IFS=":" read -r ip provider; do
-        if [ "$ip" != "" ]; then
-            echo "# DNS provider: ${provider}" | $tee_cmd
-            echo "nameserver ${ip}" | $tee_cmd
-        fi
-    done <<< "$DNS_FILE" 
-}
-
-mAdd(){
-    echo "$str" >> "$DNS_FILE" 
-    if [ -n "$sys" ]; then
-        echo "$str" | "$tee_cmd"
-    fi
-}
+_initialize_
 
 case "$m" in
-    add ) mAdd ;;
-    load) mAll ;;
-    edit) $EDITOR "$DNS_FILE" ;;
+    add ) mAdd  ;;
+    load) mLoad ;;
+    edit) mEdit ;;
 esac

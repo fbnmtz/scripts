@@ -1,0 +1,57 @@
+#!/usr/bin/env bash
+#
+# ############################################################################
+# Project: scripts (none)
+# File...: setDNS.lib
+# Created: Monday, 2023/08/28 - 00:56:31
+# Author.: @fbnmtz, (fabiano.matoz@gmail.com)
+# ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
+# Last Modified: Monday, 2023/08/28 - 01:03:05
+# Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
+# ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
+# Version: 0.0.1.7
+# ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
+# Description: 
+#  >
+# ############################################################################
+# HISTORY:
+#
+
+_xLIB_SETDNS_=true
+
+_initialize_(){
+  tee_cmd="sudo tee -a /etc/resolv.conf"
+  # servers addresses
+  DNS_ADDRS="# DNS config
+  8.8.8.8:google
+  8.8.4.4:google
+  1.1.1.1:cloudflare
+  "
+  DNS_FILE="$APP_HOME/dns_list"
+  if [ ! -f "$DNS_FILE" ]; then 
+      echo "$DNS_ADDRS" > "$DNS_FILE"
+  fi
+
+  # set default editor
+  [ -z "$EDITOR" ] && EDITOR=$(getPath micro vim nano)
+}
+
+mLoad(){
+    while IFS=":" read -r ip provider; do
+        if [ "$ip" != "" ]; then
+            echo "# DNS provider: ${provider}" | $tee_cmd
+            echo "nameserver ${ip}" | $tee_cmd
+        fi
+    done <<< "$DNS_FILE" 
+}
+
+mAdd(){
+    echo "$str" >> "$DNS_FILE" 
+    if [ -n "$sys" ]; then
+        echo "$str" | "$tee_cmd"
+    fi
+}
+
+mEdit(){
+  $EDITOR "$DNS_FILE" 
+}
