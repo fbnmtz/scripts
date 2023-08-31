@@ -1,0 +1,86 @@
+#!/usr/bin/env bash
+#
+# ############################################################################
+# Project: scripts (none)
+# File...: popcorn.lib
+# Created: Wednesday, 2023/08/30 - 20:23:49
+# Author.: @fbnmtz, (fabiano.matoz@gmail.com)
+# ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
+# Last Modified: Wednesday, 2023/08/30 - 21:02:34
+# Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
+# ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
+# Version: 0.0.1.47
+# ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
+# Description: 
+#  >
+# ############################################################################
+# HISTORY:
+#
+
+_xLIB_POPCORN_=true
+
+# set default player
+player=mpv 
+
+# used commands
+_peerflix="peerflix '<link>' --all --list --subtitles --no-quit --$player --"
+_pirateget="pirate-get -C '<peerflix>' '<search>'"
+_run_cmd=''
+
+saveHistory(){
+  xrequirements mdate
+  history=$APP_HOME/search.txt
+  echo "$(mdate --us -f):$search" >> "$history"
+}
+
+pSearch(){
+  [ -z "$search" ] && search="$@"
+  
+  # save search in history
+  saveHistory
+    
+  # prepare 'pirete-get/peerflix' commands
+  _peerflix=${_peerflix//<link>/%s}
+  _pirateget="pirate-get -C '$_peerflix' '$search'"
+
+  # update command
+  _run_cmd=${_pirateget//<peerfliex>/$_peerflix}
+  _run_cmd=${_pirateget//<search>/$search}
+
+  # validate selected player
+  xrequirements "$player"
+}
+
+pWeb(){
+  xrequirements docker
+
+  docker volume create \
+    --name popcorn-data type=none \
+    --opt device=/tmp/torrent-stream \
+    --opt o=bind
+
+  docker run -p 9000:9000 -p 6881:6881 -p 6881:6881/udp \
+      --rm -it \
+      --mount source=popcorn-data,target=/tmp/torrent-stream \
+      --name porpcorn-web \
+      asapach/peerflix-server
+      # -v /tmp/torrent-stream/:/tmp/torrent-stream/ \
+      # --mount type=bind,source="/tmp/torrent-stream"/target,target=/tmp/torrent-stream \
+  exit 
+}
+
+pMagnet(){
+  # magnet is a valid link?
+  if [[ "$magnet" =~ "magnet:?xt=" ]]; then
+      link=${magnet^^}
+  else
+      # get magnet by string/folder/file name  
+      link="magnet:?xt=urn:btih:${magnet//.torrent}"
+  fi
+  # prepare command
+  _run_cmd=${_peerflix//<link>/${link}}
+}
+
+runApp(){
+  echo "$_run_cmd" && eval "$_run_cmd"
+}

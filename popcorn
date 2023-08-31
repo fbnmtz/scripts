@@ -4,13 +4,13 @@
 # Project: scripts (none)
 # File...: popcorn
 # Created: 2020/03/06 - 19:26:02
-# Author.: Fabiano Matos, fgm (fabiano.matoz@gmail.com) 
+# Author.: @fbnmtz, fgm (fabiano.matoz@gmail.com) 
 #        (take idea for another script)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Last Modified: Tuesday, 2023/08/15 - 22:09:29
+# Last Modified: Wednesday, 2023/08/30 - 21:02:40
 # Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Version: 1.1.10.257
+# Version: 1.1.11.283
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
 # Description: 
 #  > popcorn (term version)
@@ -27,65 +27,21 @@
 
 # shellcheck disable=SC1090        # SC1090: Can't follow non-constant source. Use a directive to specify location.
 source ~/bin/xSHELL/init
-use args
+use args popcorn.lib
 xrequirements pirate-get peerflix
 xsetHome
 
-# set default player
-player=mpv 
-
-xarg --id -s,--search --var search+o   --desc "term for search a torrent"
-xarg --id -w,--web    --var pweb:true  --desc "start peerfliex web interface"
-xarg --id -m,--magnet --var magnet+r   --desc "magnet link for download"
-xarg --id -p,--player --var player+r   --desc "set player to watch torrent"
+xarg --id -s,--search --var f:s,search+r   --desc "term for search a torrent"
+xarg --id -w,--web    --var f:w            --desc "start peerfliex web interface"
+xarg --id -m,--magnet --var f:m,magnet+r   --desc "magnet link for download"
+xarg --id -p,--player --var f:p,player+r   --desc "set player to watch torrent"
 
 xrun --xversionrc --xrequire-one --xcolors "$@"
 
-# command to download torrent
-_peerflix="peerflix '<link>' --all --list --subtitles --no-quit --$player --"
+case "$f" in
+    w  ) pWeb         ;;
+    m  ) pMagnet      ;;
+    s|*) pSearch "$@" ;;
+esac
 
-# web interface
-if [ -n "$pweb" ]; then 
-    xrequirements docker
-    docker volume create --name popcorn-data type=none --opt device=/tmp/torrent-stream --opt o=bind
-
-    docker run -p 9000:9000 -p 6881:6881 -p 6881:6881/udp \
-        --rm -it \
-        --mount source=popcorn-data,target=/tmp/torrent-stream \
-        --name porpcorn-web \
-        asapach/peerflix-server
-        # -v /tmp/torrent-stream/:/tmp/torrent-stream/ \
-        # --mount type=bind,source="/tmp/torrent-stream"/target,target=/tmp/torrent-stream \
-    exit 
-fi
-
-# no magnet link? perform a search 
-if [ -z "$magnet" ]; then
-    # shellcheck disable=SC2124     # SC2124: Assigning an array to a string! Assign as array, or use * instead of @ to concatenate.
-    # no search? pass all arguments as search
-    [ -z "$search" ] && search="$@"
-    
-    # prepare 'pirete-get/peerflix' command
-    _peerflix=${_peerflix//<link>/%s}
-    # run command
-    _pirateget="pirate-get -C '$_peerflix' '$search'"
-
-    history=$APP_HOME/search.txt
-    echo "$(mdate --us -f):$search" >> "$history"
-    
-    # validate selected player
-    xrequirements $player
-else
-    # magnet is a valid link?
-    if [[ "$magnet" =~ "magnet:?xt=" ]]; then
-        link=${magnet^^}
-    else
-        # get magnet by folder/file name  
-        link="magnet:?xt=urn:btih:${magnet//.torrent}"
-    fi
-    # prepare 'pirete-get/peerflix' command
-    _peerflix=${_peerflix//<link>/${link}}
-fi
-
-# run command
-echo "$_pirateget" && eval "$_pirateget"
+runApp
