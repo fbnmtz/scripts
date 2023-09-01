@@ -7,10 +7,10 @@
 # Author.: @fbnmtz, fgm (fabiano.matoz@gmail.com) 
 #        (take idea for another script)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Last Modified: Friday, 2023/09/01 - 01:09:09
+# Last Modified: Friday, 2023/09/01 - 01:22:22
 # Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Version: 1.1.12.291
+# Version: 1.1.13.293
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
 # Description: 
 #  > popcorn (term version)
@@ -41,8 +41,8 @@ xrun --xversionrc --xrequire-one --xcolors "$@"
 case "$f" in
     h  ) pHistory      ;;
     m  ) pMagnet      ;;
-    s|*) pSearch "$@" ;;
     w  ) pWeb         ;;
+    s|*) pSearch "$@" ;;
 esac
 
 runApp
