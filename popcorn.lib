@@ -6,10 +6,10 @@
 # Created: Wednesday, 2023/08/30 - 20:23:49
 # Author.: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Last Modified: Wednesday, 2023/08/30 - 21:02:34
+# Last Modified: Friday, 2023/09/01 - 01:07:37
 # Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Version: 0.0.1.47
+# Version: 0.0.2.59
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
 # Description: 
 #  >
@@ -19,8 +19,12 @@
 
 _xLIB_POPCORN_=true
 
+# create app data folder
+xsetHome
+
 # set default player
 player=mpv 
+_history_file=$APP_HOME/search.txt
 
 # used commands
 _peerflix="peerflix '<link>' --all --list --subtitles --no-quit --$player --"
@@ -29,8 +33,7 @@ _run_cmd=''
 
 saveHistory(){
   xrequirements mdate
-  history=$APP_HOME/search.txt
-  echo "$(mdate --us -f):$search" >> "$history"
+  echo "$(mdate --us -f):$search" >> "$_history_file"
 }
 
 pSearch(){
@@ -79,6 +82,10 @@ pMagnet(){
   fi
   # prepare command
   _run_cmd=${_peerflix//<link>/${link}}
+}
+
+pHistory(){
+  cat "$_history_file"
 }
 
 runApp(){
