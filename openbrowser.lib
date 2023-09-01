@@ -1,0 +1,58 @@
+#!/usr/bin/env bash
+#
+# ############################################################################
+# Project: scripts (none)
+# File...: openbrowser.lib
+# Created: Thursday, 2023/08/31 - 20:08:57
+# Author.: @fbnmtz, (fabiano.matoz@gmail.com)
+# ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
+# Last Modified: Thursday, 2023/08/31 - 20:51:42
+# Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
+# ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
+# Version: 0.0.1.17
+# ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
+# Description: 
+#  >
+# ############################################################################
+# HISTORY:
+#
+
+_xLIB_OPENBROWSER_=true
+
+# default browser to use
+BROWSERS=(qutebrowser chromium chrome firefox brave w3m)
+BROWSER_RUN=$(getPath "${BROWSERS[@]}")
+
+SEARCH_ENGINES=(
+  "https://www.google.com/search?q=" 
+  "https://duckduckgo.com/?q=" 
+  "https://searx.me/?q=" 
+)
+
+mpv_command(){
+  local MSOCK=~/.fbnmtz/mpv.sock
+  local MPLAYLIST=~/.fbnmtz/tmp/openbrowser-playlist
+  [ ! -f $MSOCK ] && touch $MSOCK 
+  url=$1
+  if xdotool search --classname 'mpvOB'; then
+    echo "loadfile $url append" | socat - $MSOCK
+    echo "$url" >> $MPLAYLIST
+  else
+    [ -f $MPLAYLIST ] && rm $MPLAYLIST
+    mpv --x11-name='mpvOB' \
+      --profile=openbrowser \
+      --screenshot-template=~/videos/ytdl/img/%f-%n  \
+      --input-ipc-server=$MSOCK \
+      $url
+  fi
+}
+
+isUrl(){
+  local query=$1
+  echo "$query" | grep --quiet -E '^https|^http|\.com|\.io|\.edu.br|\.br|\.net|\.org'
+}
+
+getDomain(){
+  local url=$1
+  echo "$url" | cut -d ':' -f2 | sed 's/\/\///' | cut -d '/' -f1 | sed 's/^www.//'
+}

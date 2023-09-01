@@ -6,10 +6,10 @@
 # Created: Friday, 2022/02/11 - 21:11:37
 # Author.: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Last Modified: Saturday, 2023/07/15 - 00:06:41
+# Last Modified: Thursday, 2023/08/31 - 21:43:01
 # Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Version: 0.4.0.261
+# Version: 0.4.1.367
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
 # Description: 
 #  >
@@ -26,32 +26,19 @@
 # ignore some shellcheck expression
 # shellcheck disable=SC1091,SC2046,2068
 
-# load lib (core)
 source ~/bin/xSHELL/init
-use args
+use args utils openbrowser.lib
+xrequirements rofi grep mpv socat xdotool
 
-# default browser to use
-BROWSERS=(qutebrowser chromium w3m)
-
-# validate tools in system (requirements or is_installed) 
-xrequirements ${BROWSERS[@]} rofi grep mpv socat xdotool
-
-SEARCH_ENGINES=( "https://duckduckgo.com/?q=" "https://searx.me/?q=" "https://www.google.com/search?q=" )
-
-# set options for CASE struct that will handle params
 xarg --id -b,--browser --var name+r      --desc "inform a installed  browser to open url/query"
 xarg --id -q,--query   --var query+r     --desc "query to search OR url to open"
-xarg --id -c,--class   --var classname+r --desc "define current x11 classname"
+# xarg --id -c,--class   --var f:c,classname+r --desc "define current x11 classname"
 
-# pass ARGS to runAGRS
-# theres a loop with struct case (can execute code, declare vars, etc) 
 xrun --xversionrc --xcolors "$@"
 
-# using a var created inisde 'runARGS' method
-[ -n "$name" ] && { 
-  BROWSER_RUN=$name 
-  is_installed "$name"
-} || BROWSER_RUN=${BROWSERS[0]}
+# user defined browser?
+[ -n "$name" ] && BROWSER_RUN=$name
+xrequirements "${BROWSER_RUN}" 
 
 # no query given by command line? 
 if [ -z "$query" ]; then
@@ -59,7 +46,6 @@ if [ -z "$query" ]; then
   if [ -z "${_PARAMS_[1]}" ]; then 
     # ask user input with rofi
     query="$(rofi -dmenu -no-config -lines 1 -p "Browser")"
-    # query="$( dmenu -p "Browser")"
   else
     # Given input, set param as query
     query=${_PARAMS_[1]}
@@ -67,43 +53,30 @@ if [ -z "$query" ]; then
   fi
 fi
 
-mpv_command(){
-  local MSOCK=~/.fbnmtz/mpv.sock
-  local MPLAYLIST=~/.fbnmtz/tmp/openbrowser-playlist
-  [ ! -f $MSOCK ] && touch $MSOCK 
-  query=$1
-  if xdotool search --classname 'mpvOB'; then
-    echo "loadfile $query append" | socat - $MSOCK
-    echo "$query" >> $MPLAYLIST
-  else
-    [ -f $MPLAYLIST ] && rm $MPLAYLIST
-    mpv --x11-name='mpvOB' \
-      --profile=openbrowser \
-      --screenshot-template=~/videos/ytdl/img/%f-%n  \
-      --input-ipc-server=$MSOCK \
-      $query
-  fi
-}
-
 # query still null?
 if [ -z "$query" ]; then
   # quit application
   exit 1
-elif echo "$query" | grep --quiet -E '^https|^http|\.com|\.io|\.edu.br|\.br|\.net|\.org'; then
-  # 'query' is a url
-  # so lets get current domain
-  domain=$(echo "$query" | cut -d ':' -f2 | sed 's/\/\///' | cut -d '/' -f1 | sed 's/^www.//')
-  # domain=$(echo "$query" | cut -d ':' -f2 | cut -d '/' -f1 | sed 's/^www.//')
-    # open urls bellow in mpv
-  notify-send $domain $query
-  case $domain in
-    youtu.be|youtube.com|youtube.com.br|\
+elif isUrl "$query"; then
+  # 'query' is a url. so lets get current domain
+  domain=$(getDomain "$query")
+  notify-send "$APP" "$domain"
+  
+  mpv_domains="youtu.be|youtube.com|youtube.com.br|\
     *vimeo.com|\
     bitchute.com|\
-    cloudflare.tv) mpv_command "$query" ;;
+    cloudflare.tv\
+    $customUrls"
+
+  _case="case \$domain in
+    # domains to open with 'mpv'
+    $mpv_domains) mpv_command "\$query" ;;
+    # use RID (Reddit Image Downloader)
+    reddit.com) rid \$query ;; 
     # other domains open in default browser
-    *) "$BROWSER_RUN" "${query}"
-  esac
+    *) "\$BROWSER_RUN" "\${query}"
+  esac"
+  eval "$_case"
 else
   # no url given? search this 'query' on browser with default search engine
   "$BROWSER_RUN" "${SEARCH_ENGINES[0]}""${query}"
