@@ -6,10 +6,10 @@
 # Created: Friday, 2023/08/18 - 21:43:52
 # Author.: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Last Modified: Friday, 2023/08/18 - 21:44:52
+# Last Modified: Saturday, 2023/09/02 - 01:10:03
 # Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Version: 0.0.1.4
+# Version: 0.0.2.34
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
 # Description: 
 #  >
@@ -18,21 +18,24 @@
 #
 
 _xLIB_MDISK_=true
+xrequirements lsblk grep awk aw printf sfdisk smartctl mdate cut rev
+xsetHome
+
+_disks_="lsblk -lpn"
+_filter_="grep 'part\|crypt\|lvm\|loop\|disk'"
 
 _mounted(){
-    lsblk  -lpn | \
-        grep 'part\|crypt\|lvm\|loop\|disk' | \
+    $_disks_ | eval "$_filter_" | \
         awk '$7!="" {printf "%-10s (%6s) - %s\n",  $1, $4, $7}'
 }
 
 _unmounted(){
-    lsblk  -lpn | \
-        grep 'part\|crypt\|lvm\|loop\|disk' | \
+    $_disks_ | eval "$_filter_" | \
         awk '$7=="" {printf "%-10s (%6s)\n", $1, $4 }'
 }
 
 _list(){
-    lsblk -lpn -o name,type,size | grep disk
+    $_disks_ -o name,type,size | grep disk
 }
 
 _preBackup(){
@@ -66,4 +69,9 @@ getFilename(){
     [ "$2" == '-d' ] && local suffix="-$(mdate -y -m -d)"
     local disk_name=$(echo $1 | rev | cut -d '/' -f1 | rev)
     echo "${disk_name}${suffix}"
+}
+
+_resotore(){
+    echo -e "${RED}Warning!${RESET} this is an experimental feature and can cause data loss!\nPlease, do it at your own risk.\n"
+    echo -e "sfdisk /dev/$disk < $APP_HOME/${disk}-YYYYMMDD.sfdisk"
 }
