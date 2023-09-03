@@ -6,10 +6,10 @@
 # Created: Friday, 2023/08/18 - 21:43:52
 # Author.: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Last Modified: Saturday, 2023/09/02 - 01:10:03
+# Last Modified: Sunday, 2023/09/03 - 00:30:22
 # Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Version: 0.0.2.34
+# Version: 0.0.3.41
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
 # Description: 
 #  >
@@ -35,10 +35,15 @@ _unmounted(){
 }
 
 _list(){
-    $_disks_ -o name,type,size | grep disk
+    t=$1
+    case "$t" in
+        mounted|m ) _mounted   ;;
+        umounted|u) _unmounted ;;
+        all|a|*   ) $_disks_ -o name,type,size | grep disk ;;
+    esac
 }
 
-_preBackup(){
+_backup(){
     if [ -n "$disk" ]; then
         filename="$(getFilename $disk -d).sfdisk"
         if doBackup $disk $filename; then

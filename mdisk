@@ -6,10 +6,10 @@
 # Created: Sunday, 2022/02/27 - 15:31:50
 # Author.: @fbnmtz, fgm (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Last Modified: Saturday, 2023/09/02 - 01:08:00
+# Last Modified: Sunday, 2023/09/03 - 00:32:12
 # Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Version: 0.1.5.189
+# Version: 0.1.6.204
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
 # Description: 
 #  >
@@ -25,20 +25,16 @@ source ~/bin/xSHELL/init
 use args mdisk.lib
 
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~    
-xarg --id -l,--list      --var f:l        --desc "list all disks on device"    
-xarg --id -m,--mounted   --var f:m        --desc "list mounted disks on device"    
-xarg --id -u,--unmounted --var f:u        --desc "list unmounted disks on device"    
-xarg --id -b,--backup    --var f:b,disk+o --desc "backup disk info"    
+xarg --id -b,--backup    --var f:b,disk+o --desc "backup disk header"    
+xarg --id -l,--list      --var f:l,type+o --desc "list available disks"    
 xarg --id -r,--restore   --var f:r,disk+r --desc "restore an backup"    
 
 xrun --xreject-unknow --xrequire-one --xversionrc --xcolors "$@"    
 
 # check selected flag
 case "$f" in    
-    b) _preBackup ;;    
-    m) _mounted   ;;
-    u) _unmounted ;;
-    l) _list      ;;
-    r) _resotore  ;;
+    b) _backup     ;;    
+    l) _list $type ;;
+    r) _resotore   ;;
 esac    
     
