@@ -6,10 +6,10 @@
 # Created: Wednesday, 2021/01/27 - 06:46:30
 # Author.: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Last Modified: Monday, 2023/06/05 - 01:06:58
+# Last Modified: Sunday, 2023/09/03 - 00:35:01
 # Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Version: 1.0.2.16
+# Version: 1.0.3.18
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
 # Description: 
 #  >
@@ -17,7 +17,7 @@
 # HISTORY:
 #
 
-disk=$(mdisk --mounted  | \
+disk=$(mdisk --list m  | \
     dmenu -p "Qual disco vc quer desmontar?" | \
     awk '{print $1}')
 if [ -n "$disk" ]; then

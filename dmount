@@ -6,10 +6,10 @@
 # Created: Wednesday, 2021/01/27 - 06:46:30
 # Author.: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Last Modified: Tuesday, 2023/06/06 - 01:01:15
+# Last Modified: Sunday, 2023/09/03 - 00:34:49
 # Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Version: 1.0.3.48
+# Version: 1.0.4.50
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
 # Description: 
 #  > dmenu script to mount disks on the system.
@@ -17,7 +17,7 @@
 # HISTORY:
 #
 
-disk=$(mdisk --unmounted  | \
+disk=$(mdisk --list u  | \
     dmenu -p "Qual disco vc quer montar?" | \
     awk '{print $1}')
 if [ -n "$disk" ]; then
