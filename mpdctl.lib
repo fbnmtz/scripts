@@ -6,10 +6,10 @@
 # Created: Thursday, 2023/07/20 - 00:02:53
 # Author.: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Last Modified: Tuesday, 2023/09/26 - 18:49:06
+# Last Modified: Saturday, 2023/10/07 - 23:25:40
 # Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Version: 0.0.8.130
+# Version: 0.0.9.195
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
 # Description: 
 #  >
@@ -23,10 +23,10 @@ _xLIB_MPDCTL_=true
 _ROFI="rofi -no-config -dmenu -i -p"
 
 # validates installation of required binaries
-xrequirements rofi watch pgrep cut
+xrequirements rofi watch pgrep cut aw
 
-_mpd_check(){
-  if ! pgrep mpd >/dev/null; then 
+_mpd_check_(){
+  if [ "$f" != 'r' ] && ! pgrep mpd >/dev/null; then 
     echo "Error! MPD is not running."
     exit 1
   fi
@@ -53,19 +53,36 @@ mListPlay(){
 
 mPlaylists(){
   local menu choice
-  menu="clear\nall\n"
-  menu+=$(mpc lsplaylists)
-  choice=$(echo -e "$menu" | $_ROFI "Playlist Functions")
+  menu="all;Play all songs\nclear;Empty current queue\n------\n$(_lists_info | sort -f)"
+  choice=$(echo -en "$menu" | column -t -s ';' | $_ROFI "Playlist Functions" | aw 1)
 
   if [ -n "$choice" ]; then
     case "$choice" in
-      clear) mpc clear ;;
-      all  ) mpc listall | mpc add ;;
-      *    ) mpc clear && mpc load "$choice" && mpc play ;;
+      clear) queue_clear ;;
+      all  ) queue_all   ;;
+      *    ) queue_playlist "$choice";;
     esac
   fi
 }
 
 mWatch(){
   watch -n 1  mpc status
+}
+
+_lists_info(){
+  for i in $(mpc lsplaylists); do 
+    echo -en "$i;($(mpc playlist $i | wc -l) Músicas)\n" 
+  done
+}
+
+queue_clear(){
+  mpc clear
+}
+
+queue_all(){
+  mpc listall | mpc add
+}
+
+queue_playlist(){
+  mpc clear && mpc load "$choice" && mpc play 
 }
