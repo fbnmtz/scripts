@@ -6,16 +6,15 @@
 # Created: Sunday, 2023/07/16 - 12:05:00
 # Author.: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Last Modified: Tuesday, 2023/09/26 - 18:48:19
+# Last Modified: Saturday, 2023/10/07 - 23:29:51
 # Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Version: 1.0.9.135
+# Version: 1.0.10.147
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
 # Description: 
 #  >
 # ############################################################################
 # HISTORY:
-#
 # 
 # shellcheck disable=SC1090
 source ~/bin/xSHELL/init
@@ -23,43 +22,43 @@ use args mpdctl.lib
 xrequirements mpd mpc pkill
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~
 xarg --group "Music Options"
-xarg --id -p,--play      --var action:play      --desc "play music of current playlist"
-xarg --id -N,--next      --var action:next      --desc "next music"
-xarg --id -P,--prev      --var action:prev      --desc "previous music"
-xarg --id -t,--toggle    --var action:toggle    --desc "toggle music"
-xarg --id -A,--all       --var action:pall      --desc "play all music on database"
-xarg --id -c,--current   --var action:current   --desc "show current music"
-xarg --id -l,--list-play --var action:lplay     --desc "select and play music"
-xarg --id -L,--playlist  --var action:playlists --desc "playlists functions"
-xarg --id -s,--status    --var action:status    --desc "music status"
-xarg --id -w,--watch     --var action:watch     --desc "watch music status"
+xarg --id -p,--play      --var f:p --desc "play music of current playlist"
+xarg --id -N,--next      --var f:n --desc "next music"
+xarg --id -P,--prev      --var f:P --desc "previous music"
+xarg --id -t,--toggle    --var f:t --desc "toggle music"
+xarg --id -A,--all       --var f:A --desc "play all music on database"
+xarg --id -c,--current   --var f:c --desc "show current music"
+xarg --id -l,--list-play --var f:l --desc "select and play music"
+xarg --id -L,--playlist  --var f:L --desc "playlists functions"
+xarg --id -s,--status    --var f:s --desc "music status"
+xarg --id -w,--watch     --var f:w --desc "watch music status"
 
 xarg --group "Server Options"
-xarg --id -r,--run    --var action:run    --desc "start MPD server"
-xarg --id -S,--stats  --var action:stats  --desc "stats of MPD server"
-xarg --id -q,--quit   --var action:quit   --desc "stop MPD server"
-xarg --id -u,--update --var action:update --desc "update MPD database"
+xarg --id -r,--run    --var f:r --desc "start MPD server"
+xarg --id -S,--stats  --var f:S --desc "MPD server stats"
+xarg --id -q,--quit   --var f:q --desc "stop MPD server"
+xarg --id -u,--update --var f:u --desc "update MPD database"
 
 xrun --xreject-unknow --xrequire-one --xversionrc --xcolors "$@"
 
 # verify MPD
-_mpd_check
+_mpd_check_
 
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~
 # shellcheck disable=SC2154
-case "$action" in
-  play     ) mpc play    ;;
-  next     ) mpc next    ;;
-  prev     ) mpc prev    ;;
-  toggle   ) mpc toggle  ;;
-  current  ) mpc current ;;
-  lplay    ) mListPlay   ;;
-  playlists) mPlaylists  ;;
-  run      ) mpd &       ;;
-  quit     ) pkill mpd   ;;
-  stats    ) mpc stats   ;;
-  status   ) mpc status  ;;
-  update   ) mUpdate     ;;
-  pall     ) mPlayAll    ;;
-  watch    ) mWatch      ;;
+case "$f" in
+  p) mpc play    ;;
+  n) mpc next    ;;
+  P) mpc prev    ;;
+  t) mpc toggle  ;;
+  c) mpc current ;;
+  l) mListPlay   ;;
+  L) mPlaylists  ;;
+  r) mpd &       ;;
+  q) pkill mpd   ;;
+  s) mpc stats   ;;
+  S) mpc status  ;;
+  u) mUpdate     ;;
+  p) mPlayAll    ;;
+  w) mWatch      ;;
 esac
