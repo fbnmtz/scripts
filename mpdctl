@@ -6,10 +6,10 @@
 # Created: Sunday, 2023/07/16 - 12:05:00
 # Author.: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Last Modified: Saturday, 2023/10/07 - 23:29:51
+# Last Modified: Wednesday, 2023/09/06 - 00:05:58
 # Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Version: 1.0.10.147
+# Version: 1.0.11.151
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
 # Description: 
 #  >
@@ -51,14 +51,14 @@ case "$f" in
   n) mpc next    ;;
   P) mpc prev    ;;
   t) mpc toggle  ;;
+  A) mPlayAll    ;;
   c) mpc current ;;
   l) mListPlay   ;;
   L) mPlaylists  ;;
-  r) mpd &       ;;
-  q) pkill mpd   ;;
   s) mpc stats   ;;
-  S) mpc status  ;;
-  u) mUpdate     ;;
-  p) mPlayAll    ;;
   w) mWatch      ;;
+  r) mpd &       ;;
+  S) mpc status  ;;
+  q) pkill mpd   ;;
+  u) mUpdate     ;;
 esac
