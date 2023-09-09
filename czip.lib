@@ -1,0 +1,173 @@
+#!/usr/bin/env bash
+#
+# ############################################################################
+# Project: scripts (none)
+# File...: czip.lib
+# Created: Saturday, 2023/09/09 - 01:13:02
+# Author.: @fbnmtz, (fabiano.matoz@gmail.com)
+# ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
+# Last Modified: Saturday, 2023/09/09 - 02:34:13
+# Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
+# ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
+# Version: 0.0.1.47
+# ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
+# Description: 
+#  >
+# ############################################################################
+# HISTORY:
+#
+
+# shift
+# s=${1:-'10'}
+
+_xLIB_CZIP_=true
+xrequirements datesh puts pwdgen sed grep cat du awk ls mkdir hostname tr
+
+xsetHome
+
+# set up DIRs
+BACKUPS=$APP_HOME/backups/
+RESTORES=$APP_HOME/recovery
+KEYS=$APP_HOME/.zkey
+DEVICE=$(hostname)
+
+for directory in $BACKUPS $RESTORES $KEYS; do
+  if [ ! -d $directory ]; then
+    mkdir -p $directory
+  fi
+done
+
+prompt(){
+  printf "$APP>>[ "; puts r "x" -n; puts "]" -n;  read choice
+}
+
+file?(){
+  if [ -f $1 ]; then
+    echo "ok"
+  else
+    echo "x"
+  fi
+}
+
+_create(){
+  local file
+  file=$1
+  name=$(echo $file | tr -s '/' '-')
+  # generate key
+  pw=$(pwdgen 30)
+  filedate="$(datesh | tr -d '/' | tr -d ':')"
+  filename="$filedate@$DEVICE:$name"
+  
+  puts "debug"
+  puts "$file, $pw, $filename"
+
+  # compact this file/folder
+  if zip -P $pw -9 $BACKUPS/$filename.zip -r $file; then
+    # save key only if zip process was done 
+    
+    # file1
+    echo "# $filename" > /media/xdb/$filename.zkey
+    echo $pw >> /media/xdb/$filename.zkey
+    # file2
+    echo "# $filename" > $KEYS/$filename.zkey
+    echo $pw >> $KEYS/$filename.zkey
+  fi
+}
+
+_extract(){
+  files=($(ls $BACKUPS | tr -s '\n' ' '))
+
+  if [ "$1" == "" ]; then
+    echo "choose file to extract:"
+    i=-1
+    for d in ${files[@]}; do
+      i=$(($i+1))
+      if [ $(($i%2)) -eq 1 ]; then
+          current_color=c
+      else
+          current_color=B
+      fi 
+      size=$(du -h $BACKUPS/$d | awk '{print $1}')
+      puts $current_color "   [$i] => $d ($size)"
+    done
+    prompt
+    while [ ! $choice -le $i ]  || [ "$choice" == "" ] ; do
+      echo "invalid number! choose between [0..$i]"
+      prompt
+    done
+    # remove FILE and KEY
+    pw=$( cat $KEYS$(echo ${files[$choice]} | sed 's/\.zip/\.zkey/g') | grep -v '#' )
+    echo $pwd
+    cmd="unzip -P $pw $BACKUPS/${files[$choice]} -d $RESTORES"
+    echo "$cmd"
+    $cmd
+    # rm $KEYS$(echo ${files[$choice]} | sed 's/\.zip/\.zkey/g')
+    # usage
+    exit 0
+  fi
+
+
+  file=$1
+  # name=$(basename $1)
+  name=$(echo $file | tr -s '/' '-')
+
+  pw="$(cat $KEYS$(echo "$name" | cut -d '.' -f 1 ).zkey | grep -v  '#')"
+  echo "$pw"
+  unzip -P $pw $1 -d $RESTORES
+}
+
+_list(){
+  i=-1
+  colors=(c B)
+  files=($(ls $BACKUPS))
+  puts "$APP list:"
+  for f in ${files[@]}; do
+    i=$(($i+1))
+    if [ $(($i%2)) -eq 1 ]; then
+        current_color=c
+    else
+        current_color=B
+    fi 
+    size=$(du -h $BACKUPS/$f | awk '{print $1}')
+    # echo -e "$f ($size) $s"
+    puts $current_color " -> $f ($size) [$(file? $KEYS$(echo ${files[$i]} | sed 's/\.zip/\.zkey/g') )]"
+  done
+  puts "files count: ${#files[@]} - total size: $(du -h $BACKUPS | awk '{print $1}')"
+                
+}
+
+_remove(){
+  files=($(ls $BACKUPS | tr -s '\n' ' '))
+
+  if [ "$1" == "" ]; then
+    echo "choose file to exclude:"
+    i=-1
+    for d in ${files[@]}; do
+      i=$(($i+1))
+      if [ $(($i%2)) -eq 1 ]; then
+        current_color=c
+      else
+        current_color=B
+      fi
+      size=$(du -h $BACKUPS/$d | awk '{print $1}')
+      puts $current_color "   [$i] => $d ($size)"
+    done
+    prompt
+    while [ ! $choice -le $i ]  || [ "$choice" == "" ] ; do
+      echo "invalid number! choose between [0..$i]"
+      prompt
+    done
+    # remove FILE and KEY
+    echo "rm $BACKUPS/${files[$choice]}"
+    rm $BACKUPS/${files[$choice]}
+    rm $KEYS$(echo ${files[$choice]} | sed 's/\.zip/\.zkey/g')
+  else
+    # if para exit check if it's in valid options
+    if [[ "${files[@]}" =~ "$1" ]]; then
+      echo "file in"
+      # command="$command $1"
+    else
+      echo "file out"
+    fi
+  fi
+}

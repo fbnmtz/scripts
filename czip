@@ -1,0 +1,36 @@
+#!/usr/bin/env bash
+#
+# ############################################################################
+# Project: scripts (none)
+# File...: czip
+# Created: Tuesday, 2020/03/03 - 18:44:19
+# Author.: @fbnmtz, (fabiano.matoz@gmail.com)
+# ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
+# Last Modified: Saturday, 2023/09/09 - 02:33:56
+# Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
+# ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
+# Version: 1.1.0.39
+# ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
+# Description: 
+#  > create a backup zipped in a defaul destination 
+# ############################################################################
+# HISTORY:
+# 
+
+source ~/bin/xSHELL/init
+use args utils czip.lib
+xrequirements zip unzip
+
+xarg --id -c,--create  --var "f:c,source+r" --desc "create a new backup/zip file to default location"
+xarg --id -x,--extract --var "f:x,backup+o" --desc "extract a existing backup/zip file to default location"
+xarg --id -l,--list    --var "f:l"          --desc "list all existent backups"
+xarg --id -r,--rm      --var "f:r,backup+o" --desc "delete backup files"
+
+xrun --xreject-unknow --xrequire-one --xversionrc --xcolors "$@"
+
+case "$f" in
+    c) _create "$source" ;;
+    x) _extract ;;
+    l) _list    ;;
+    r) _remove  ;;
+esac
