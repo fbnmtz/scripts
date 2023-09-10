@@ -1,0 +1,130 @@
+#!/usr/bin/env bash
+#
+# ############################################################################
+# Project: scripts (none)
+# File...: toggleService
+# Created: Wednesday, 2020/04/22 - 00:28:43
+# Author.: @fbnmtz, (fabiano.matoz@gmail.com)
+# ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
+# Last Modified: Sunday, 2023/09/10 - 00:59:40
+# Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
+# ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
+# Version: 0.2.7.368
+# ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
+# Description: 
+#  >
+# ############################################################################
+# HISTORY:
+#
+
+# ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
+source ~/bin/xSHELL/init
+use args
+xrequirements conky compton:picom xm sxhkd mpd dunst ulauncher cairo-dock
+
+# ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
+processctl(){
+    # define vars
+    action=$1; shift;
+    process_name=$1; shift;
+    args="$*";
+    
+    # check if service is installed
+    xrequirements "$process_name"
+
+    _pkill(){
+        # if pgrep -x "$process_name"; then
+        # test $? -eq 0 && 
+            pkill -x "$process_name"
+        # fi
+    }
+    _start(){
+        #  test ! pgrep -x "$process_name" && "$process_name" $args &
+        # if ! pgrep -x "$process_name"; then
+            $process_name $args & 
+        # fi
+        # pgrep -x "$process_name"
+        # test $? -ne 0 && $process_name $args & 
+    }
+
+    _toggle(){
+        if ! pgrep -x "$process_name" >/dev/null ; then
+            $process_name $args &
+            msg="'$process_name' started"
+        else
+            msg="'$process_name' stopped"
+            _pkill
+        fi
+
+        notify-send "$APP" "$msg"
+        echo "$msg"
+    }
+
+    case "$action" in
+        -t|--toggle) _toggle ;;
+        -k|--kil) _pkill  ;;
+        -s|--start) _start  ;;
+    esac
+}
+
+conkyctl(){
+    widget=$1
+    pid=$(ps -x | grep conky | grep -v grep | grep "$widget" | aw 1)
+    if [ "$pid" == "" ]; then
+        conky -c ~/.config/conky/$widget &
+    else
+        kill -9 $pid
+    fi
+}
+
+swapctl(){
+    if [ "$(free -h | grep -i swap | aw 2)" !=  "0B" ]; then
+        # sudo swapoff -a && clearcache
+        sudo swapoff -a && msg='swap off' || msg='swap error on desactivate' 
+    else
+        sudo swapon -a && msg='swap on' || msg='swap error on activate' 
+    fi
+    notify-send "$APP" "$msg"
+    echo "$msg"
+}
+
+ssh_agentctl(){
+    # if ! pgrep -x ssh-agent &> /dev/null; then
+        pkill ssh-agent
+        rm -rf /tmp/ssh-*
+        eval "$(ssh-agent -s)"
+    # fi
+}
+
+# ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
+xarg --section "General options"
+xarg --id -k,--kill      --var name+r         --desc "kill a service by <name>"
+xarg --id -s,--start     --var name+r,args+o  --desc "start a service by <name> with '<args>' (quoted)"
+xarg --section "Services options"
+xarg --id -c,--compton   --code "processctl -t compton -b"               --desc "compton A lightweight compositor for X11 (now picom)"
+xarg --id -d,--dunst     --code "processctl -t dunst"                    --desc "dunst Lightweight and customizable notification daemon"
+xarg --id -m,--mpd       --code "processctl -t mpd"                      --desc "mpd Music Player Daemon "
+xarg --id -p,--picom     --code "processctl -t picom -b"                 --desc "picom A lightweight compositor for X11"
+xarg --id -u,--ulauncher --code "processctl -t ulauncher"                --desc "ulauncher Linux Application Launcher"
+xarg --id -a,--ssh-agent --code "ssh_agentctl"                           --desc "setup ssh-agent "
+xarg --section "My scripts options"
+xarg --id -C,--conky     --code "conkyctl 'sysinfo'"                     --desc "conky Light-weight system monitor for X"
+xarg --id -D,--dock      --code "processctl -t cairo-dock -c -f"         --desc "cairo-dock app launcher and taskbar "   
+xarg --id -M,--wmpd      --code "conkyctl 'cmpd/conkyrc-mpd'"            --desc "conky widget 'mpd'"
+xarg --id -S,--skippy    --code "processctl -t skippy-xd --start-daemon" --desc "skippy-xd A full-screen Exposé-style standalone task switcher for X11 "   
+xarg --id -w,--swap      --code "swapctl"                                --desc "linux swap"   
+xarg --id -y,--winfo     --code "conkyctl 'sysinfo'"                     --desc "conky widget 'sysinfo' "
+
+xhelp --header="Toggle status of a service (running to stopped / stopped to running). \
+    Some custom services are already configured.\
+    \nYou can use 'general options' to start your customizations.
+"
+
+xhelp --footer="for more details, visit: https://github.com/fbnmtz"
+
+xrun --xreject-unknow --require-one --xversionrc "$@"
+
+case "$1" in
+    -k|--kill ) processctl -k "$name";;
+    -s|--start) processctl -s "$name" "$args";;
+esac
