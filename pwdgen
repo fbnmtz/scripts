@@ -1,0 +1,50 @@
+#!/usr/bin/env bash
+#
+# ############################################################################
+# Project: scripts (none)
+# File...: pwdgen
+# Created: Tuesday, 18/02/2020-20:44:58
+# Author.: @fbnmtz, (fabiano.matoz@gmail.com)
+# ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
+# Last Modified: Monday, 2023/09/11 - 00:56:40
+# Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
+# ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
+# Version: 0.1.1.14
+# ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
+# Description: 
+#  >
+# ############################################################################
+# HISTORY:
+#
+
+# you can use openssl, gpg, apg, /dev/urandom
+# gpg --gen-random --armor 1 6
+# < /dev/urandom tr -dc A-Za-z0-9 | head -c14; echo
+# cat /dev/urandom | tr -dc 'a-zA-Z0-9[$-:-?{-~!^_`\[\]]' | fold -w $x | head -n 1
+# cat /dev/urandom | tr -dc 'a-zA-Z0-9*@$.' | fold -w $size | head -n 1  
+# < /dev/urandom tr -dc 'a-zA-Z0-9*@$.' | fold -w 14; echo
+
+APP=$(basename $0)
+DEFAULT_SIZE=6
+size=${1:-$DEFAULT_SIZE}
+
+usage(){
+	echo "no size informed. default is 6."
+	echo " usage:"
+	echo "$APP length"
+	exit
+}
+
+gerenare_password(){
+	openssl rand --base64 $1
+}
+
+while [ "$1" != "" ]; do
+	case $1 in
+		-h) usage;;
+		*) size=$1
+	esac
+	shift
+done
+
+gerenare_password $size | xclip-cmd
