@@ -1,0 +1,61 @@
+#!/usr/bin/env bash
+#
+# ############################################################################
+# Project: scripts (none)
+# File...: sxhkdctl
+# Created: Sunday, 2020/04/19 - 21:54:57
+# Author: Fabiano Matos (none) - [fgm@note]
+# ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
+# Last Modified: Tuesday, 2023/09/12 - 00:40:24
+# Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
+# ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
+# Version: 0.2.4.120
+# ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
+# Description: 
+#  >
+# ############################################################################
+# HISTORY:
+#
+# Thursday, 2022/01/27 - 14:22:53: (fgm)
+#  -> refactor with ~/bin/lib/init
+
+source ~/bin/xSHELL/init
+use args
+xrequirements sxhkd datesh puts
+
+lockfile=/tmp/$APP.lock
+
+trap "[ -f $lockfile ] && /bin/rm -f $lockfile && exit 1" 2 3 13 15 
+
+# ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
+run_daemon(){
+    # check if this script already running
+    if [ ! -f $lockfile ]; then
+        echo "$(datesh)-$USER@$(hostname):$APP" > $lockfile
+        while true; do
+            if ! pgrep -x sxhkd ; then
+                # not runnung start daemon
+                sxhkd &
+            fi
+
+            # check if is discharging (not conected to powerline)
+            discharging=$(acpi | grep Discharging)
+            if [ "$discharging" != "" ]; then
+                # check battery capacity
+                bat=$(acpi | cut -d ',' -f2 | tr -d '%' | tr -d ' ')
+                case 1 in 
+                    $(($bat<=30))) notify-send -u critical "Low Battery" "$bat %" ;;
+                esac 
+            fi
+
+            # check every 30 seconds
+            sleep 30
+        done
+    else
+        puts c "$APP already running"
+    fi
+}
+
+# ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
+xarg --id -d,--daemon --code "run_daemon &" --desc "watch if 'sxhkd' is running. start new instance if not"
+xrun --require-one "$@"
