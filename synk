@@ -1,0 +1,400 @@
+#!/usr/bin/env bash
+#
+# ############################################################################
+# Project: scripts (none)
+# File...: synk
+# Created: Tuesday, 2020/03/03 - 19:55:59
+# Author.: @fbnmtz, (fabiano.matoz@gmail.com)
+# ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
+# Last Modified: Wednesday, 2023/09/13 - 01:51:08
+# Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
+# ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
+# Version: 1.0.4.66
+# ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
+# Description: 
+#  > Sync files with RCLONE
+# ############################################################################
+# HISTORY:
+#
+
+# active bash debug
+# set -xv 
+
+# log type of "current file" to avoid check if it is a "FILE" or "DIR" in every run
+log_remote_filetype(){
+
+    remote_path=$1
+    filename=$2
+
+    # get remote file path/name;type
+    remote_check="$(rclone lsf --format pm $remote_path | grep -m1 $filename | cut -d ';' -f 2)"
+
+    if [ "$remote_check" == "inode/directory" ]; then
+        # it is a DIRECTORY
+        echo "dir:$filename" >> $REMOTE_FILE_TYPE_LOG
+    else
+        # it is a FILE
+        echo "file:$filename" >> $REMOTE_FILE_TYPE_LOG
+    fi
+}
+
+getPath(){
+    source=$1
+    destination=$2
+    object=$3
+
+    # get only filename (ignore all path)
+    filename=$(basename $object)
+    
+    # $OBJECT have relative_path+filename in $LOCAL or $REMOTE folder.
+    # So we use sed to remove filename and get only path
+    relative_path=$(echo $object | sed "s/$filename//g")
+
+    # check if $source contain $REMOTE in path
+    location=$(echo $source | grep $REMOTE)
+    # check if OBJECT is located in REMOTE or LOCAL
+    if [ "$location" == "" ]; then
+        # here OBJECT is LOCAL
+        # next lets check if this OBJECT is a FILE or DIRECTORY
+        if [[ -d $LOCAL/$object ]]; then
+            # it is a DIRECTORY
+            echo "$source""$OBJECT" "$destination""$OBJECT"
+        else
+            # it is a FILE
+            echo "$source""$OBJECT" "$destination""$relative_path"
+        fi
+    else
+        # here OBJECT is REMOTE
+        # next lets check if this OBJECT is a FILE or DIRECTORY
+
+        fileFound="$(cat $REMOTE_FILE_TYPE_LOG | grep -m1 $filename)"
+
+        if [ "$fileFound" == "" ]; then
+            log_remote_filetype $source$relative_path $filename
+            fileFound="$(cat $REMOTE_FILE_TYPE_LOG | grep -m1 $filename)"
+        fi
+    
+        isdir="$(echo $fileFound | cut -d ':' -f 1)"
+        if [ "$isdir" == "dir" ]; then
+            # it is a DIRECTORY
+            # RD path: 
+            echo "$source$OBJECT $destination$OBJECT"
+        else
+            # it is a FILE
+            echo "$source""$OBJECT" "$destination""$relative_path"
+        fi
+
+    fi
+}
+
+synk(){
+    source=$1
+    destination=$2
+    tag=$3
+
+    echo -e "sync on host '$DEVICE' => $command
+from -> '$source' to -> '$destination' \n"
+    while IFS= read -r OBJECT
+    do
+        echo "$(echo $command | cut -d ' ' -f 1): $OBJECT"
+
+        # test if $OBJECT is a relative path inside $LOCAL for a directory or a regular file
+        # BUG: need to test if is a dir or file in SOURCE(local or remote), not only in LOCAL. this mistake can erase all files in LOCAL/dots/.config/
+        run_cmd $(getPath $source $destination $OBJECT)
+
+        echo -e "done.\n"
+    done <<< $(filter_rules $RULES $tag)
+}
+
+run_cmd(){
+    # name args
+    src=$1; dst=$2
+    params=""
+    if [ "$ARGS" == "backup" ]; then
+        params="--backup-dir=$(backup_dir $dst)"
+    fi
+    
+    # store rclone cmd
+    cmd="rclone sync -P $src $dst --log-file=$MYHOME/synk.log $params"
+    
+    # test if is a fake run (test to see whats is going to be sync)
+    if [ "$fake_run" -eq 0 ]; then
+        # is a real exection, so run CMD
+        # echo "$cmd"
+        $cmd
+    else 
+        # in fake run, just prints command that will be used in real run
+        echo "fake run: $cmd"
+    fi
+}
+
+backup_dir(){
+    # $1 = destination
+    result="$(echo $1 | grep $LOCAL)"
+    if [ "$result" == "" ]; then
+        echo "$REMOTE""backups/sync"
+    else
+        echo "$LOCAL""backups/sync"
+    fi
+}
+
+filter_rules(){
+    file=$1; tag=$2
+    # filter 1 - remove comments
+    f1=$(grep -v '#' $file) 
+    # filter 2 - filter by host 
+    f2=$(printf %"s\n" $f1 | awk -F ':' '{ if ($1 == "'$DEVICE'" || $1 == "all") {print $2":"$3} }') 
+    # filter 3 - filter by tag
+    f3=$(printf %"s\n" $f2 | awk -F ':' '{ if ($1 == "'$tag'") {print $2} }') 
+    printf %"s\n" $f3
+}
+
+# define VARs 
+initialize(){
+    # create default config if dont exists
+    configure
+
+    # log REMOTES files types to speed up synk pull run
+    REMOTE_FILE_TYPE_LOG=$MYHOME/remote-filetype.log
+
+    # script name
+    APP=$(basename $0)
+    
+    # command to be executed after check args
+    command=""
+    
+    # device name to apply rules
+    # DEVICE=$HOSTNAME
+    DEVICE=$(hostname)
+    
+    # set remote rclone service/folder 
+    # REMOTE=ifnmg:
+    REMOTE=$(rconfig "REMOTE")
+
+    # set full path to local folder
+    LOCAL=$(rconfig "LOCAL")
+
+    #  set of RULES to sync files on each device
+    RULES=$(rconfig "RULES")
+
+    # define options 
+    OPTIONS=(pull push edit)
+
+    # groups of files/folders to sync
+    # get TAGs in RULES files used in this host or in ALL
+    TAGS=$(cat $RULES | grep -v "#" | awk -F ":" '{ if ($1=="'$DEVICE'"||$1=="all") {print $2} }' | uniq | tr -s '\n' ' ')
+
+    # run a sync test if value is 1
+    #   0 = FALSE
+    #   1 = TRUE
+    fake_run=0
+
+    ARGS=""
+}
+
+# check ARGs 
+inputs(){
+    # check exist ARGs
+    if [ $# -gt 0 ]; then
+        while [ "$1" != "" ]; do
+            case $1 in
+                # pull sync data from REMOTE to LOCAL
+                # push sync data from LOCAL to REMOTE
+                pull | push ) 
+                    # is valid command so we save it and gather next param as option of this command
+                    command=$1
+                    # we remove the first param to get next
+                    shift
+                    # check if have next param (required)
+                    if [ "$1" != "" ]; then
+                        # if para exit check if it's in valid options
+                        if [[ "${TAGS[@]}" =~ "$1" ]]; then
+                            # if valid store it within command
+                            command="$command $1"
+                        else
+                            # prints error for missing a required pararm
+                            missing_tag
+                        fi
+                    else
+                        # prints error for missing a required pararm
+                        missing_tag
+                    fi 
+                    ;;
+
+                edit)
+                    # store command to check if have non-required options
+                    command=$1 
+                    # remove fist param (already stored) and now $1 poits to next
+                    shift
+                    # check if have a next param
+                    if [ "$1" != "" ]; then
+                        if [ "$1" == "rules" ]; then
+                            command="$command $1"
+                        else
+                            # prints error for missing a required pararm
+                            missing_tag
+                        fi
+                    fi 
+                    ;;
+                # fake run to see if all will run as expected
+                -f | --fake)    fake_run=1 ;;
+                -b | --backup) ARGS="backup" ;;
+
+                # show usage info
+                -h | --help | help )
+                    usage
+                    exit
+                    ;;
+
+                # if no valid command/option/flag as give show usage info
+                * ) 
+                    usage
+                    exit 1
+            esac
+            # if no errors found until now, remove this param ($1) to check next
+            shift
+        done
+    else
+        # if we dont have any param show usage info
+        usage
+        exit 1
+    fi
+}
+
+# set up som VARs and create default DIRs
+configure(){
+    # create default directory for this app config
+    MYHOME=/home/$USER/.config/synk
+    # folders=($MYHOME) # ~/synk/{documents,pictures})
+    # for d in ${folders[@]}
+    # do
+    if [ ! -d $MYHOME ]; then
+        echo "create dir $MYHOME"
+        mkdir -p $MYHOME
+    fi
+    # done
+
+    # set conf file with default options
+    CONFIG=$MYHOME/synk.conf
+    if [ ! -f $CONFIG ]; then
+        template_config 
+    fi
+
+    # default RULES
+    DEFAULT_RULES=$MYHOME/synk.rules
+    if [ ! -f $DEFAULT_RULES ]; then
+        template_rules
+    fi
+}
+
+# read config
+rconfig(){
+    # receive 'config name' to find it in config file
+    name=$1
+    # read it on file
+    value=$(grep -v '#' $CONFIG | grep -m 1 $name | cut -d '=' -f 2)
+    # return $value
+    echo $value
+}
+
+# return fist REMOTE available in "rclone"
+getRemote(){
+    echo $(rclone listremotes | tr -s '\n' ' ' | cut -d ' ' -f 1)
+}
+
+# create a default config file
+template_config(){
+    echo "# SYNK config file" > $CONFIG
+    echo "# set remote rclone service/folder " >> $CONFIG
+    echo "REMOTE=$(getRemote)" >> $CONFIG
+    echo "#" >> $CONFIG
+    echo "# set full path to LOCAL folder and move files inside that you want to backup" >> $CONFIG
+    echo "LOCAL=/home/$USER/synk/" >> $CONFIG
+    echo "#" >> $CONFIG
+    echo "# set full path to RULES FILE. Rules define how to sync files on each device" >> $CONFIG
+    echo "RULES=$MYHOME/synk.rules" >> $CONFIG
+}
+
+template_rules(){
+    echo "# synk rules" > $DEFAULT_RULES
+    echo "# files/folders to sync" >> $DEFAULT_RULES
+    echo "# use this format for describe paths to sync:" >> $DEFAULT_RULES
+    echo "#" >> $DEFAULT_RULES
+    echo "#   host:tag:relative/path/inside/local/sync/folder/or/file" >> $DEFAULT_RULES
+    echo "#" >> $DEFAULT_RULES
+    echo "#   host:   hostname or all to sync in all devices" >> $DEFAULT_RULES
+    echo "#   tag:    tag name to sync only some files/folders. ex "config" or "data"" >> $DEFAULT_RULES
+    echo "#   path:   path to file/folder to sync. Use relative paths inside $LOCAL_SYNC_FOLDER ex "documents"" >> $DEFAULT_RULES
+    echo "#   ex.     all:data:documents" >> $DEFAULT_RULES
+    echo "#" >> $DEFAULT_RULES
+    echo "# host:tag:path" >> $DEFAULT_RULES
+    echo "#" >> $DEFAULT_RULES
+    echo "all:docs:documents" >> $DEFAULT_RULES
+}
+
+usage(){
+    echo "usage: $APP [command] [tag] [options]"
+    echo -e " * commands:\n\t"${OPTIONS[@]}" \n * tags:\n\t${TAGS[@]} \n * options:\n\t -f or --fake\n\t -b or --backup"
+    echo "rule-based sync files using RCLONE. "
+    echo "  use '$APP config' to change defautl config or '$APP config rules' to change rules config"
+}
+
+missing_tag(){
+    echo "$APP error: missing/wrong TAG value!"
+    echo -e " * values:\n\t${TAGS[@]}"
+    exit 1
+}
+
+run(){
+    # check if DIRs exist if its changed from default values
+    if [ -z $REMOTE  ]; then
+        echo "Error: REMOTE rclone service not found in config file!"
+        echo "User '$APP config' to fix this"
+        # usage
+        exit 1
+    fi
+    
+    if [ ! -d $LOCAL ]; then
+        echo "Error: LOCAL folder not found in file system!"
+        # usage
+        exit 1
+    fi
+
+    if [ "$command" != "" ]; then
+        $command
+    else
+        echo "Error! no command selected."
+        exit 1
+    fi
+}
+# pull: remote to local
+pull(){
+    # check_configs
+    synk $REMOTE $LOCAL $1
+}
+# push: local to remote
+push(){
+    # check_configs
+    synk $LOCAL $REMOTE $1
+}
+
+edit(){
+    if [ "$1" == "" ]; then
+        $TERMINAL $EDITOR $CONFIG 2>/dev/null
+    else
+        $TERMINAL $EDITOR $RULES 2>/dev/null
+    fi
+}
+
+# 
+main() {
+    # set VAR's
+    initialize
+    # manage ARGs
+    inputs $@
+    # run command and options selected with args
+    run
+}
+
+# call main function and pass all args
+main $@
