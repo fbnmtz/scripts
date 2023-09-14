@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+#
+# ############################################################################
+# Project: scripts (none)
+# File...: synk-and-off
+# Created: Thursday, 2020/03/05 - 17:29:49
+# Author.: @fbnmtz, (fabiano.matoz@gmail.com)
+# ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
+# Last Modified: Thursday, 2023/09/14 - 00:38:46
+# Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
+# ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
+# Version: 0.1.4.22
+# ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
+# Description: 
+#  >
+# ############################################################################
+# HISTORY:
+#
+
+# czip -c  ~/documents
+# czip -c  ~/pictures
+# czip -c  ~/apps
+# czip -c  ~/videos
+
+synk push config && \
+synk push data  && \
+notify-send "SYNK DONE!" "shutdown in two minutes" && \
+sleep 120 && \
+sudo shutdown -h now
