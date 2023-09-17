@@ -1,0 +1,43 @@
+#!/usr/bin/env bash
+#
+# #############################################################
+# Project: bin (none)
+# File...: xdd
+# Created: sábado, 2022/02/05 - 16:43:58
+# Author.: Fabiano Matos, fgm (fabiano.matoz@gmail.com)  (fgm@7c4)
+# ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
+# Last Modified: Saturday, 2022/02/05 - 17:31:20
+# Modified By..: Fabiano Matos, fgm (fabiano.matoz@gmail.com)
+# ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
+# Version: 0.0.1.47
+# ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
+# Description: 
+#  >
+# ############################################################################
+# HISTORY:
+#
+# #############################################################
+#
+
+# dd command line
+cmd='sudo dd if=<from> of=<to> bs=1M status=progress'
+
+case "$1" in
+    -i|--inspect|-h|--help) 
+        echo -e "usage: xdd <from> <to>\n\nwill generate this code:"
+        echo -e "   ${cmd}" 
+        ;;
+    *)
+        if [ -n "$1" ] && [ -n "$2" ]; then
+        echo "dd wrapper"
+            run="sudo dd if=$1 of=$2 bs=1M status=progress" 
+            echo $run
+            if eval $run; then
+                [ -f $2 ] && sudo chown -R $USER:$USER $2
+            fi
+        else 
+            echo missing params
+        fi
+        # [ $? -eq 0 ] && sudo chown -R $USER:$USER $2
+    ;;
+esac
