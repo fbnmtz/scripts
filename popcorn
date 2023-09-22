@@ -7,10 +7,10 @@
 # Author.: @fbnmtz, fgm (fabiano.matoz@gmail.com) 
 #        (take idea for another script)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Last Modified: Friday, 2023/09/01 - 01:22:22
+# Last Modified: Friday, 2023/09/22 - 01:07:58
 # Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Version: 1.1.13.293
+# Version: 1.1.14.298
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
 # Description: 
 #  > popcorn (term version)
@@ -34,14 +34,16 @@ xarg --id -H,--history --var f:h            --desc "show search history"
 xarg --id -m,--magnet  --var f:m,magnet+r   --desc "magnet link for download"
 xarg --id -p,--player  --var f:p,player+r   --desc "set player to watch torrent"
 xarg --id -s,--search  --var f:s,search+r   --desc "term for search a torrent"
+xarg --id -S,--status  --var f:S            --desc "show popcorn status"
 xarg --id -w,--web     --var f:w            --desc "start peerfliex web interface"
 
 xrun --xversionrc --xrequire-one --xcolors "$@"
 
 case "$f" in
-    h  ) pHistory      ;;
+    h  ) pHistory     ;;
     m  ) pMagnet      ;;
     w  ) pWeb         ;;
+    S  ) pStatus      ;;
     s|*) pSearch "$@" ;;
 esac
 

@@ -6,10 +6,10 @@
 # Created: Wednesday, 2023/08/30 - 20:23:49
 # Author.: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Last Modified: Friday, 2023/09/01 - 01:07:37
+# Last Modified: Friday, 2023/09/22 - 01:08:14
 # Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Version: 0.0.2.59
+# Version: 0.0.3.76
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
 # Description: 
 #  >
@@ -25,6 +25,7 @@ xsetHome
 # set default player
 player=mpv 
 _history_file=$APP_HOME/search.txt
+_PDATA=~/popcorn
 
 # used commands
 _peerflix="peerflix '<link>' --all --list --subtitles --no-quit --$player --"
@@ -86,6 +87,16 @@ pMagnet(){
 
 pHistory(){
   cat "$_history_file"
+}
+
+pStatus(){
+  xrequirements xhr ls wc du tail
+  
+  xhr 1
+  echo -e "#\t$APP status"
+  xhr 1
+  echo "torrents: $(ls | wc -l)"
+  echo "size: $(du -h $_PDATA | tail -n1)"
 }
 
 runApp(){
