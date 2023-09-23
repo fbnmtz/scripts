@@ -6,10 +6,10 @@
 # Created: Wednesday, 2023/08/30 - 20:23:49
 # Author.: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Last Modified: Friday, 2023/09/22 - 01:08:14
+# Last Modified: Saturday, 2023/09/23 - 01:57:28
 # Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Version: 0.0.3.76
+# Version: 0.0.4.126
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
 # Description: 
 #  >
@@ -90,13 +90,16 @@ pHistory(){
 }
 
 pStatus(){
-  xrequirements xhr ls wc du tail
+  xrequirements xhr ls wc du tail find grep aw column
+  div=$(xhr 1 -s 40)
   
-  xhr 1
-  echo -e "#\t$APP status"
-  xhr 1
-  echo "torrents: $(ls | wc -l)"
-  echo "size: $(du -h $_PDATA | tail -n1)"
+  echo -e "\n${CYAN}${div}\n#\t${APP} status\n${div}${RESET}"
+  output+="\n${YELLOW}torrents${RESET}:;$(ls | wc -l)"
+  output+="\n${YELLOW} \`-> downloaded:${RESET};$(find -maxdepth 1 -type d | wc -l)"
+  output+="\n${YELLOW} \`-> files.....:${RESET};$(ls -l $_PDATA | grep '.torrent' | wc -l)"
+  output+="\n${YELLOW}storage${RESET}.:;$_PDATA (${RED}$(du -h $_PDATA | tail -n1 | aw 1)${RESET})"
+
+  echo -e "$output" | column -t -s ';'
 }
 
 runApp(){
