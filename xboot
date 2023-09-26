@@ -1,0 +1,52 @@
+#!/usr/bin/env bash
+#
+# ############################################################################
+# Project: scripts (none)
+# File...: usb-boot
+# Created: Tuesday, 2020/02/04 - 00:07:38
+# Author.: @fbnmtz, (fabiano.matoz@gmail.com)
+# ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
+# Last Modified: Wednesday, 2024/01/17 - 18:19:37
+# Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
+# ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
+# Version: 0.0.4.101
+# ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
+# Description: 
+#  >
+# ############################################################################
+# HISTORY:
+#
+
+# ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~    
+# shellcheck disable=SC1090,SC2154    
+source ~/bin/xSHELL/init    
+use args
+# ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~    
+xrequirements qemu-system-x86_64 sudo fallocate rm
+# _cmd_="sudo qemu-system-x86_64 -usb -usbdevice disk:<disk>  -boot menu=on  -m 512"
+# _cmd_="sudo qemu-system-x86_64 -device piix3-usb-uhci -drive id=pendrive,file=<disk>,format=raw,if=none -device usb-storage,drive=pendrive  -boot menu=on  -m 512"
+# _cmd_="sudo qemu-system-x86_64 -hdc /tmp/vda.img -hdb <disk>  -boot menu=on  -m 512"
+_cmd_="sudo qemu-system-x86_64 -hdc /tmp/vda.img  -boot menu=on  -m 512"
+
+# ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~    
+xarg --id -d,--disk --var disk   --desc "create disk to install"
+xarg --id -i,--iso  --var iso+r  --desc "ISO file to boot"
+xarg --id -u,--usb  --var usb+r  --desc "boot usb stick"      
+xarg --id -s,--size --var size+r --desc "size of install disk"      
+xarg --header "use qemu to boot an iso/usb stick"
+xarg --footer "* this script require 'qemu-system-x86_64' and root privilege"
+    
+xrun --xreject-unknow --xrequire-one --xversionrc --xcolors "$@"    
+
+[ -z "$size" ] && size=5G
+# [ -n "$iso"  ] && _cmd_+=" -cdrom $iso"
+[ -n "$iso"  ] && _cmd_+=" -drive file=$iso,index=0,media=cdrom"
+[ -n "$usb"  ] && _cmd_+=" -drive file=$usb,format=raw,index=0,media=disk"
+
+# if [ -n "$disk" ]; then
+	sudo fallocate -l $size /tmp/vda.img
+	# _cmd_=${_cmd_/<disk>/$usb}
+	echo "$_cmd_"
+	eval "$_cmd_"
+	sudo rm /tmp/vda.img
+# fi
