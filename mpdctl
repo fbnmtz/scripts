@@ -6,10 +6,10 @@
 # Created: Sunday, 2023/07/16 - 12:05:00
 # Author.: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Last Modified: Wednesday, 2023/09/06 - 00:05:58
+# Last Modified: Wednesday, 2023/09/27 - 02:13:50
 # Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Version: 1.0.11.151
+# Version: 1.0.12.174
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
 # Description: 
 #  >
@@ -32,6 +32,7 @@ xarg --id -l,--list-play --var f:l --desc "select and play music"
 xarg --id -L,--playlist  --var f:L --desc "playlists functions"
 xarg --id -s,--status    --var f:s --desc "music status"
 xarg --id -w,--watch     --var f:w --desc "watch music status"
+xarg --id -o,--options   --var f:o,value+r --desc "set options (s|single)(r|repeat)(z|random)"
 
 xarg --group "Server Options"
 xarg --id -r,--run    --var f:r --desc "start MPD server"
@@ -61,4 +62,5 @@ case "$f" in
   S) mpc status  ;;
   q) pkill mpd   ;;
   u) mUpdate     ;;
+  o) mOptions    ;;
 esac

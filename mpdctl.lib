@@ -6,10 +6,10 @@
 # Created: Thursday, 2023/07/20 - 00:02:53
 # Author.: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Last Modified: Saturday, 2023/10/07 - 23:25:40
+# Last Modified: Wednesday, 2023/09/27 - 02:13:37
 # Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Version: 0.0.9.195
+# Version: 0.0.10.220
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
 # Description: 
 #  >
@@ -20,7 +20,7 @@
 _xLIB_MPDCTL_=true
 
 # set ROFI command and arguments
-_ROFI="rofi -no-config -dmenu -i -p"
+_MENU_CMD_="rofi -no-config -dmenu -i -p"
 
 # validates installation of required binaries
 xrequirements rofi watch pgrep cut aw
@@ -42,7 +42,7 @@ mPlayAll(){
 
 mListPlay(){
   local music index
-  music=$(mpc playlist | $_ROFI "Select one Music" -format "d%s"); 
+  music=$(mpc playlist | $_MENU_CMD_ "Select one Music" -format "d%s"); 
   if [ -n "$music" ]; then 
     index=$(echo "$music" | cut -d '%' -f1) 
     echo "$music";
@@ -52,9 +52,9 @@ mListPlay(){
 }
 
 mPlaylists(){
-  local menu choice
-  menu="all;Play all songs\nclear;Empty current queue\n------\n$(_lists_info | sort -f)"
-  choice=$(echo -en "$menu" | column -t -s ';' | $_ROFI "Playlist Functions" | aw 1)
+  local menu_items choice
+  menu_items="all;Play all songs\nclear;Empty current queue\n------\n$(_lists_info | sort -f)"
+  choice=$(echo -en "$menu_items" | column -t -s ';' | $_MENU_CMD_ "Playlist Functions" | aw 1)
 
   if [ -n "$choice" ]; then
     case "$choice" in
@@ -85,4 +85,17 @@ queue_all(){
 
 queue_playlist(){
   mpc clear && mpc load "$choice" && mpc play 
+}
+
+mOptions(){
+  if [ -n "$value" ]; then 
+    for opt in $(echo "$value" | cut -d ',' -f1); do
+      case "$opt" in
+        s|single ) mpc single  ;;
+        r|repeat ) mpc repeat  ;;
+        z|shuffle) mpc shuffle ;;
+        *        ) echo "Invalid option!" ;;
+      esac
+    done
+  fi
 }
