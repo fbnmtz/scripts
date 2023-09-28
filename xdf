@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+#
+# #############################################################
+# File...: xdf
+# Project: scripts (none)
+# Created: Monday, 2021/01/25-08:25:52
+# Author.: bkn7c4 (none) - [bkn@7c4]
+# ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~
+# Last Modified: Thursday, 2023/09/28 - 01:28:59
+# Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
+# ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~
+# Description: 
+#  >
+# #############################################################
+#
+
+second-terminal -e watch --color -d 'df -h' &
+second-terminal -e watch --color -d 'lsblk' &
+second-terminal -e watch --color -d "findmnt| grep xfiles" &
+second-terminal -e watch -d blkid &
