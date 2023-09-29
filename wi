@@ -6,10 +6,10 @@
 # Created: Thursday, 2020/03/02 - 00:16:03
 # Author.: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Last Modified: Thursday, 2023/06/08 - 05:07:01
+# Last Modified: Friday, 2023/09/29 - 01:44:02
 # Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Version: 0.0.1.3
+# Version: 0.0.1.7
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
 # Description: 
 #  > shortcut to 'whereis'
@@ -17,4 +17,8 @@
 # HISTORY:
 #
 
- whereis $1
+# shellcheck disable=SC1090
+source ~/bin/xSHELL/init
+xrequirements whereis
+
+whereis "$1"
