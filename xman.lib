@@ -6,10 +6,10 @@
 # Created: Sunday, 2023/08/13 - 08:03:29
 # Author.: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Last Modified: Monday, 2023/08/14 - 20:04:17
+# Last Modified: Sunday, 2023/10/01 - 03:43:25
 # Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Version: 0.1.2.14
+# Version: 0.1.2.16
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
 # Description: 
 #  >
@@ -34,14 +34,16 @@ mList(){
 }
 
 mBinary(){
-  binary=$( find /usr/bin/ /bin/ /sbin/ -type f | \
-    sed 's/\/usr\/bin\///g' | \
-    sed 's/\/bin\///g' | \
-    sed 's/\/sbin\///g' | \
-    awk '{print $1}' | \
-    sort -u | \
-    $rofi_cmd "Man Search" 
-  )
+  if [ -z "$binary" ]; then
+    binary=$( find /usr/bin/ /bin/ /sbin/ -type f | \
+      sed 's/\/usr\/bin\///g' | \
+      sed 's/\/bin\///g' | \
+      sed 's/\/sbin\///g' | \
+      awk '{print $1}' | \
+      sort -u | \
+      $rofi_cmd "Man Search" 
+    )
+  fi
   mDefault
 }
 
