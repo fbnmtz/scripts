@@ -3,48 +3,42 @@
 # ############################################################################
 # Project: scripts (none)
 # File...: pwdgen
-# Created: Tuesday, 18/02/2020-20:44:58
+# Created: Tuesday, 2020/02/18-20:44:58
 # Author.: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Last Modified: Monday, 2023/09/11 - 00:56:40
+# Last Modified: Monday, 2023/10/02 - 00:38:13
 # Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Version: 0.1.1.14
+# Version: 1.0.0.33
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
 # Description: 
 #  >
+# 	you can use openssl, gpg, apg, /dev/urandom
+# 	gpg --gen-random --armor 1 6
+# 	< /dev/urandom tr -dc A-Za-z0-9 | head -c14; echo
+# 	cat /dev/urandom | tr -dc 'a-zA-Z0-9[$-:-?{-~!^_`\[\]]' | fold -w $x | head -n 1
+# 	cat /dev/urandom | tr -dc 'a-zA-Z0-9*@$.' | fold -w $size | head -n 1  
+# 	< /dev/urandom tr -dc 'a-zA-Z0-9*@$.' | fold -w 14; echo
 # ############################################################################
 # HISTORY:
 #
 
-# you can use openssl, gpg, apg, /dev/urandom
-# gpg --gen-random --armor 1 6
-# < /dev/urandom tr -dc A-Za-z0-9 | head -c14; echo
-# cat /dev/urandom | tr -dc 'a-zA-Z0-9[$-:-?{-~!^_`\[\]]' | fold -w $x | head -n 1
-# cat /dev/urandom | tr -dc 'a-zA-Z0-9*@$.' | fold -w $size | head -n 1  
-# < /dev/urandom tr -dc 'a-zA-Z0-9*@$.' | fold -w 14; echo
+# ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~    
+# shellcheck disable=SC1090,SC2154    
+# ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~    
+source ~/bin/xSHELL/init
+use args 
+xrequirements xclip-cmd openssl
 
-APP=$(basename $0)
+xarg --id -s,--size --var size+r --desc "size of new password"
+xrun --xversionrc --xcolors "$@"   
+
 DEFAULT_SIZE=6
-size=${1:-$DEFAULT_SIZE}
-
-usage(){
-	echo "no size informed. default is 6."
-	echo " usage:"
-	echo "$APP length"
-	exit
-}
 
 gerenare_password(){
 	openssl rand --base64 $1
 }
 
-while [ "$1" != "" ]; do
-	case $1 in
-		-h) usage;;
-		*) size=$1
-	esac
-	shift
-done
+[ -z "$size" ] && size=${DEFAULT_SIZE}
 
 gerenare_password $size | xclip-cmd
