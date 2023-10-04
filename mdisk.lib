@@ -6,10 +6,10 @@
 # Created: Friday, 2023/08/18 - 21:43:52
 # Author.: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Last Modified: Sunday, 2023/09/03 - 00:30:22
+# Last Modified: Wednesday, 2023/10/04 - 00:03:07
 # Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Version: 0.0.3.41
+# Version: 0.0.4.101
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
 # Description: 
 #  >
@@ -36,11 +36,23 @@ _unmounted(){
 
 _list(){
     t=$1
+    values=$($_disks_ -o name,type,size | grep disk)
     case "$t" in
         mounted|m ) _mounted   ;;
         umounted|u) _unmounted ;;
-        all|a|*   ) $_disks_ -o name,type,size | grep disk ;;
+        all|a|*   ) echo "$values" ;;
     esac
+    expr=$(echo -e "$values" | aw 3 | tr -d 'G' | tr -s '\n' '+' | sed 's/.$//')
+    # expr=$(echo -e "$values" | aw 3 | tr -s '\n' '+' | sed 's/.$//')
+    bruteSize=$(lshw -quiet -class disk -class storage -json 2>/dev/null |
+        grep -Po '"size" : \K\d+' |
+        paste -sd + - |
+        bc |
+        numfmt --to=si --suffix=B)
+    s=$(echo "scale=3; (${expr})/1000" | bc 2> /dev/null)
+    # s=$(echo "scale=3; (${expr/G//})/1000" | bc 2> /dev/null)
+    d=$(xhr 3 -s 40)
+    echo -e "$d\nsum: ${expr} = ${s}TB (${bruteSize})\n$d"
 }
 
 _backup(){
