@@ -6,10 +6,10 @@
 # Created: Friday, 2023/08/18 - 21:43:52
 # Author.: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Last Modified: Wednesday, 2023/10/04 - 00:03:07
+# Last Modified: Wednesday, 2023/10/04 - 02:58:37
 # Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Version: 0.0.4.101
+# Version: 0.0.5.109
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
 # Description: 
 #  >
@@ -18,9 +18,8 @@
 #
 
 _xLIB_MDISK_=true
-xrequirements lsblk grep awk aw printf sfdisk smartctl mdate cut rev
+xrequirements aw awk bc cut grep lsblk lshw mdate numfmt paste printf rev sfdisk smartctl 
 xsetHome
-
 _disks_="lsblk -lpn"
 _filter_="grep 'part\|crypt\|lvm\|loop\|disk'"
 
