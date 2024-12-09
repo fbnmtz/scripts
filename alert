@@ -6,15 +6,15 @@
 # Created: Wednesday, 2020/10/01 - 12:13:32
 # Author.: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Last Modified: Monday, 2023/07/10 - 14:03:33
+# Last Modified: Monday, 2024/12/09 - 17:37:10
 # Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Version: 0.1.3.82
+# Version: 0.1.3.84
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
 # Description: 
 #  >
 
-source ~/bin/lib/init
+source "$xSHELL_INIT"
 
 use args
 requirements notify-send mdate
@@ -29,9 +29,9 @@ filename="$(mdate -y -m -d).log"
 cmd='notify-send'
 
 # define args
-xargs --id -c,--critical --var level:critical --desc "define notification level as 'critical'"
-xargs --id -t,--title    --var title+r        --desc "set title of notification"
-xargs --id -m,--msg      --var msg+r          --desc "set mensage of notification"
+xarg --id -c,--critical --var level:critical --desc "define notification level as 'critical'"
+xarg --id -t,--title    --var title+r        --desc "set title of notification"
+xarg --id -m,--msg      --var msg+r          --desc "set mensage of notification"
 
 # run params
 xrun --xrequire-one --xversionrc "$@"

@@ -6,10 +6,10 @@
 # Created: Wednesday, 2020/04/22 - 03:38:46
 # Author.: Fabiano Matos, fgm (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Last Modified: Tuesday, 2023/08/22 - 09:09:59
+# Last Modified: Monday, 2024/12/09 - 17:41:13
 # Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Version: 0.1.3.11
+# Version: 0.1.3.13
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
 # Description: 
 #  >
@@ -18,7 +18,7 @@
 #
 
 # shellcheck disable=SC1090
-source ~/bin/xSHELL/init
+source "$xSHELL_INIT"
 xrequirements mpv
 
 # play a video as wallpaper

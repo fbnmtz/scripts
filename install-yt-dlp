@@ -6,10 +6,10 @@
 # Created: quinta, 2022/02/10 - 12:53:52
 # Author.: Fabiano Matos, fgm (fabiano.matoz@gmail.com)  (fgm@7c4)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Last Modified: Thursday, 2023/08/17 - 18:52:56
+# Last Modified: Monday, 2024/12/09 - 17:39:34
 # Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Version: 0.0.2.25
+# Version: 0.0.2.27
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
 # Description: 
 #  >
@@ -20,7 +20,7 @@
 #
 
 # shellcheck disable=SC1090
-source ~/bin/xSHELL/inits 2> /dev/null || { echo "Error loading 'xSHELL' lib!"; exit 1; }
+source "$xSHELL_INIT" 2> /dev/null || { echo "Error loading 'xSHELL' lib!"; exit 1; }
 
 xrequirements curl chmod
 

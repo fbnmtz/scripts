@@ -6,10 +6,10 @@
 # Created: Wednesday, 2021/05/26 - 23:45:50
 # Author.: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Last Modified: Thursday, 2023/08/24 - 22:15:49
+# Last Modified: Monday, 2024/12/09 - 17:41:37
 # Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Version: 0.1.4.38
+# Version: 0.1.4.40
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
 # Description: 
 #  >
@@ -19,7 +19,7 @@
 #
 
 # shellcheck disable=SC1090
-source ~/bin/xSHELL/init
+source "$xSHELL_INIT"
 use args
 xarg --id -s,--size  --var "size+r" --desc "columns of header"
 xarg --id -c,--char  --var "char+r" --desc "custom <char> for header"

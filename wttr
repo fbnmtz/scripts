@@ -6,10 +6,10 @@
 # Created: Tuesday, 2020/02/18 - 20:44:58
 # Author.: @fbnmtz, fgm (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Last Modified: Saturday, 2023/08/26 - 15:29:04
+# Last Modified: Monday, 2024/12/09 - 17:41:22
 # Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Version: 0.1.3.62
+# Version: 0.1.3.64
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
 # Description: 
 #  > see whether of a city form terminal
@@ -18,7 +18,7 @@
 #
 
 # shellcheck disable=SC1090
-source ~/bin/xSHELL/init
+source "$xSHELL_INIT"
 xrequirements cut tr curl sed
 xsetHome
 

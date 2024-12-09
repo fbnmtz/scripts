@@ -6,10 +6,10 @@
 # Created: Tuesday, 2020/03/03 - 18:44:19
 # Author.: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Last Modified: Saturday, 2023/09/09 - 02:33:56
+# Last Modified: Monday, 2024/12/09 - 17:38:37
 # Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Version: 1.1.0.39
+# Version: 1.1.0.40
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
 # Description: 
 #  > create a backup zipped in a defaul destination 
@@ -17,7 +17,7 @@
 # HISTORY:
 # 
 
-source ~/bin/xSHELL/init
+source "$xSHELL_INIT"
 use args utils czip.lib
 xrequirements zip unzip
 

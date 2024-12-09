@@ -6,10 +6,10 @@
 # Created: Sunday, 2020/04/19 - 21:54:57
 # Author: Fabiano Matos (none) - [fgm@note]
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Last Modified: Tuesday, 2023/09/12 - 00:40:24
+# Last Modified: Monday, 2024/12/09 - 17:41:05
 # Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Version: 0.2.4.120
+# Version: 0.2.4.122
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
 # Description: 
 #  >
@@ -19,7 +19,7 @@
 # Thursday, 2022/01/27 - 14:22:53: (fgm)
 #  -> refactor with ~/bin/lib/init
 
-source ~/bin/xSHELL/init
+source "$xSHELL_INIT"
 use args
 xrequirements sxhkd datesh puts
 

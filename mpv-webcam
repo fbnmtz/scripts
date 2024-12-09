@@ -6,10 +6,10 @@
 # Created: Thursday, 2020/04/23 - 01:15:41
 # Author.: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Last Modified: Saturday, 2023/08/19 - 01:45:29
+# Last Modified: Monday, 2024/12/09 - 17:40:12
 # Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Version: 0.2.2.163
+# Version: 0.2.2.165
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
 # Description: 
 #  >
@@ -27,7 +27,7 @@
 #   * SC2154: var is referenced but not assigned.
 #       -> variables created by or library system (don't worry)
 
-source ~/bin/xSHELL/init
+source "$xSHELL_INIT"
 use args utils io
 xrequirements dmenu:rofi mpv tr
 
