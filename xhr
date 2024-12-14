@@ -6,10 +6,10 @@
 # Created: Wednesday, 2021/05/26 - 23:45:50
 # Author.: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Last Modified: Monday, 2024/12/09 - 17:41:37
+# Last Modified: Saturday, 2024/12/14 - 14:40:37
 # Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Version: 0.1.4.40
+# Version: 0.1.4.66
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
 # Description: 
 #  >
@@ -21,25 +21,38 @@
 # shellcheck disable=SC1090
 source "$xSHELL_INIT"
 use args
-xarg --id -s,--size  --var "size+r" --desc "columns of header"
-xarg --id -c,--char  --var "char+r" --desc "custom <char> for header"
-xrun --xrequire-one --xversionrc --xcolors "$@"
+
+xrequirements tput seq
+
+xarg --id -s,--size     --var "size+r"       --desc "columns of header"
+xarg --id -c,--char     --var "char+r"       --desc "custom <char> for header"
+xarg --id -C,--comment  --var "comment:true" --desc "add comment before header line"
+
+xrun --xversionrc --xcolors "$@"
 
 if [ -z "$char" ]; then 
-  case $1 in
-    1) char="~" ;;
-    2) char="*"  ;;
-    3) char="-"  ;;
-    4) char="+"  ;;
-    5) char="." ;;
-    6) char="/" ;;
-    *) char="#"  ;;
-  esac
+  if [ -n "$1" ]; then
+    case $1 in
+      1) char="~"  ;;
+      2) char="*"  ;;
+      3) char="-"  ;;
+      4) char="+"  ;;
+      5) char="."  ;;
+      6) char="/"  ;;
+      *) char="$1" ;;
+    esac
+  else 
+    char="#"
+  fi
 fi
 
-[ -z "$size" ] && size=80 
-echo -n "# "
+# get curret terminal collumn size
+[ -z "$size" ] && size=$(($(tput cols)-2))
+# add shell comment before, if requested
+[ -n "$comment" ] && echo -n "# "
+# print header line
 for i in $(seq 1 "$size"); do
   echo -n "$char"
 done
+# break line at end
 echo
