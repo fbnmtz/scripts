@@ -1,0 +1,55 @@
+#!/usr/bin/env bash
+#
+# ############################################################################
+# Project: scripts (none)
+# File...: watch
+# Created: Saturday, 2024/12/14 - 13:04:40
+# Author.: fbnmtz, (fabiano.matoz@gmail.com)
+# ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
+# Last Modified: Saturday, 2024/12/14 - 14:51:39
+# Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
+# ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
+# Version: 0.0.1.63
+# ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
+# Description: 
+#  >
+# ############################################################################
+# HISTORY:
+#
+
+# ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~
+# shellcheck disable=SC1090,SC2154
+#   * SC1090: Can't follow non-constant source. Use a directive to specify location.
+#       -> cant follow or source usage
+#   * SC2154: var is referenced but not assigned.
+#       -> variables created by or library system (don't worry)
+
+# ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~
+source "$xSHELL_INIT"
+use args
+
+xrequirements clear sleep tput xhr
+
+# ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~
+# define your arguments with 'xarg' function. Example below:
+xarg --id -c,--command --var cmd+r  --desc "command to watch"
+xarg --id -s,--seconds --var secs+r --desc "seconds to run again"
+
+xhelp --header="wrapper for 'watch' command or a function on Darwin systems"
+
+xrun --xreject-unknow --xrequire-one --xcolors --xversionrc "$@"
+
+# define seconds to wait and run cmd again
+[ -z "$secs" ] && seconds=2 || seconds=$secs
+
+if builtin watch; then
+  watch "$@"
+else
+  while :; do 
+    clear
+    echo "watch: '$cmd' - reload: '$seconds' secs"
+    xhr -c "-"
+    $cmd
+    sleep "$seconds"
+  done
+fi
