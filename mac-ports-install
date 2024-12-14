@@ -1,0 +1,40 @@
+#!/usr/bin/env bash
+#
+# ############################################################################
+# Project: scripts (none)
+# File...: /Users/fgm/binx/mac-ports-install
+# Created: Saturday, 2024/12/14 - 16:21:54
+# Author.: fbnmtz, (fabiano.matoz@gmail.com)
+# ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
+# Last Modified: Saturday, 2024/12/14 - 16:24:40
+# Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
+# ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
+# Version: 0.0.1.6
+# ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
+# Description: 
+#  >
+# ############################################################################
+# HISTORY:
+#
+
+# ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~
+# shellcheck disable=SC1090,SC2154
+#   * SC1090: Can't follow non-constant source. Use a directive to specify location.
+#       -> cant follow or source usage
+#   * SC2154: var is referenced but not assigned.
+#       -> variables created by or library system (don't worry)
+
+# ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~
+source "$xSHELL_INIT"
+use args
+
+mkdir -p $HOME/mports
+cd $HOME/mports
+git clone https://github.com/macports/macports-base.git
+cd macports-base
+git checkout v2.10.5  # skip this if you want to use the development version
+
+./configure --prefix=${HOME}/mports --with-install-user=${USER} --with-install-group=staff
+make
+make install
+make distclean
