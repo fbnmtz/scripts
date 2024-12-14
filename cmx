@@ -1,16 +1,24 @@
-#!/usr/bin/bash
+#!/usr/bin/env bash
 #
 # #############################################################
-# File...: /home/fgm/bin/cmx
-# Project: /home/fgm/bin
+# File...: cmx
+# Project: scripts (none)
 # Created: 18/02/2020-20:44:58
 # Author: Fabiano Matos (fgm@core)
 # -------------------------------------------------------------
-# Last Modified: 07/04/2020-17:32:58
-# Modified By: Fabiano Matos (fgm@note)
+# Last Modified: Saturday, 2024/12/14 - 15:17:04
+# Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
 # -------------------------------------------------------------
 # Description: 
 # #############################################################
 #
 
-chmod +x $1
+# shellcheck disable=SC1090,2154
+source "$xSHELL_INIT"
+xrequirements chmod
+
+if [ -f "$1" ]; then
+  chmod +x "$1"
+else 
+  echo "Error! File \"$1\" not exists."
+fi
