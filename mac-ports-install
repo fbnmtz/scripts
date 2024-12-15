@@ -6,10 +6,10 @@
 # Created: Saturday, 2024/12/14 - 16:21:54
 # Author.: fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Last Modified: Saturday, 2024/12/14 - 16:24:40
+# Last Modified: Saturday, 2024/12/14 - 19:18:41
 # Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Version: 0.0.1.6
+# Version: 0.0.1.19
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
 # Description: 
 #  >
@@ -28,13 +28,21 @@
 source "$xSHELL_INIT"
 use args
 
-mkdir -p $HOME/mports
-cd $HOME/mports
-git clone https://github.com/macports/macports-base.git
-cd macports-base
-git checkout v2.10.5  # skip this if you want to use the development version
+xrequirements git make
 
-./configure --prefix=${HOME}/mports --with-install-user=${USER} --with-install-group=staff
-make
-make install
-make distclean
+_PORTS_DIR=$HOME/mports
+_PORTS_GIT=https://github.com/macports/macports-base.git
+
+mkdir -p "$_PORTS_DIR"
+cd "$_PORTS_DIR" || { echo "Error! Directory '$_PORTS_DIR' not found."; exit 1; }
+if git clone $_PORTS_GIT; then
+  cd macports-base || exit 2
+  git checkout v2.10.5  # skip this if you want to use the development version
+
+  ./configure --prefix=${_PORTS_DIR} --with-install-user=${USER} --with-install-group=staff
+  make
+  make install
+  make distclean
+else
+  echo "Fail to clone 'Mac Ports' repository"
+fi
