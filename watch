@@ -6,10 +6,10 @@
 # Created: Saturday, 2024/12/14 - 13:04:40
 # Author.: fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Last Modified: Saturday, 2024/12/14 - 14:51:39
+# Last Modified: Saturday, 2024/12/14 - 23:24:35
 # Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Version: 0.0.1.63
+# Version: 0.0.1.83
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
 # Description: 
 #  >
@@ -28,7 +28,7 @@
 source "$xSHELL_INIT"
 use args
 
-xrequirements clear sleep tput xhr
+xrequirements clear sleep tput xhr diff
 
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~
 # define your arguments with 'xarg' function. Example below:
@@ -45,11 +45,25 @@ xrun --xreject-unknow --xrequire-one --xcolors --xversionrc "$@"
 if builtin watch; then
   watch "$@"
 else
+  output1=/tmp/watch-output1
+  output2=/tmp/watch-output2
+
+  # clear previous outputs
+  rm $output1 $output2
+  
   while :; do 
     clear
     echo "watch: '$cmd' - reload: '$seconds' secs"
     xhr -c "-"
-    $cmd
+    # eval "$cmd"
+    [ -f "$output1" ] && cat $output1 > $output2
+    bash -c "$cmd" > $output1
+    if [ ! -f "$output2" ]; then
+      cat $output1
+    else
+      diff -y $output1 $output2
+    fi
+
     sleep "$seconds"
   done
 fi
