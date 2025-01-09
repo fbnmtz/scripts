@@ -1,0 +1,53 @@
+#!/usr/bin/env bash
+#
+# ############################################################################
+# Project: scripts (none)
+# File...: /Users/fgm/binx/mpv
+# Created: Saturday, 2024/12/14 - 15:59:19
+# Author.: fbnmtz, (fabiano.matoz@gmail.com)
+# ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
+# Last Modified: Thursday, 2025/01/09 - 09:54:42
+# Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
+# ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
+# Version: 0.0.1.41
+# ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
+# Description: 
+#  >
+# ############################################################################
+# HISTORY:
+#
+
+# ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~
+# shellcheck disable=SC1090,SC2154
+source "$xSHELL_INIT"
+use args
+
+xrequirements mpv:docker
+
+_mpv(){
+  # --device /dev/dri \
+  # -v /path/to/your/media/:/home/mpv/media:ro \
+  # docker run --rm -it \
+  #   --privileged \
+  #   --network host \
+  #   -e XDG_RUNTIME_DIR \
+  #   -v /etc/machine-id:/etc/machine-id:ro \
+  #   -v /run/user/1000/pulse:/run/user/1000/pulse \
+  #   -v $HOME/.Xauthority:/home/mpv/.Xauthority \
+  #   -v /tmp/.X11-unix:/tmp/.X11-unix -v $(pwd):/home/fgm/share -e DISPLAY=$DISPLAY \
+  #   fbnmtz/mpv mpv "$@"
+
+  # docker run --rm -it --privileged --net host --name mpv --group-add audio --group-add video -v ~/Desktop:/videos pmdcosta/mpv  mpv "$@"
+
+  # install IINA
+  # https://github.com/iina/iina
+  open -a IINA "$@"
+}
+
+if builtin mpv 2> /dev/null; then
+  echo "mpv binary"
+  mpv "$@"
+else
+  echo "mpv function (docker)"
+  _mpv "$@"  
+fi
