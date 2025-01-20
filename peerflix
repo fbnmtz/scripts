@@ -6,10 +6,10 @@
 # Created: Sunday, 2025/01/19 - 11:55:48
 # Author.: fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Last Modified: Monday, 2025/01/20 - 00:49:15
+# Last Modified: Monday, 2025/01/20 - 00:59:45
 # Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Version: 0.0.1.75
+# Version: 0.0.1.81
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
 # Description: 
 #  >
@@ -23,14 +23,15 @@ use args
 
 _app_=peerflix
 
-xrequirements "$_app_|docker fzf wc awk0"
+xrequirements "$_app_|docker fzf wc awk"
 
 xarg --id -p,--port     --var port+r        --desc "port to run peerflix server"
 xarg --id -P,--params   --var params+r      --desc "params to peerflix server"
 xarg --id -d,--defaults --var defaults:true --desc "use default params (--all --subtitles --list)"
 xarg --id -k,--kill     --var kill:true     --desc "kill runnung server"
 
-xarg --header "stream a torrent file on a webserver (localhost:8888  or defined <port>)"
+xarg --header "peerflix wrapper"
+xarg --footer "stream a torrent file on a webserver (localhost:8888  or defined <port>)"
 # xarg --footer "footer"
 
 xrun --xversionrc --xcolors "$@"
@@ -83,9 +84,7 @@ _kill(){
 
 [ -z "$port" ] && port="8888"
 [ "$defaults" == "true" ] && params="--all --subtitles --list"
-[ "$kill" == "true" ] && { 
-    _kill
- }
+[ "$kill" == "true" ] && {  _kill && exit 0; }
 
 _app_function(){
     docker run --rm -it -p "$port":8888 \
