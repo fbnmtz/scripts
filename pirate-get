@@ -1,0 +1,38 @@
+#!/usr/bin/env bash
+#
+# ############################################################################
+# Project: scripts (none)
+# File...: /Users/fgm/binx/pirate-get
+# Created: Sunday, 2025/01/19 - 11:17:55
+# Author.: fbnmtz, (fabiano.matoz@gmail.com)
+# ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
+# Last Modified: Sunday, 2025/01/19 - 11:39:02
+# Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
+# ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
+# Version: 0.0.1.20
+# ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
+# Description: 
+#  >
+# ############################################################################
+# HISTORY:
+#
+
+# shellcheck disable=SC1090,SC2154
+source "$xSHELL_INIT"
+use args
+
+_app_=pirate-get
+
+xrequirements "$_app_|docker"
+
+_app_function(){
+    docker run -ti --rm -v "$HOME"/popcorn:/usr/src/app/ jaume/docker-pirate-get "$@"
+}
+
+if builtin $_app_ 2> /dev/null; then
+  echo "$_app_ binary"
+  $_app_ "$@"
+else
+  echo "$_app_ function (docker)"
+  _app_function "$@"  
+fi
