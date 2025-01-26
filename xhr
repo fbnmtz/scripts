@@ -6,10 +6,10 @@
 # Created: Wednesday, 2021/05/26 - 23:45:50
 # Author.: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Last Modified: Saturday, 2024/12/14 - 14:40:37
+# Last Modified: Sunday, 2025/01/26 - 13:05:23
 # Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Version: 0.1.4.66
+# Version: 0.1.5.72
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
 # Description: 
 #  >
@@ -24,9 +24,9 @@ use args
 
 xrequirements tput seq
 
-xarg --id -s,--size     --var "size+r"       --desc "columns of header"
-xarg --id -c,--char     --var "char+r"       --desc "custom <char> for header"
-xarg --id -C,--comment  --var "comment:true" --desc "add comment before header line"
+xarg --id -s,--size    --var "size+r" --desc "columns of header"
+xarg --id -c,--char    --var "char+r" --desc "custom <char> for header"
+xarg --id -C,--comment --desc "add comment before header line"
 
 xrun --xversionrc --xcolors "$@"
 
@@ -49,7 +49,7 @@ fi
 # get curret terminal collumn size
 [ -z "$size" ] && size=$(($(tput cols)-2))
 # add shell comment before, if requested
-[ -n "$comment" ] && echo -n "# "
+[ "$xarg" == "C" ] && echo -n "# "
 # print header line
 for i in $(seq 1 "$size"); do
   echo -n "$char"
