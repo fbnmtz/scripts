@@ -6,10 +6,10 @@
 # Created: Thursday, 2025/01/23 - 18:02:34
 # Author.: fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Last Modified: Sunday, 2025/01/26 - 10:19:47
+# Last Modified: Sunday, 2025/01/26 - 12:12:38
 # Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Version: 1.0.1.38
+# Version: 1.0.1.76
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
 # Description: 
 #  >
@@ -22,10 +22,11 @@ use args colors
 
 xrequirements ssh ssh-keyscan ssh-keygen cut
 
-xarg --id -k,--known --var "known:true" --desc "show ssh known hosts"
+xarg --id -k,--known --desc "show ssh known hosts"
 xrun --xrequire-one --xversionrc --xcolors "$@"
 
-[ -n "$known" ] && less ~/.ssh/known_hosts
+# -k/--known option: show knwon hosts
+[ "$xarg" == "k" ] && { less ~/.ssh/known_hosts; exit 0; } 
 
 # Extrai o usuário e o IP do parâmetro
 USER_IP=$1
