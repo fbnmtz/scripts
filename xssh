@@ -1,0 +1,44 @@
+#!/usr/bin/env bash
+#
+# ############################################################################
+# Project: scripts (none)
+# File...: xssh
+# Created: Thursday, 2025/01/23 - 18:02:34
+# Author.: fbnmtz, (fabiano.matoz@gmail.com)
+# ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
+# Last Modified: Sunday, 2025/01/26 - 10:19:47
+# Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
+# ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
+# Version: 1.0.1.38
+# ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
+# Description: 
+#  >
+# ############################################################################
+# HISTORY:
+#
+
+source "$xSHELL_INIT"
+use args colors
+
+xrequirements ssh ssh-keyscan ssh-keygen cut
+
+xarg --id -k,--known --var "known:true" --desc "show ssh known hosts"
+xrun --xrequire-one --xversionrc --xcolors "$@"
+
+[ -n "$known" ] && less ~/.ssh/known_hosts
+
+# Extrai o usuário e o IP do parâmetro
+USER_IP=$1
+IP=$(echo "$USER_IP" | cut -d'@' -f2)
+
+# Verifica se o host está online e adiciona o IP ao known_hosts
+if ssh-keyscan -H "$IP" >> ~/.ssh/known_hosts; then
+    # Conecta via SSH
+    ssh "$USER_IP"
+
+    # Remove o IP do known_hosts após encerrar a conexão SSH
+    ssh-keygen -R "$IP"
+else
+    echo -e "${RED}Error!${RESET} Host ${MAGENTA}${IP}${RESET} unreachable." >&2
+    exit 2
+fi
