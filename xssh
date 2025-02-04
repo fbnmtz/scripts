@@ -6,10 +6,10 @@
 # Created: Thursday, 2025/01/23 - 18:02:34
 # Author.: fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Last Modified: Sunday, 2025/01/26 - 12:12:38
+# Last Modified: Tuesday, 2025/02/04 - 02:31:31
 # Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Version: 1.0.1.76
+# Version: 1.0.2.89
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
 # Description: 
 #  >
@@ -22,24 +22,36 @@ use args colors
 
 xrequirements ssh ssh-keyscan ssh-keygen cut
 
-xarg --id -k,--known --desc "show ssh known hosts"
+xarg --id -u,--user   --var user+r --desc "login with <user>"
+xarg --id -H,--host   --var host+r --desc "<host> to connect "
+xarg --id -k,--known               --desc "show ssh known hosts"
+xarg --id -r,--remove --var host+r --desc "remove <host> form known_hosts"
+
 xrun --xrequire-one --xversionrc --xcolors "$@"
 
 # -k/--known option: show knwon hosts
 [ "$xarg" == "k" ] && { less ~/.ssh/known_hosts; exit 0; } 
+[ "$xarg" == "r" ] && { ssh-keygen -R "$host" -f ~/.ssh/known_hosts; exit 0; } 
 
 # Extrai o usuário e o IP do parâmetro
 USER_IP=$1
-IP=$(echo "$USER_IP" | cut -d'@' -f2)
+
+if [ -n "$user" ] && [ -n "$host" ]; then
+    ssh_cmd="ssh $user@$host"
+    IP=$host
+else
+    IP=$(echo "$USER_IP" | cut -d'@' -f2)
+    ssh_cmd="ssh $USER_IP"
+fi
 
 # Verifica se o host está online e adiciona o IP ao known_hosts
 if ssh-keyscan -H "$IP" >> ~/.ssh/known_hosts; then
     # Conecta via SSH
-    ssh "$USER_IP"
+    $ssh_cmd
 
     # Remove o IP do known_hosts após encerrar a conexão SSH
     ssh-keygen -R "$IP"
 else
-    echo -e "${RED}Error!${RESET} Host ${MAGENTA}${IP}${RESET} unreachable." >&2
+    echo -e "${BGRED} Error! Host $IP unreachable. ${RESET}" >&2
     exit 2
 fi
