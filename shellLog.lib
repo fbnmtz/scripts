@@ -1,0 +1,127 @@
+#!/usr/bin/env bash
+#
+# ############################################################################
+# Project: scripts (none)
+# File...: /Users/fgm/binx/shellLog.lib
+# Created: Saturday, 2025/02/08 - 20:02:28
+# Author.: fbnmtz, (fabiano.matoz@gmail.com)
+# ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
+# Last Modified: Sunday, 2025/02/09 - 10:49:15
+# Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
+# ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
+# Version: 0.0.1.32
+# ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
+# Description:
+#  >
+# ############################################################################
+# HISTORY:
+#
+
+# Set a flag to indicate that this library is loaded
+_xLIB_SHELLLOG_=true
+
+# Define the database name and table name
+DB_NAME=$APP_HOME/shellLog.db
+TABLE_NAME="command_history"
+
+# Define the log file
+LOG_FILE=$APP_HOME/shellLog.log
+
+# Function to log messages
+log_message() {
+    local message="$1"
+    echo "$(date +"%F %T") - $message" >> "$LOG_FILE"
+}
+
+# Function to initialize the application
+_app_init(){
+    # Check if the database exists, if not, create it
+    if [ ! -f "$DB_NAME" ]; then
+        if sqlite3 "$DB_NAME" "CREATE TABLE $TABLE_NAME (id INTEGER PRIMARY KEY, command TEXT, timestamp DATETIME DEFAULT CURRENT_TIMESTAMP);"; then
+            log_message "Database created."
+        else
+            log_message "Failed to create database."
+            exit 1
+        fi
+    fi
+}
+
+# Function to insert a command into the database
+insert_command() {
+    local command="$1"
+    local timestamp="$2"
+    sqlite3 "$DB_NAME" "INSERT INTO $TABLE_NAME (command, timestamp) VALUES ('$command', '$timestamp');"
+}
+
+# Function to import history from a file
+fImport(){
+    local filename=$1
+
+    # Set the history file to the provided filename or default to .zhistory
+    if [ -n "$filename" ]; then
+        HISTORY_FILE=$filename
+    else
+        HISTORY_FILE=$HOME/.zhistory
+    fi
+
+    # Check if the history file exists
+    if [ -f "$HISTORY_FILE" ]; then
+        # Read the history file line by line
+        while IFS= read -r line; do
+            # Extract the timestamp and command
+            timestamp=$(echo "$line" | awk -F';' '{print $1}' | awk -F':' '{print $2}')
+            command=$(echo "$line" | awk -F';' '{print $2}')
+
+            # Convert the Unix timestamp to the format YYYY-MM-DD HH:MM:SS
+            timestamp=$(date -r "$timestamp" +"%F %T")
+
+            # Insert the command into the database with its respective timestamp
+            insert_command "$command" "$timestamp"
+        done < "$HISTORY_FILE"
+        log_message "Imported history from $HISTORY_FILE."
+    else
+        log_message "History file not found: $HISTORY_FILE"
+    fi
+}
+
+# Function to capture and save the current command
+save_current_command() {
+    local command="$1"
+    if [ -n "$command" ]; then
+        local timestamp=$(date +"%F %T")
+        insert_command "$command" "$timestamp"
+    fi
+}
+
+# Hook to capture and save the current command before displaying the prompt
+export PROMPT_COMMAND="save_current_command \"\$(history 1 | sed 's/^[ ]*[0-9]*[ ]*//')\""
+
+# Function to view all records
+fViewAll() {
+    sqlite3 "$DB_NAME" "SELECT * FROM $TABLE_NAME;"
+}
+
+# Function to search in the command history using fzf
+fSearchHistory() {
+    sqlite3 "$DB_NAME" "SELECT command FROM $TABLE_NAME;" | fzf
+}
+
+# Function to replace Ctrl+R with the search function
+replace_ctrl_r() {
+    bind -x '"\C-r": "fSearchHistory"'
+}
+
+# Function to clear the database with confirmation
+fClearDb() {
+    read -p "Are you sure you want to clear the database? (y/n): " confirm
+    if [[ $confirm == [yY] ]]; then
+        sqlite3 "$DB_NAME" "DELETE FROM $TABLE_NAME;"
+        echo "Database cleared."
+    else
+        echo "Operation canceled."
+    fi
+}
+
+# Initialize the application and replace Ctrl+R
+# _app_init
+# replace_ctrl_r
