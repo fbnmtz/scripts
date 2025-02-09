@@ -2,14 +2,14 @@
 #
 # ############################################################################
 # Project: scripts (none)
-# File...: /Users/fgm/binx/shellLog
+# File...: shellLog
 # Created: Saturday, 2025/02/08 - 19:30:30
 # Author.: fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Last Modified: Sunday, 2025/02/09 - 10:40:13
+# Last Modified: Sunday, 2025/02/09 - 11:42:06
 # Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Version: 0.0.1.35
+# Version: 0.0.2.40
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
 # Description: 
 #  >
@@ -32,9 +32,10 @@ _app_init
 
 # Define command-line arguments
 xarg --id -i,--import --var filename+o --desc "import bash_history"
-xarg --id -V,--view                    --desc "view all commands"
+xarg --id -l,--list                    --desc "list all commands"
 xarg --id -s,--search                  --desc "search in command history"
-xarg --id -c,--clear --desc "clear the database"
+xarg --id -c,--clear                   --desc "clear the database"
+xarg --id -v,--verbose                 --desc "enable verbose mode"
 
 # Run the script with the provided arguments
 xrun --xrequire-one --xversionrc --xcolors --xapp-home "$@"
@@ -42,7 +43,8 @@ xrun --xrequire-one --xversionrc --xcolors --xapp-home "$@"
 # Handle the command-line arguments
 case "${xarg}" in
     i) fImport "$filename" ;;
-    V) fViewAll ;;
+    l) fListAll ;;
     s) fSearchHistory ;;
-    c) clear_db ;;
+    c) fClearDb ;;
+    v) VERBOSE=true ;;
 esac

@@ -2,14 +2,14 @@
 #
 # ############################################################################
 # Project: scripts (none)
-# File...: /Users/fgm/binx/shellLog.lib
+# File...: shellLog.lib
 # Created: Saturday, 2025/02/08 - 20:02:28
 # Author.: fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Last Modified: Sunday, 2025/02/09 - 10:49:15
+# Last Modified: Sunday, 2025/02/09 - 11:42:49
 # Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Version: 0.0.1.32
+# Version: 0.0.2.50
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
 # Description:
 #  >
@@ -27,10 +27,22 @@ TABLE_NAME="command_history"
 # Define the log file
 LOG_FILE=$APP_HOME/shellLog.log
 
-# Function to log messages
+# Define log levels
+LOG_LEVELS=("DEBUG" "INFO" "WARN" "ERROR")
+LOG_LEVEL=1  # Default to INFO
+
+# Function to log messages with log levels and optional display
 log_message() {
-    local message="$1"
-    echo "$(date +"%F %T") - $message" >> "$LOG_FILE"
+    local level="$1"
+    local message="$2"
+    local always_display="$3"
+    local log_level_index=$(printf "%s\n" "${LOG_LEVELS[@]}" | grep -n "^$level\$" | cut -d: -f1)
+    if [ -n "$log_level_index" ] && [ "$log_level_index" -le "$LOG_LEVEL" ]; then
+        echo "$(date +"%F %T") - [$level] - $message" >> "$LOG_FILE"
+        if [ "$VERBOSE" = true ] || [ "$always_display" = true ]; then
+            echo "$(date +"%F %T") - [$level] - $message"
+        fi
+    fi
 }
 
 # Function to initialize the application
@@ -38,9 +50,9 @@ _app_init(){
     # Check if the database exists, if not, create it
     if [ ! -f "$DB_NAME" ]; then
         if sqlite3 "$DB_NAME" "CREATE TABLE $TABLE_NAME (id INTEGER PRIMARY KEY, command TEXT, timestamp DATETIME DEFAULT CURRENT_TIMESTAMP);"; then
-            log_message "Database created."
+            log_message "INFO" "Database created." true
         else
-            log_message "Failed to create database."
+            log_message "ERROR" "Failed to create database." true
             exit 1
         fi
     fi
@@ -51,6 +63,7 @@ insert_command() {
     local command="$1"
     local timestamp="$2"
     sqlite3 "$DB_NAME" "INSERT INTO $TABLE_NAME (command, timestamp) VALUES ('$command', '$timestamp');"
+    log_message "DEBUG" "Inserted command: $command at $timestamp"
 }
 
 # Function to import history from a file
@@ -78,9 +91,9 @@ fImport(){
             # Insert the command into the database with its respective timestamp
             insert_command "$command" "$timestamp"
         done < "$HISTORY_FILE"
-        log_message "Imported history from $HISTORY_FILE."
+        log_message "INFO" "Imported history from $HISTORY_FILE." true
     else
-        log_message "History file not found: $HISTORY_FILE"
+        log_message "WARN" "History file not found: $HISTORY_FILE" true
     fi
 }
 
@@ -90,6 +103,7 @@ save_current_command() {
     if [ -n "$command" ]; then
         local timestamp=$(date +"%F %T")
         insert_command "$command" "$timestamp"
+        log_message "DEBUG" "Saved current command: $command at $timestamp"
     fi
 }
 
@@ -97,13 +111,15 @@ save_current_command() {
 export PROMPT_COMMAND="save_current_command \"\$(history 1 | sed 's/^[ ]*[0-9]*[ ]*//')\""
 
 # Function to view all records
-fViewAll() {
+fListAll() {
     sqlite3 "$DB_NAME" "SELECT * FROM $TABLE_NAME;"
+    log_message "INFO" "Listed all commands." true
 }
 
 # Function to search in the command history using fzf
 fSearchHistory() {
     sqlite3 "$DB_NAME" "SELECT command FROM $TABLE_NAME;" | fzf
+    log_message "INFO" "Searched in command history." true
 }
 
 # Function to replace Ctrl+R with the search function
@@ -116,12 +132,8 @@ fClearDb() {
     read -p "Are you sure you want to clear the database? (y/n): " confirm
     if [[ $confirm == [yY] ]]; then
         sqlite3 "$DB_NAME" "DELETE FROM $TABLE_NAME;"
-        echo "Database cleared."
+        log_message "INFO" "Database cleared." true
     else
-        echo "Operation canceled."
+        log_message "INFO" "Operation canceled." true
     fi
 }
-
-# Initialize the application and replace Ctrl+R
-# _app_init
-# replace_ctrl_r
