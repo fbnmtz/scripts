@@ -6,10 +6,10 @@
 # Created: Wednesday, 2021/01/27 - 10:46:26
 # Author.: @fbnmtz, (devel.fgm@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Last Modified: Monday, 2025/02/10 - 06:07:44
+# Last Modified: Thursday, 2025/02/20 - 00:23:58
 # Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Version: 0.3.0.162
+# Version: 0.3.1.195
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
 # Description:
 #  > https://unix.stackexchange.com/questions/61183/bash-script-that-reads-filenames-from-a-pipe-or-from-command-line-args
@@ -19,49 +19,64 @@
 
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~
 # shellcheck disable=SC1090,SC2154
-# ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~
 source "$xSHELL_INIT"
-use args
+use args colors
 xrequirements "xclip|pbcopy tee"
 
 xarg --id -s,--silent --desc "disable notifications"
-xarg --header "clipboard command line for Linux/Darwin"
-xrun --xversionrc --xcolors "$@"
+xarg --id -p,--paste  --desc "paste clipboard content"
 
-case "$(xsys.os)" in
-    Linux ) xclip_cmd=xclip  ;;
-    Darwin) xclip_cmd=pbcopy ;;
-esac
+xarg --header "clipboard command line for Linux/Darwin (command | $APP)"
 
-# format an array with received args
-#   ex:
-#   seq 1 3 | xclip-cmd foo bar baz
-#   ARGS=([0]="foo" [1]="bar" [2]="baz" [3]="1" [4]="2" [5]="3")
-declare -a ARGS=("$@")
-# while read -rt .02 arg; do
-while read -r arg; do
-    ARGS+=($arg)
-done
+xrun --xversionrc --xapp-data "$@"
 
-# join all args to pass everything to xclip
-for arg in "${ARGS[@]}"; do
-    if [ "$arg" != "--silent" ] && [ "$arg" != "-s" ]; then
-        output+="$arg "
-    fi
-done
+_copy(){
+    # format an array with received args
+    #   ex:
+    #   seq 1 3 | xclip-cmd foo bar baz
+    #   ARGS=([0]="foo" [1]="bar" [2]="baz" [3]="1" [4]="2" [5]="3")
+    declare -a ARGS=("$@")
+    # while read -rt .02 arg; do
+    while read -r arg; do
+        ARGS+=($arg)
+    done
 
-# fill all buffers of xclip_cmd
+    # join all args to pass everything to xclip
+    for arg in "${ARGS[@]}"; do
+        case "$arg" in
+            -s|--silent) ;;
+            -p|--paste ) ;;
+            *) output+="$arg "
+        esac
+    done
+
+    case "$(xsys.os)" in
+        Linux ) 
+            # fill all buffers of xclip_cmd
+            for sel in primary secondary clipboard; do
+                echo -n "$output" | $xclip_cmd -selection $sel
+            done
+        ;;
+        Darwin) echo -n "$output" | $xclip_cmd ;;
+    esac
+}
+
 case "$(xsys.os)" in
     Linux ) 
-        for sel in primary secondary clipboard; do
-            echo -n "$output" | $xclip_cmd -selection $sel
-        done
+        xclip_cmd=xclip  
+        xcase p "xclip_cmd+=' -out'"
     ;;
-    Darwin) echo -n "$output" | $xclip_cmd ;;
+    Darwin) 
+        xclip_cmd=pbcopy 
+        xcase p "xrequirements pbpaste; xclip_cmd=pbpaste"
+    ;;
 esac
 
+if [ "$xarg" == "p" ]; then
+    output=$($xclip_cmd)
+else
+    _copy "$@"
+    # save output to clipboard history
+    echo "$output" | tee -a "$APP_HOME"/clipboard
+fi
 
-# save clipboard history
-echo "$output" | tee -a "$APP_HOME"/clipboard
-
-# [ "$xarg" == "s" ] && notify-send "$xclip_cmd" "$output"
