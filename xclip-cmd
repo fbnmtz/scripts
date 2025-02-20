@@ -6,10 +6,10 @@
 # Created: Wednesday, 2021/01/27 - 10:46:26
 # Author.: @fbnmtz, (devel.fgm@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Last Modified: Thursday, 2025/02/20 - 00:23:58
+# Last Modified: Saturday, 2025/02/22 - 11:35:32
 # Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Version: 0.3.1.195
+# Version: 0.3.2.221
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
 # Description:
 #  > https://unix.stackexchange.com/questions/61183/bash-script-that-reads-filenames-from-a-pipe-or-from-command-line-args
@@ -23,19 +23,21 @@ source "$xSHELL_INIT"
 use args colors
 xrequirements "xclip|pbcopy tee"
 
-xarg --id -s,--silent --desc "disable notifications"
+# xarg --id -s,--silent --desc "disable notifications"
 xarg --id -p,--paste  --desc "paste clipboard content"
 
 xarg --header "clipboard command line for Linux/Darwin (command | $APP)"
 
 xrun --xversionrc --xapp-data "$@"
 
-_copy(){
+declare -a ARGS=("$@")
+
+_data(){
+    local arg data
     # format an array with received args
     #   ex:
     #   seq 1 3 | xclip-cmd foo bar baz
     #   ARGS=([0]="foo" [1]="bar" [2]="baz" [3]="1" [4]="2" [5]="3")
-    declare -a ARGS=("$@")
     # while read -rt .02 arg; do
     while read -r arg; do
         ARGS+=($arg)
@@ -44,39 +46,30 @@ _copy(){
     # join all args to pass everything to xclip
     for arg in "${ARGS[@]}"; do
         case "$arg" in
-            -s|--silent) ;;
+            # -s|--silent) ;;
             -p|--paste ) ;;
-            *) output+="$arg "
+            *) data+="$arg "
         esac
     done
-
-    case "$(xsys.os)" in
-        Linux ) 
-            # fill all buffers of xclip_cmd
-            for sel in primary secondary clipboard; do
-                echo -n "$output" | $xclip_cmd -selection $sel
-            done
-        ;;
-        Darwin) echo -n "$output" | $xclip_cmd ;;
-    esac
+    echo -n $data
 }
 
 case "$(xsys.os)" in
     Linux ) 
-        xclip_cmd=xclip  
-        xcase p "xclip_cmd+=' -out'"
+        _cmd_="xclip -selection primary|secondary|clipboard"  
+        xcase p "_cmd_='xclip -out'"
     ;;
     Darwin) 
-        xclip_cmd=pbcopy 
-        xcase p "xrequirements pbpaste; xclip_cmd=pbpaste"
+        _cmd_=pbcopy 
+        xcase p "xrequirements pbpaste; _cmd_=pbpaste"
     ;;
 esac
 
 if [ "$xarg" == "p" ]; then
-    output=$($xclip_cmd)
+    output=$($_cmd_)
+    echo "$output"
 else
-    _copy "$@"
-    # save output to clipboard history
+    output=$(_data "$@")
+    echo -n "$output" | $_cmd_ 
     echo "$output" | tee -a "$APP_HOME"/clipboard
 fi
-
