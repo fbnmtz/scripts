@@ -6,10 +6,10 @@
 # Created: Saturday, 2023/01/14 - 13:08:04
 # Author.: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Last Modified: Thursday, 2025/02/20 - 00:25:01
+# Last Modified: Thursday, 2025/02/20 - 02:47:50
 # Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Version: 1.0.0.119
+# Version: 1.0.1.145
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
 # Description: 
 #  > script to translate  text 
@@ -23,8 +23,6 @@ source "$xSHELL_INIT"
 use args colors
 xrequirements curl jq xclip-cmd
 
-clipboard_text=$(xclip-cmd -p)
-
 _translate(){
     local text="$@"
     # Make the translation using curl 
@@ -32,7 +30,7 @@ _translate(){
         curl -s -A "Mozilla/5.0" -G \
             --data-urlencode "client=gtx" \
             --data-urlencode "sl=auto" \
-            --data-urlencode "tl=en" \
+            --data-urlencode "tl=$lang" \
             --data-urlencode "dt=t" \
             --data-urlencode "q=$text" \
             "http://translate.googleapis.com/translate_a/single"
@@ -46,13 +44,16 @@ _to_clipboard(){ echo "$translation" | xclip-cmd > /dev/null; }
 xarg --id -t,--text           --desc "set <text> to translate"    --var text+r
 xarg --id -T,--text-clipboard --desc "fill <text> from clipboard"
 xarg --id -c,--clipboard      --desc "save translation to clipboard"
+xarg --id -l,--language       --desc "define <lang> to translate" --var lang+r
 
 xarg --header "translations using 'Google Translate'"
 
 xrun --xrequire-one --xreject-unknown "$@"
 
+[ -z "$lang" ] && lang=en
+
 xcase t "_translate $text"
-xcase T "_translate $clipboard_text"
+xcase T "_translate $(xclip-cmd -p)"
 xcase c "_to_clipboard"
 
 xsys.write "$translation"
