@@ -6,10 +6,10 @@
 # Created: Sunday, 2022/04/03 - 16:49:39
 # Author.: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Last Modified: Monday, 2024/12/09 - 17:38:37
+# Last Modified: Tuesday, 2025/04/08 - 12:05:12
 # Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Version: 0.0.4.96
+# Version: 0.0.4.98
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
 # Description: 
 #  >
@@ -23,7 +23,7 @@
 source "$xSHELL_INIT"    
 use args ytdl.lib
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~    
-xrequirements yt-dlp:youtube-dl cut sed
+xrequirements "yt-dlp|youtube-dl cut sed"
 
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~    
 xarg --id -V,--video   --var flag:v,url+r      --desc "download video from YouTube url"    
