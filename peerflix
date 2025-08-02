@@ -2,14 +2,14 @@
 #
 # ############################################################################
 # Project: scripts (none)
-# File...: /Users/fgm/binx/peerflix
+# File...: peerflix
 # Created: Sunday, 2025/01/19 - 11:55:48
 # Author.: fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Last Modified: Monday, 2025/01/20 - 00:59:45
+# Last Modified: Saturday, 2025/08/02 - 08:32:20
 # Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Version: 0.0.1.81
+# Version: 1.0.0.115
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
 # Description: 
 #  >
@@ -23,16 +23,15 @@ use args
 
 _app_=peerflix
 
-xrequirements "$_app_|docker fzf wc awk"
+xrequirements "$_app_|docker fzf wc awk nc"
 
-xarg --id -p,--port     --var port+r        --desc "port to run peerflix server"
-xarg --id -P,--params   --var params+r      --desc "params to peerflix server"
-xarg --id -d,--defaults --var defaults:true --desc "use default params (--all --subtitles --list)"
+xarg --id -c,--custom   --var params+r      --desc "custom params to peerflix server"
+xarg --id -d,--defaults --var defaults:true --desc "default params (--all --subtitles --list)"
 xarg --id -k,--kill     --var kill:true     --desc "kill runnung server"
+xarg --id -p,--port     --var port+r        --desc "port to run peerflix server (default 8888)"
 
 xarg --header "peerflix wrapper"
-xarg --footer "stream a torrent file on a webserver (localhost:8888  or defined <port>)"
-# xarg --footer "footer"
+xarg --footer "stream a torrent file on a webserver (localhost:8888 or custom <port>)"
 
 xrun --xversionrc --xcolors "$@"
 
@@ -82,14 +81,31 @@ _kill(){
     exit 0
 }
 
-[ -z "$port" ] && port="8888"
+_get_port(){
+    # porta padrão
+    local _port=8888
+    while true; do
+        # Verifica se a porta está em uso
+        if nc -z localhost $_port &> /dev/null; then
+            # Sim? incrementa em um
+            echo "port '$_port' already in use! trying next..." >&2
+            _port=$((_port + 1))
+        else
+            # Não? retorna a porta
+            echo $_port
+            return
+        fi
+    done
+}
+
+[ -z "$port" ] && port="$(_get_port)"
 [ "$defaults" == "true" ] && params="--all --subtitles --list"
 [ "$kill" == "true" ] && {  _kill && exit 0; }
 
 _app_function(){
     docker run --rm -it -p "$port":8888 \
     -v "$HOME"/popcorn:/tmp/torrent-stream \
-    cdrage/peerflix $params "$@"
+    cdrage/peerflix "$params" "$@"
     # docker run -d --name peerflix-server \
     # -p 8080:8080 \
     # -v "$HOME"/popcorn/torrent-stream:/tmp/torrent-stream \
@@ -100,6 +116,6 @@ if builtin $_app_ 2> /dev/null; then
   echo "$_app_ binary"
   $_app_ "$@"
 else
-  echo "$_app_ function (docker)"
+  echo "$_app_ (docker:$port)"
   _app_function "$@"  
 fi
