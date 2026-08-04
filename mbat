@@ -1,0 +1,209 @@
+#!/usr/bin/env bash
+#
+# ############################################################################
+# Project: scripts (none)
+# File...: mbat
+# Created: Saturday, 2026/07/25 - 02:51:33
+# Author.: @fbnmtz, (fabiano.matoz@gmail.com)
+# ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
+# Last Modified: Tuesday, 2026/08/04 - 01:54:00
+# Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
+# ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
+# Version: 0.1.0.88
+# ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
+# Description: 
+#  >
+# ############################################################################
+# HISTORY:
+#
+
+source "$xSHELL_INIT"    
+use args 
+xrequirements "tput seq pygmentize|highlight|nl diff awk less wc"
+
+xarg --id -f,--file --var filename+r      --desc "file to view (or stdin if not provided)"
+xarg --id -d,--diff --var file1+r,file2+r --desc "enable side-by-side diff mode"
+
+xarg --header "Simple file viewer with syntax highlighting and side-by-side diff"
+# xarg --footer "require: 'tput seq pygmentize|highlight|nl'"
+
+xrun --xrequire-one --xversionrc --xcolors "$@"
+
+# Função para formatar exibição de um único arquivo ou stdin
+process_stream() {
+    local label="$1"
+    local file_path="$2"
+
+    local cols
+    cols=$(tput cols 2>/dev/null || echo 80)
+    local line_separator
+    line_separator=$(printf '─%.0s' $(seq 1 "$cols"))
+
+    # echo -e "\e[90m$line_separator\e[0m"
+    # echo -e "\e[1;36mFile: $label\e[0m"
+    # echo -e "\e[90m$line_separator\e[0m"
+    
+    echo -e "${GREY}$line_separator"
+    echo -e "${CYAN}File: ${REVERSE} $label ${RESET}"
+    echo -e "${GREY}$line_separator"
+
+    format_content() {
+        if [ -n "$file_path" ] && command -v pygmentize &> /dev/null; then
+            pygmentize -g "$file_path" 2>/dev/null | nl -ba -w 4 -s " │ "
+        elif command -v pygmentize &> /dev/null; then
+            pygmentize -g 2>/dev/null | nl -ba -w 4 -s " │ "
+        elif command -v highlight &> /dev/null; then
+            highlight -O truecolor --force 2>/dev/null | nl -ba -w 4 -s " │ "
+        else
+            nl -ba -w 4 -s " │ "
+        fi
+    }
+
+    if [ -n "$file_path" ]; then
+        format_content < "$file_path"
+    else
+        format_content
+    fi
+
+    echo -e "\e[90m$line_separator\e[0m\n"
+}
+
+# Função de Diff Lado a Lado com Alinhamento Rígido
+process_diff() {
+    local file1="$1"
+    local file2="$2"
+
+    if [ ! -f "$file1" ] || [ ! -f "$file2" ]; then
+        echo -e "${RED}Erro: Ambos os arquivos devem existir para comparar.${RESET}" >&2
+        exit 1
+    fi
+
+    local cols
+    cols=$(tput cols 2>/dev/null || echo 80)
+    local line_separator
+    line_separator=$(printf '─%.0s' $(seq 1 "$cols"))
+
+    # Largura de cada lado: (Terminal - 13 caracteres fixos de numeração e divisores) / 2
+    local col_width=$(( (cols - 13) / 2 ))
+    if [ "$col_width" -lt 10 ]; then col_width=10; fi
+
+    # Cabeçalho Lado a Lado Alinhado
+    echo -e "${RESET}$line_separator${RESET}"
+    printf "${CYAN}%-*s${RESET} ${RESET}│${RESET} ${CYAN}%-*s${RESET}\n" \
+        $((col_width + 5)) "File 1: $file1" $((col_width + 5)) "File 2: $file2"
+        
+    echo -e "${RESET}$line_separator${RESET}"
+
+    # Usa diff com delimitador estrito e sem expansão irregular de tabulação
+    diff -y -t -W "$cols" "$file1" "$file2" | awk -v cw="$col_width" '
+    BEGIN {
+        l1 = 0; 
+        l2 = 0;
+    }
+    {
+        # O diff -y posiciona o divisor exatamente no meio da linha
+        half_len = int(length($0) / 2);
+        
+        # Identifica a marcação central do diff (<, >, |)
+        sep = " ";
+        if ($0 ~ /</)      sep = "<";
+        else if ($0 ~ />/) sep = ">";
+        else if ($0 ~ /\|/) sep = "|";
+
+        # Separa metade esquerda e direita cruas
+        left_raw  = substr($0, 1, cw);
+        right_raw = (length($0) > cw) ? substr($0, length($0) - cw + 1) : "";
+
+        # Limpa espaços extras no final da esquerda e início da direita
+        gsub(/[ \t]+$/, "", left_raw);
+        gsub(/^[ \t]+/, "", right_raw);
+
+        # Controle de Numeração, Texto e Cores
+        num1 = "    ";
+        num2 = "    ";
+        color = "\033[0m"; # Normal
+
+        if (sep == "<") {
+            l1++;
+            num1 = sprintf("%4d", l1);
+            color = "\033[31m"; # Vermelho: Linha removida/Apenas no Arq 1
+            text_l = left_raw;
+            text_r = "";
+        } else if (sep == ">") {
+            l2++;
+            num2 = sprintf("%4d", l2);
+            color = "\033[32m"; # Verde: Linha adicionada/Apenas no Arq 2
+            text_l = "";
+            text_r = right_raw;
+        } else if (sep == "|") {
+            l1++; l2++;
+            num1 = sprintf("%4d", l1);
+            num2 = sprintf("%4d", l2);
+            color = "\033[33m"; # Amarelo: Linhas modificadas
+            text_l = left_raw;
+            text_r = right_raw;
+        } else {
+            l1++; l2++;
+            num1 = sprintf("%4d", l1);
+            num2 = sprintf("%4d", l2);
+            color = "\033[90m"; # Cinza: Sem alterações
+            text_l = left_raw;
+            text_r = right_raw;
+        }
+
+        # Trunca o texto se for maior que a coluna OU preenche com espaços até completar 'cw'
+        # Isso garante que a divisória NUNCA saia do lugar!
+        fmt_l = sprintf("%-*.*s", cw, cw, text_l);
+        fmt_r = sprintf("%-*.*s", cw, cw, text_r);
+
+        # Imprime a linha com alinhamento perfeito de colunas:
+        # [Num1] [Texto1 truncado/preenchido] │ [Num2] [Texto2 truncado/preenchido]
+        printf "\033[90m%s\033[0m %s%s\033[0m \033[90m│\033[0m \033[90m%s\033[0m %s%s\033[0m\n", 
+            num1, color, fmt_l, num2, color, fmt_r;
+    }'
+
+    echo -e "\e[90m$line_separator\e[0m\n"
+}
+
+# --- CONTROLE DE ARGUMENTOS ---
+
+if [ "$1" = "-d" ] || [ "$1" = "--diff" ]; then
+    shift
+    # if [ $# -lt 2 ]; then
+    #     echo -e "${RED}Erro: O modo diff exige 2 arquivos.\e[0m" >&2
+    #     echo "Uso: $0 -d arquivo1 arquivo2" >&2
+    #     exit 1
+    # fi
+
+    process_diff "$1" "$2" | less -R -F -X
+    exit 0
+fi
+
+if [ $# -eq 0 ] && [ -t 0 ]; then
+    echo "Uso: $0 <arquivo_1> [arquivo_2 ...]" >&2
+    echo "   ou: $0 -d <arquivo_1> <arquivo_2>   (Modo Diff Lado a Lado)" >&2
+    echo "   ou: comando | $0                     (Entrada via Pipe)" >&2
+    exit 1
+fi
+
+if [ ! -t 0 ]; then
+    process_stream "STDIN" ""
+    exit 0
+fi
+
+# Process each file provided as argument
+for file in "$@"; do
+    if [ ! -f "$file" ]; then
+        echo -e "${RED}Erro: Arquivo '$file' não encontrado.\e[0m" >&2
+        continue
+    fi
+
+    lines_count=$(wc -l < "$file")
+    term_lines=$(tput lines 2>/dev/null || echo 24)
+
+    if [ "$lines_count" -gt "$((term_lines - 6))" ] && [ -t 1 ]; then
+        process_stream "$file" "$file" | less -R -F -X
+    else
+        process_stream "$file" "$file"
+    fi
+done
