@@ -6,10 +6,10 @@
 # Created: Thursday, 2020/10/01 - 12:52:37
 # Author.: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Last Modified: Monday, 2024/12/09 - 17:39:53
+# Last Modified: Tuesday, 2026/08/04 - 22:56:56
 # Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Version: 0.3.4.236
+# Version: 0.3.4.246
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
 # Description: 
 #  >
@@ -42,6 +42,8 @@ xarg --id -m,--month      --code "args+=\"%m\""       --desc "current month (num
 xarg --id -y,--year       --code "args+=\"%Y\""       --desc "current year (number)"
 xarg --id -Y,--year2      --code "args+=\"%y\""       --desc "current year (two digits)"
 xarg --id -D,--date       --code "args+=\"%d/%m/%Y\"" --desc "current date (full)"
+xarg --id -n,--month-full  --code "args+=\"%B\""      --desc "current month name (full)"
+xarg --id -N,--month-short --code "args+=\"%b\""      --desc "current month name (short)"
 
 xarg --block "Time Options"
 xarg --id -H,--hour       --code "args+=\"%H\""     --desc "current hour (number)"
@@ -64,7 +66,7 @@ xarg --header "helper to get date in many formats"
 # [ "$type" == "date" ] && { date_separator=$date_char; } #args=$(updateArgs); }
 # [ "$type" == "time" ] && { time_separator=$time_char; } #args=$(updateArgs); }
 
-xrun --xreject-unknow --xrequire-one --xversionrc --xcolors "$@"
+xrun --xreject-unknown --xrequire-one --xversionrc --xcolors "$@"
 
 # if [ -n "$char" ]; then
 #     date_separator="$char"
