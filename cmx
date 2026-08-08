@@ -3,22 +3,23 @@
 # #############################################################
 # File...: cmx
 # Project: scripts (none)
-# Created: 18/02/2020-20:44:58
-# Author: Fabiano Matos (fgm@core)
-# -------------------------------------------------------------
-# Last Modified: Saturday, 2024/12/14 - 15:17:04
+# Created: 2020/02/18 - 20:44:58
+# Author.: @fbnmtz, (fabiano.matoz@gmail.com)
+# ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
+# Last Modified: Saturday, 2026/08/08 - 11:19:44
 # Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
-# -------------------------------------------------------------
+# ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
+# Version: 0.1.1.27
+# ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
 # Description: 
 # #############################################################
 #
 
-# shellcheck disable=SC1090,2154
-source "$xSHELL_INIT"
-xrequirements chmod
+# shellcheck disable=SC1090
+source "$xSHELL_INIT"; xrequirements chmod
 
 if [ -f "$1" ]; then
   chmod +x "$1"
 else 
-  echo "Error! File \"$1\" not exists."
+  echo "Error! File \"$1\" does not exists."
 fi

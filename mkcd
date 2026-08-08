@@ -6,16 +6,22 @@
 # Created: Sunday, 2023/09/17 - 23:40:05
 # Author.: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Last Modified: Sunday, 2023/09/17 - 23:43:00
+# Last Modified: Friday, 2026/08/07 - 09:06:14
 # Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Version: 0.0.1.8
+# Version: 0.0.2.18
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
 # Description: 
-#  > create a new directory and go inside
+#  > create a new directory and cd into it
 # ############################################################################
 # HISTORY:
 #
 
-mkdir -p $1
-cd $1 
+# shellcheck disable=SC1090
+source "$xSHELL_INIT"; xrequirements mkdir cd
+
+if [ $# -eq 0 ]; then
+    echo "Usage: ${APP} <directory_name>"
+    exit 1
+fi
+{ mkdir -p $1 && cd $1; } || { echo "Failed to create and enter directory: $1"; exit 2; }  

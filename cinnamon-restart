@@ -1,11 +1,35 @@
-#!/bin/bash
+#!/usr/bin/env bash
 #
-# Script: cinnamon-restart
-# Date..: 02/12/19, 16:17:17
-# Author: fabiano@core
-# Params:
-# 
-# 
+# ############################################################################
+# Project: scripts (none)
+# File...: cinnamon-restart
+# Created: Tuesday, 2019/12/02 - 07:38:40
+# Author.: @fbnmtz, (fabiano.matoz@gmail.com)
+# ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
+# Last Modified: Saturday, 2026/08/08 - 11:19:34
+# Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
+# ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
+# Version: 0.1.2.71
+# ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
+# Description:
+#  > The DISPLAY environment variable is used in Unix-like operating systems 
+# to specify the display server and screen that graphical applications should 
+# use for rendering their user interface. It is particularly relevant in systems 
+# that support multiple graphical sessions or remote access to graphical 
+# applications.
+# In the context of the command export DISPLAY=:0.0, it sets the DISPLAY 
+# variable to :0.0, which typically refers to the first display (display 0) 
+# and the first screen (screen 0) of the local machine. This is the default 
+# display for most desktop environments, including Cinnamon. 
+# By setting this variable, the command ensures that the cinnamon --replace 
+# command will run in the correct graphical context, allowing it to replace 
+# the current Cinnamon session without issues related to display
+# ############################################################################
+# HISTORY:
+#
+
+# shellcheck disable=SC1090
+source "$xSHELL_INIT"; xrequirements cinnamon
 
 # use when cinnamon freezes
 export DISPLAY=:0.0 && cinnamon --replace &
