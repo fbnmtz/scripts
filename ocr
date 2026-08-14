@@ -6,10 +6,10 @@
 # Created: unknown, 2020
 # Author.: @sdushantha, (Siddharth Dushantha)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Last Modified: Monday, 2024/12/09 - 17:38:37
+# Last Modified: Friday, 2026/08/14 - 15:09:19
 # Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Version: 1.0.4.85
+# Version: 1.0.5.94
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
 # Description: 
 #  > https://github.com/sdushantha/bin
@@ -22,12 +22,12 @@
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~    
 source "$xSHELL_INIT"    
 use args 
-packages=(tesseract maim xclip-cmd)
-xrequirements "${packages[@]}" pkill wc notify-send cat
+# packages=(tesseract maim xclip-cmd)
+xrequirements "tesseract maim xclip-cmd pkill wc notify-send cat"
 
-xarg --id -n,--no-compositor --var compositor:false --desc "disable compositor (picom)"
+xarg --id -n,--no-compositor --var compositor:false --desc "disable compositor (picom/compton)"
 xarg --header "Extract a text from screen/image with OCR"
-xarg --footer "required: ${packages[*]}"
+# xarg --footer "required: ${packages[*]}"
 
 xrun --xreject-unknow --xversionrc --xcolors "$@"    
 
@@ -36,9 +36,11 @@ IMG_FILE="/tmp/ocr.png"
 
 # kill compositors
 [ -n "$compositor" ] && {
-    echo "killing compositors:" 
-    echo -n " '-> picom";   pkill picom; echo " ....[done]" 
-    echo -n " '-> compton"; pkill compton; echo " ..[done]" 
+    for proc in picom compton; do
+        if pgrep -x "$proc" > /dev/null; then
+            echo -n " -> killing $proc"; pkill "$proc"; echo " ....[done]"
+        fi
+    done
 }
 
 # Take screenshot by selecting the area
@@ -53,18 +55,24 @@ fi
 # because tesseract adds .txt to the given file path anyways. So if we were to
 # specify /tmp/ocr.txt as the file path, tesseract would out the text to 
 # /tmp/ocr.txt.txt
-tesseract "$IMG_FILE" "${TXT_FILE//\.txt/}"
+if tesseract "$IMG_FILE" "${TXT_FILE//\.txt/}"; then
+    echo " -> text extracted to $TXT_FILE"
+    # Check if the text was detected by checking number
+    # of lines in the file
+    LINES=$(wc -l < $TXT_FILE)
+    if [ "$LINES" -eq 0 ]; then
+        notify-send "ocr" "no text was detected"
+        exit 1
+    fi
 
-# Check if the text was detected by checking number
-# of lines in the file
-LINES=$(wc -l < $TXT_FILE)
-if [ "$LINES" -eq 0 ]; then
-    notify-send "ocr" "no text was detected"
+    # Copy text to clipboard
+    xclip-cmd --silent < $TXT_FILE
+
+    # Send a notification with the text that was grabbed using OCR
+    notify-send "ocr" "$(cat $TXT_FILE)"
+else
+    echo " -> failed to extract text"
     exit 1
 fi
 
-# Copy text to clipboard
-xclip-cmd --silent < $TXT_FILE
 
-# Send a notification with the text that was grabbed using OCR
-notify-send "ocr" "$(cat $TXT_FILE)"
