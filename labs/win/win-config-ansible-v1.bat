@@ -4,10 +4,10 @@
 :: Created: Friday, 2026/08/14 - 14:39:25
 :: Author.: @fbnmtz, (fabiano.matoz@gmail.com)
 :: ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-:: Last Modified: Friday, 2026/08/14 - 14:54:38
+:: Last Modified: Friday, 2026/08/14 - 15:18:18
 :: Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
 :: ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-:: Version: 0.0.1.4
+:: Version: 0.0.1.6
 :: ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
 :: Description: 
 ::  >
@@ -15,9 +15,9 @@
 :: HISTORY:
 
 
-:: net user suporte RUuKJUkJKJkp /add
+:: net user suporte AAAAAAAAAAAA /add
 :: cria o usuario "ansible" com a senha "ansible" 
-net user ansible aen84UrKxfPK /add
+net user ansible AAAAAAAAAAAA /add
 :: adiciona aos administradores
 net localgroup Administradores ansible /add
 
