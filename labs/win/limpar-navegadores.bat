@@ -4,10 +4,10 @@
 :: Created: Friday, 2026/08/14 - 14:40:03
 :: Author.: @fbnmtz, (fabiano.matoz@gmail.com)
 :: ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-:: Last Modified: Friday, 2026/08/14 - 14:55:19
+:: Last Modified: Tuesday, 2026/08/18 - 15:52:48
 :: Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
 :: ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-:: Version: 0.0.1.1
+:: Version: 0.0.1.8
 :: ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
 :: Description: 
 ::  >
@@ -43,15 +43,23 @@ if exist "%LOCAL_APP%\Microsoft\Edge\User Data" (
 :: 3. MOZILLA FIREFOX
 echo Limpando Mozilla Firefox...
 taskkill /f /im firefox.exe >nul 2>&1
+if exist "%ROAMING_APP%\Mozilla\Firefox\profiles.ini" (
+    del /f /q "%ROAMING_APP%\Mozilla\Firefox\profiles.ini" >nul 2>&1
+)
 if exist "%ROAMING_APP%\Mozilla\Firefox\Profiles" (
     for /d %%p in ("%ROAMING_APP%\Mozilla\Firefox\Profiles\*") do (
         rd /s /q "%%p\cache2" >nul 2>&1
+        rd /s /q "%%p\sessionstore-backups" >nul 2>&1
         del /f /q "%%p\cookies.sqlite" >nul 2>&1
-        del /f /q "%%p\sessionstore.jsonlz4" >nul 2>&1
+        del /f /q "%%p\sessionstore*.jsonlz4" >nul 2>&1
+        del /f /q "%%p\recovery*.jsonlz4" >nul 2>&1
+        del /f /q "%%p\previous.jsonlz4" >nul 2>&1
         del /f /q "%%p\logins.json" >nul 2>&1
+        del /f /q "%%p\key4.db" >nul 2>&1
         rd /s /q "%%p\storage" >nul 2>&1
     )
 )
+
 
 :: 4. BRAVE BROWSER
 echo Limpando Brave Browser...
