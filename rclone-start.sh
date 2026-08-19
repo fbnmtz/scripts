@@ -6,10 +6,10 @@
 # Created: Thursday, 2026/07/30 - 12:22:17
 # Author.: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Last Modified: Monday, 2026/08/03 - 15:36:58
+# Last Modified: Wednesday, 2026/08/19 - 09:05:32
 # Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Version: 0.0.1.25
+# Version: 0.0.1.26
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
 # Description: 
 #  >
@@ -29,10 +29,12 @@ start(){
 
     sleep 5
 
-    for remote in "${mounts[@]}"; do
-        mkdir -p "$HOME/mnt/rclone/$remote"
-        rclone bisync $remote "$HOME/mnt/rclone/$remote" --create-empty-src-dirs --compare size,modtime,checksum --slow-hash-sync-only --resilient -MvP --drive-skip-gdocs --fix-case --resync --dry-run
-    done
+    mount
+
+    # for remote in "${mounts[@]}"; do
+    #     mkdir -p "$HOME/mnt/rclone/$remote"
+    #     rclone bisync $remote "$HOME/mnt/rclone/$remote" --create-empty-src-dirs --compare size,modtime,checksum --slow-hash-sync-only --resilient -MvP --drive-skip-gdocs --fix-case --resync --dry-run
+    # done
 }
 
 mount(){
