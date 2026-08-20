@@ -6,10 +6,10 @@
 # Created: Thursday, 2025/01/23 - 18:02:34
 # Author.: fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Last Modified: Wednesday, 2026/08/19 - 12:48:47
+# Last Modified: Wednesday, 2026/08/19 - 21:37:21
 # Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Version: 1.0.2.133
+# Version: 1.0.3.161
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
 # Description: 
 #  >
@@ -18,28 +18,32 @@
 #
 
 source "$xSHELL_INIT"
+# xs_init
 xs_use args colors
-
-xs_require ssh ssh-keyscan ssh-keygen cut
+xs_require ssh ssh-keyscan ssh-keygen cut mbat
 
 xarg --id -u,--user     --var user+r --desc "login with <user>"
 xarg --id -H,--host     --var host+r --desc "<host> to connect "
 xarg --id -k,--known                 --desc "show ssh known hosts"
 xarg --id -r,--remove   --var host+r --desc "remove <host> form known_hosts"
 xarg --id -g,--generate --var mail+r,filename+r --desc "generate a new ssh-key"
-xarg --id -s,--size     --var size+r --desc "define password length"
+xarg --id -s,--size     --var size+r --desc "define password <size>"
 
-xrun --xrequire-one --xversionrc --xcolors --xapp-data "$@"
+xarg --footer "   * script files stored on '$APP_HOME'"
 
-key_generate(){
-    # user not define size? set default value
+xrun --xrequire-one --xversionrc --xapp-data "$@"
+
+__known(){ mbat ~/.ssh/known_hosts; exit 0; } 
+__remove(){ ssh-keygen -R \"$host\" -f ~/.ssh/known_hosts; exit 0; }
+__generate(){
+    # no size? set default value
     [ -z "$size" ] && size=35
     
     # needed tools
     xs_require cat fold head
-    _PASS=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9*@$.' | fold -w "$size" | head -n 1)
 
-    # echo $_PASS; exit 0;
+    # generate a random password
+    _PASS=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9*@$.!\#' | fold -w "$size" | head -n 1)
 
     key_file="$APP_HOME/$filename-priv.key"
     key_file_pass="$APP_HOME/$filename-priv.pass"
@@ -48,15 +52,15 @@ key_generate(){
     
     ssh-keygen -t ed25519 -C "$mail" -N 'PWD' -f "$key_file"
 
-    less "$key_file"
+    mbat "$key_file"
     
     exit 0;
 }
 
 # -k/--known option: show knwon hosts
-xcase k "{ less ~/.ssh/known_hosts; exit 0; } "
-xcase r "{ ssh-keygen -R \"$host\" -f ~/.ssh/known_hosts; exit 0; } "
-xcase g key_generate
+xcase k __known
+xcase r __remove
+xcase g __generate
 
 # Extrai o usuário e o IP do parâmetro
 USER_IP=$1
