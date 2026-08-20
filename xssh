@@ -6,10 +6,10 @@
 # Created: Thursday, 2025/01/23 - 18:02:34
 # Author.: fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Last Modified: Wednesday, 2026/08/19 - 21:37:21
+# Last Modified: Thursday, 2026/08/20 - 16:59:13
 # Modified By..: @fbnmtz, (fabiano.matoz@gmail.com)
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
-# Version: 1.0.3.161
+# Version: 1.0.4.173
 # ~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~·~·~·~·~·~·~·~~·~·~·~·~·~~·~·~·~·~·~·~·~
 # Description: 
 #  >
@@ -28,7 +28,6 @@ xarg --id -k,--known                 --desc "show ssh known hosts"
 xarg --id -r,--remove   --var host+r --desc "remove <host> form known_hosts"
 xarg --id -g,--generate --var mail+r,filename+r --desc "generate a new ssh-key"
 xarg --id -s,--size     --var size+r --desc "define password <size>"
-
 xarg --footer "   * script files stored on '$APP_HOME'"
 
 xrun --xrequire-one --xversionrc --xapp-data "$@"
@@ -36,28 +35,34 @@ xrun --xrequire-one --xversionrc --xapp-data "$@"
 __known(){ mbat ~/.ssh/known_hosts; exit 0; } 
 __remove(){ ssh-keygen -R \"$host\" -f ~/.ssh/known_hosts; exit 0; }
 __generate(){
-    # no size? set default value
-    [ -z "$size" ] && size=35
-    
     # needed tools
-    xs_require cat fold head
+    xs_require cat tr fold head date
 
+    # no size? set default value
+    [ -z "$size" ] && size=45
+
+    # current date
+    now=$(date "+%A-%Y%m%d-%H%M%S")
+    
     # generate a random password
     _PASS=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9*@$.!\#' | fold -w "$size" | head -n 1)
 
-    key_file="$APP_HOME/$filename-priv.key"
-    key_file_pass="$APP_HOME/$filename-priv.pass"
+    # set filename's
+    key_file_name="$APP_HOME/$filename---gen-$now-t-ed25519-ssh-key"
+    key_file_pass="$APP_HOME/$filename---gen-$now-t-ed25519-ssh-pass"
 
-    echo "$_PASS" > "$key_file_pass"
+    # save password backup file
+    echo -n "$_PASS" > "$key_file_pass"
     
-    ssh-keygen -t ed25519 -C "$mail" -N 'PWD' -f "$key_file"
+    # gen ssh key
+    ssh-keygen -t ed25519 -C "$mail" -N "$_PASS" -f "$key_file_name"
 
-    mbat "$key_file"
+    # show key to user
+    mbat "$key_file_name"
     
     exit 0;
 }
 
-# -k/--known option: show knwon hosts
 xcase k __known
 xcase r __remove
 xcase g __generate
